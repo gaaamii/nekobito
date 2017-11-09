@@ -1,8 +1,9 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, img, header, p, textarea)
-import Html.Attributes exposing (src, class)
-import Markdown exposing (..)
+import Html exposing (Html, text, div, img, header, p, textarea)
+import Html.Attributes exposing (src, class, placeholder)
+import Html.Events exposing (onInput)
+import Markdown
 
 ---- MODEL ----
 type alias Model =
@@ -11,20 +12,19 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-  ( { body = "# test" }, Cmd.none )
+  ( { body = "" }, Cmd.none )
 
 ---- UPDATE ----
-
-
 type Msg
-  = NoOp
+  = OnInput String
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  ( model, Cmd.none )
+  case msg of
+    OnInput newBody -> 
+      ( { model | body = newBody }, Cmd.none )
 
 ---- VIEW ----
-
 view : Model -> Html Msg
 view model =
   div [ class "app-wrapper" ]
@@ -34,8 +34,7 @@ view model =
       ]
     , div [ class "app-container" ]
         [ div [ class "app-editor" ]
-          [ textarea [] 
-            [ text model.body ]
+          [ textarea [ onInput OnInput, placeholder "# Markdown text here" ] []
           ]
         , Markdown.toHtml [ class "app-preview" ] model.body
         ]

@@ -25,6 +25,12 @@ body {
   height: 95%;
 }
 
+
+.app-preview {
+  text-align: left;
+  padding: 1em 2em;
+}
+
 .app-editor {
   width: 40%;
 }
