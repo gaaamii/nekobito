@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, img, header, p, textarea)
+import Html exposing (Html, text, div, img, header, p, textarea, button)
 import Html.Attributes exposing (src, class, placeholder)
 import Html.Events exposing (onInput)
 import Markdown
@@ -30,7 +30,10 @@ view model =
   div [ class "app-wrapper" ]
     [ header [ class "app-header" ]
       [ p []
-        [ text "Nekobito - A Markdown Text Editor on Browser" ]
+        [ text "Nekobito - A Markdown Text Editor on Browser"
+        , button [ class "btn-save" ] [ text "Save" ]
+        , button [ class "btn-delete" ] [ text "Delete" ]
+        ]
       ]
     , div [ class "app-container" ]
         [ div [ class "app-editor" ]
@@ -38,7 +41,7 @@ view model =
           ]
         , Markdown.toHtml [ class "app-preview" ] model.body
         ]
-      ]
+    ]
 
 ---- PROGRAM ----
 main : Program Never Model Msg

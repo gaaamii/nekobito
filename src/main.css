@@ -49,3 +49,15 @@ body {
   width: 60%;
   border-left: 1px solid #ddd;
 }
+
+/* Common parts */
+.btn-save, .btn-delete {
+  width: 120px; height: 30px; border-radius: 10px; border: 1px solid #eee;
+  background: #fafafa;
+  cursor: pointer;
+  float: right;
+  margin: -5px 10px;
+}
+.btn-save:hover, .btn-delete:hover {
+  background: #eee;
+}
