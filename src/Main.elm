@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Html exposing (Html, text, div, img, header, p, textarea, button)
 import Html.Attributes exposing (src, class, placeholder)
@@ -9,10 +9,15 @@ import Markdown
 type alias Model =
   { body: String }
 
+emptyModel : Model
+emptyModel =
+  {
+    body = ""
+  }
 
-init : ( Model, Cmd Msg )
-init =
-  ( { body = "" }, Cmd.none )
+init : Maybe Model -> ( Model, Cmd Msg )
+init savedModel =
+  Maybe.withDefault emptyModel savedModel ! []
 
 ---- UPDATE ----
 type Msg
@@ -43,12 +48,24 @@ view model =
         ]
     ]
 
+port setStorage : Model -> Cmd msg
+
+updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
+updateWithStorage msg model =
+  let
+    ( newModel, cmds ) =
+      update msg model
+  in
+    ( newModel
+    , Cmd.batch [ setStorage newModel, cmds ]
+    )
+
 ---- PROGRAM ----
-main : Program Never Model Msg
+main : Program (Maybe Model) Model Msg
 main =
-  Html.program
+  Html.programWithFlags
     { view = view
     , init = init
-    , update = update
+    , update = updateWithStorage
     , subscriptions = always Sub.none
     }

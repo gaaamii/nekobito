@@ -9,6 +9,7 @@ body {
   color: #293c4b;
   font-size: 16px;
 }
+* { box-sizing: border-box; }
 
 #root, .app-wrapper {
   height: 100%;
@@ -23,9 +24,18 @@ body {
 .app-container, .app-editor, .app-preview {
   height: 95%;
 }
+
+.app-editor, .app-preview {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.app-editor {
+  padding-left: .1em;
+}
 .app-preview {
   text-align: left;
-  padding: 1em 2em;
+  padding-left: 2em;
 }
 .app-editor {
   width: 40%;
