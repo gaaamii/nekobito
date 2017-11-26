@@ -57,7 +57,7 @@ body {
 }
 
 /* Common parts */
-.btn-save, .btn-delete {
+.btn-list, .btn-delete {
   width: 120px; height: 30px; border-radius: 10px; border: 1px solid #eee;
   background: #fafafa;
   cursor: pointer;
@@ -65,6 +65,6 @@ body {
   margin: -5px 15px;
   transition: .5s;
 }
-.btn-save:hover, .btn-delete:hover {
+.btn-list:hover, .btn-delete:hover {
   background: #eee;
 }
