@@ -1,6 +1,6 @@
 port module Main exposing (..)
 
-import Html exposing (Html, button, div, header, img, p, text, textarea)
+import Html exposing (Html, button, div, h1, header, i, img, p, text, textarea)
 import Html.Attributes exposing (class, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
@@ -55,17 +55,18 @@ view : Model -> Html Msg
 view model =
     div [ class "app-wrapper" ]
         [ header [ class "app-header" ]
-            [ p []
-                [ text "Nekobito - A Markdown Text Editor on Browser"
-                , button [ class "btn-list", onClick ListEntries ] [ text "List" ]
-                , button [ class "btn-delete", onClick DeleteEntry ] [ text "Delete" ]
-                ]
+            [ h1 []
+                [ text "Nekobito" ]
             ]
         , div [ class "app-container" ]
             [ div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value model.body ] []
                 ]
             , Markdown.toHtml [ class "app-preview" ] model.body
+            , button [ class "btn-delete", onClick DeleteEntry ]
+                [ i [ class "material-icons" ] [ text "delete" ] ]
+            , button [ class "btn-list", onClick ListEntries ]
+                [ text "L" ]
             ]
         ]
 
