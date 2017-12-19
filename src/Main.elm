@@ -1,7 +1,7 @@
 port module Main exposing (..)
 
 import Html exposing (Html, button, div, h1, header, i, img, p, text, textarea)
-import Html.Attributes exposing (class, placeholder, src, value)
+import Html.Attributes exposing (class, placeholder, src, style, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
 
@@ -55,7 +55,7 @@ view : Model -> Html Msg
 view model =
     div [ class "app-wrapper" ]
         [ header [ class "app-header" ]
-            [ h1 []
+            [ h1 [ style [ ( "font-size", "1em" ), ( "color", "#555" ) ] ]
                 [ text "Nekobito" ]
             ]
         , div [ class "app-container" ]
@@ -66,7 +66,7 @@ view model =
             , button [ class "btn-delete", onClick DeleteEntry ]
                 [ i [ class "material-icons" ] [ text "delete" ] ]
             , button [ class "btn-list", onClick ListEntries ]
-                [ text "L" ]
+                [ i [ class "material-icons" ] [ text "view_list" ] ]
             ]
         ]
 
