@@ -9,13 +9,17 @@ import Markdown
 ---- MODEL ----
 
 
+type alias Note =
+    { body : String, selected : Bool }
+
+
 type alias Model =
-    { body : String }
+    { noteList : List Note }
 
 
 emptyModel : Model
 emptyModel =
-    { body = ""
+    { noteList = [ { body = "", selected = True } ]
     }
 
 
@@ -34,17 +38,59 @@ type Msg
     | ListEntries
 
 
+newNote : Note -> String -> Note
+newNote note newBody =
+    { note | body = newBody }
+
+
+isSelected : Note -> Bool
+isSelected note =
+    note.selected
+
+
+selectedNote : Model -> Note
+selectedNote model =
+    let
+        note =
+            model.noteList |> List.filter isSelected |> List.head
+    in
+    case note of
+        Nothing ->
+            { body = "", selected = True }
+
+        Just note ->
+            note
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnInput newBody ->
-            ( { model | body = newBody }, Cmd.none )
+            let
+                list =
+                    [ newNote (model |> selectedNote) newBody ]
+            in
+            ( { model | noteList = list }, Cmd.none )
 
         DeleteEntry ->
             ( model, Cmd.none )
 
         ListEntries ->
             ( model, Cmd.none )
+
+
+getFirstNote : List Note -> Note
+getFirstNote list =
+    let
+        note =
+            List.head list
+    in
+    case note of
+        Nothing ->
+            { body = "", selected = True }
+
+        Just note ->
+            note
 
 
 
@@ -60,13 +106,13 @@ view model =
             ]
         , div [ class "app-container" ]
             [ div [ class "app-editor" ]
-                [ textarea [ onInput OnInput, placeholder "# Markdown text here", value model.body ] []
+                [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (getFirstNote model.noteList).body ] []
                 ]
-            , Markdown.toHtml [ class "app-preview" ] model.body
+            , Markdown.toHtml [ class "app-preview" ] (getFirstNote model.noteList).body
             , button [ class "btn-delete", onClick DeleteEntry ]
                 [ i [ class "material-icons" ] [ text "delete" ] ]
             , button [ class "btn-list", onClick ListEntries ]
-                [ i [ class "material-icons" ] [ text "view_list" ] ]
+                [ i [ class "material-icons" ] [ text "list" ] ]
             ]
         ]
 
