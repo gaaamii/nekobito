@@ -121,8 +121,6 @@ view model =
                     [ text "Nekobito" ]
                 , button [ class "btn-list", onClick ToggleNoteList ]
                     [ i [ class "material-icons" ] [ text "list" ] ]
-                , button [ class "btn-delete", onClick DeleteNote ]
-                    [ i [ class "material-icons" ] [ text "delete" ] ]
                 ]
             , div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (getFirstNote model.noteList).body ] []
