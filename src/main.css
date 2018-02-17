@@ -18,6 +18,7 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+:focus { outline: 0; }
 html, body {
   height: 100%;
 } 
@@ -40,68 +41,58 @@ h6 { font-size: 1em; font-weight: bold; }
   height: 100%;
 }
 /* Component Styles */
-.app-container { display: flex; }
-.app-header {
-  width: 100%;
-  height: 40px;
-  border-bottom: 1px solid #eee;
-  padding: 10px 3em;
-  font-weight: 300;
-}
-.app-container, .app-editor, .app-preview {
-  height: 95%;
-}
-
-.app-editor, .app-preview {
-  padding-top: 1em;
-  padding-bottom: 1em;
-}
-
-.app-editor {
-  padding-left: .1em;
-}
-.app-preview {
-  text-align: left;
-  padding-left: 2em;
-}
-.app-editor {
-  width: 40%;
-}
-.app-editor textarea {
+.app-container {
   width: 100%;
   height: 100%;
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas: 'header header' 'editor preview';
+}
+.app-header {
+  border-bottom: 1px solid #eee;
+  padding: 20px 3em;
+  font-weight: 300;
+  grid-area: header;
+}
+.app-editor { grid-area: editor; }
+.app-preview {
+  grid-area: preview;
+  text-align: left;
+}
+.app-editor textarea {
   border: 0;
   padding: 1em;
   font-size: 1em;
+  width: 100%;
+  height: 100%;
 }
-.app-editor textarea:focus {
-  outline: 0;
-}
-
+.app-editor textarea:focus { outline: 0; }
 .app-preview {
-  width: 60%;
   border-left: 1px solid #ddd;
   padding: 1em;
+}
+.page-header {
+  display: inline;
+  font-size: 1em;
+  color: #333;
 }
 
 /* Common parts */
 .btn-list, .btn-delete {
-  width: 60px;
-  height: 35px;
-  border-radius: 10px;
   cursor: pointer;
   float: right;
-  margin: 10px;
   box-sizing: border-box;
   padding: 0;
-  background: #fafafa;
   border: 0;
-  font-size: 1em;
-  color: #333;
+  font-size: .7em;
+  color: #999;
   opacity: .8;
+  margin: 0 15px;
 }
-.btn-list:hover, .btn-delete:hover {
-  background: #f3f3f3;
+.btn-list:hover,
+.btn-delete:hover {
   color: #000;
   opacity: 1;
+  outline: 0;
 }
