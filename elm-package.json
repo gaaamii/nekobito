@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
-    "summary": "helpful summary of your project, less than 80 characters",
-    "repository": "https://github.com/user/project.git",
+    "version": "0.1.0",
+    "summary": "A simple markdown editor",
+    "repository": "https://github.com/gaaamii/nekobito.git",
     "license": "BSD3",
     "source-directories": [
         "src"
