@@ -99,21 +99,19 @@ getFirstNote list =
 
 view : Model -> Html Msg
 view model =
-    div [ class "app-wrapper" ]
+    div [ class "app-container" ]
         [ header [ class "app-header" ]
-            [ h1 [ style [ ( "font-size", "1em" ), ( "color", "#555" ) ] ]
+            [ h1 [ class "page-header" ]
                 [ text "Nekobito" ]
-            ]
-        , div [ class "app-container" ]
-            [ div [ class "app-editor" ]
-                [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (getFirstNote model.noteList).body ] []
-                ]
-            , Markdown.toHtml [ class "app-preview" ] (getFirstNote model.noteList).body
             , button [ class "btn-delete", onClick DeleteEntry ]
                 [ i [ class "material-icons" ] [ text "delete" ] ]
             , button [ class "btn-list", onClick ListEntries ]
                 [ i [ class "material-icons" ] [ text "list" ] ]
             ]
+        , div [ class "app-editor" ]
+            [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (getFirstNote model.noteList).body ] []
+            ]
+        , Markdown.toHtml [ class "app-preview" ] (getFirstNote model.noteList).body
         ]
 
 
