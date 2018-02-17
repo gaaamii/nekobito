@@ -12,21 +12,22 @@ all : Test
 all =
     describe "Main"
         [ describe "getFirstNote"
-            [ test "最初のNoteを取得" <|
+            [ test "get first note" <|
                 \_ ->
                     let
                         subject =
                             getFirstNote [ { body = "first note", selected = False }, { body = "second note", selected = True } ]
                     in
-                    Expect.equal subject { body = "first note", selected = False }
+                    Expect.equal subject.body "first note"
             ]
         , describe "selectedNote"
-            [ test "選択中のNoteを取得" <|
+            [ test "get selected note" <|
                 \_ ->
                     let
                         subject =
                             selectedNote
-                                { noteList =
+                                { listVisible = False
+                                , noteList =
                                     [ { body = "This is not selected", selected = False }
                                     , { body = "This note is selected", selected = True }
                                     ]

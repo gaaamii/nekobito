@@ -1,9 +1,10 @@
 port module Main exposing (..)
 
-import Html exposing (Html, button, div, h1, header, i, img, p, text, textarea)
-import Html.Attributes exposing (class, placeholder, src, style, value)
+import Html exposing (Html, a, button, div, h1, header, i, img, p, text, textarea)
+import Html.Attributes exposing (class, href, placeholder, src, style, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
+import Styles
 
 
 ---- MODEL ----
@@ -14,12 +15,13 @@ type alias Note =
 
 
 type alias Model =
-    { noteList : List Note }
+    { listVisible : Bool, noteList : List Note }
 
 
 emptyModel : Model
 emptyModel =
     { noteList = [ { body = "", selected = True } ]
+    , listVisible = False
     }
 
 
@@ -34,8 +36,9 @@ init savedModel =
 
 type Msg
     = OnInput String
-    | DeleteEntry
-    | ListEntries
+    | DeleteNote
+    | ToggleNoteList
+    | AddNewNote Note
 
 
 newNote : Note -> String -> Note
@@ -72,11 +75,16 @@ update msg model =
             in
             ( { model | noteList = list }, Cmd.none )
 
-        DeleteEntry ->
+        DeleteNote ->
             ( model, Cmd.none )
 
-        ListEntries ->
-            ( model, Cmd.none )
+        ToggleNoteList ->
+            ( { model | listVisible = not model.listVisible }, Cmd.none )
+
+        AddNewNote note ->
+            ( { model | noteList = model.noteList ++ [ note ] }
+            , Cmd.none
+            )
 
 
 getFirstNote : List Note -> Note
@@ -97,21 +105,32 @@ getFirstNote list =
 ---- VIEW ----
 
 
+viewNoteListItem : Note -> Html msg
+viewNoteListItem note =
+    div [ class "app-list__item" ]
+        [ a [ href "#" ] [ text (String.slice 0 30 note.body) ]
+        ]
+
+
 view : Model -> Html Msg
 view model =
-    div [ class "app-container" ]
-        [ header [ class "app-header" ]
-            [ h1 [ class "page-header" ]
-                [ text "Nekobito" ]
-            , button [ class "btn-delete", onClick DeleteEntry ]
-                [ i [ class "material-icons" ] [ text "delete" ] ]
-            , button [ class "btn-list", onClick ListEntries ]
-                [ i [ class "material-icons" ] [ text "list" ] ]
+    div [ class "app-wrapper" ]
+        [ div [ class "app-container", Styles.appContainer model.listVisible ]
+            [ header [ class "app-header" ]
+                [ h1 [ class "page-header" ]
+                    [ text "Nekobito" ]
+                , button [ class "btn-list", onClick ToggleNoteList ]
+                    [ i [ class "material-icons" ] [ text "list" ] ]
+                , button [ class "btn-delete", onClick DeleteNote ]
+                    [ i [ class "material-icons" ] [ text "delete" ] ]
+                ]
+            , div [ class "app-editor" ]
+                [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (getFirstNote model.noteList).body ] []
+                ]
+            , Markdown.toHtml [ class "app-preview" ] (getFirstNote model.noteList).body
             ]
-        , div [ class "app-editor" ]
-            [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (getFirstNote model.noteList).body ] []
-            ]
-        , Markdown.toHtml [ class "app-preview" ] (getFirstNote model.noteList).body
+        , div [ class "app-list", Styles.appList model.listVisible ]
+            (List.map viewNoteListItem model.noteList)
         ]
 
 
