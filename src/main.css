@@ -81,7 +81,7 @@ h6 { font-size: 1em; font-weight: bold; }
 }
 
 /* Common parts */
-.btn-list, .btn-delete {
+.btn-list, .btn-delete, .btn-control-point {
   cursor: pointer;
   float: right;
   box-sizing: border-box;

@@ -11,17 +11,32 @@ import Styles
 
 
 type alias Note =
-    { body : String, selected : Bool }
+    { id : Int, body : String }
 
 
 type alias Model =
-    { listVisible : Bool, noteList : List Note }
+    { listVisible : Bool, noteList : List Note, activeNoteId : Int }
+
+
+lastNoteId : List Note -> Int
+lastNoteId noteList =
+    let
+        note =
+            List.reverse noteList |> List.head
+    in
+    case note of
+        Nothing ->
+            1
+
+        Just note ->
+            note.id
 
 
 emptyModel : Model
 emptyModel =
-    { noteList = [ { body = "", selected = True } ]
+    { noteList = [ { id = 1, body = "" } ]
     , listVisible = False
+    , activeNoteId = 1
     }
 
 
@@ -38,31 +53,54 @@ type Msg
     = OnInput String
     | DeleteNote
     | ToggleNoteList
-    | AddNewNote Note
+    | AddNewNote
+    | Blur
 
 
-newNote : Note -> String -> Note
-newNote note newBody =
+type alias NoteStatusTuple =
+    ( Note, Bool )
+
+
+isActiveNote : NoteStatusTuple -> Bool
+isActiveNote statusTuple =
+    Tuple.second statusTuple
+
+
+noteStatusTuples : Model -> List NoteStatusTuple
+noteStatusTuples model =
+    List.map (\note -> ( note, model.activeNoteId == note.id )) model.noteList
+
+
+activeNote : Model -> Note
+activeNote model =
+    let
+        noteStatus =
+            noteStatusTuples model |> List.filter isActiveNote |> List.head
+    in
+    case noteStatus of
+        Nothing ->
+            getFirstNote model.noteList
+
+        Just noteStatus ->
+            Tuple.first noteStatus
+
+
+updateNoteBody : Note -> String -> Note
+updateNoteBody note newBody =
     { note | body = newBody }
 
 
-isSelected : Note -> Bool
-isSelected note =
-    note.selected
+newNote : Model -> Note
+newNote model =
+    { id = lastNoteId model.noteList + 1, body = "" }
 
 
-selectedNote : Model -> Note
-selectedNote model =
-    let
-        note =
-            model.noteList |> List.filter isSelected |> List.head
-    in
-    case note of
-        Nothing ->
-            { body = "", selected = True }
-
-        Just note ->
-            note
+updateActiveNoteBody : String -> NoteStatusTuple -> Note
+updateActiveNoteBody newBody noteStatus =
+    if isActiveNote noteStatus then
+        updateNoteBody (Tuple.first noteStatus) newBody
+    else
+        Tuple.first noteStatus
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -71,7 +109,7 @@ update msg model =
         OnInput newBody ->
             let
                 list =
-                    [ newNote (model |> selectedNote) newBody ]
+                    noteStatusTuples model |> List.map (updateActiveNoteBody newBody)
             in
             ( { model | noteList = list }, Cmd.none )
 
@@ -81,8 +119,24 @@ update msg model =
         ToggleNoteList ->
             ( { model | listVisible = not model.listVisible }, Cmd.none )
 
-        AddNewNote note ->
-            ( { model | noteList = model.noteList ++ [ note ] }
+        AddNewNote ->
+            let
+                note =
+                    newNote model
+            in
+            ( { model | noteList = model.noteList ++ [ note ], activeNoteId = note.id }
+            , Cmd.none
+            )
+
+        Blur ->
+            let
+                nextModel =
+                    if model.listVisible then
+                        { model | listVisible = False }
+                    else
+                        model
+            in
+            ( nextModel
             , Cmd.none
             )
 
@@ -95,7 +149,7 @@ getFirstNote list =
     in
     case note of
         Nothing ->
-            { body = "", selected = True }
+            { id = 1, body = "" }
 
         Just note ->
             note
@@ -119,13 +173,15 @@ view model =
             [ header [ class "app-header" ]
                 [ h1 [ class "page-header" ]
                     [ text "Nekobito" ]
+                , button [ class "btn-control-point", onClick AddNewNote ]
+                    [ i [ class "material-icons" ] [ text "control_point" ] ]
                 , button [ class "btn-list", onClick ToggleNoteList ]
                     [ i [ class "material-icons" ] [ text "list" ] ]
                 ]
-            , div [ class "app-editor" ]
-                [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (getFirstNote model.noteList).body ] []
+            , div [ class "app-editor", onClick Blur ]
+                [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
                 ]
-            , Markdown.toHtml [ class "app-preview" ] (getFirstNote model.noteList).body
+            , Markdown.toHtml [ class "app-preview", onClick Blur ] (activeNote model).body
             ]
         , div [ class "app-list", Styles.appList model.listVisible ]
             (List.map viewNoteListItem model.noteList)
