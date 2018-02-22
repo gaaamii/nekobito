@@ -90,9 +90,12 @@ updateNoteBody note newBody =
     { note | body = newBody }
 
 
-newNote : Model -> Note
+newNote : Model -> Maybe Note
 newNote model =
-    { id = lastNoteId model.noteList + 1, body = "" }
+    if (activeNote model).body == "" then
+        Nothing
+    else
+        Just { id = lastNoteId model.noteList + 1, body = "" }
 
 
 updateActiveNoteBody : String -> NoteStatusTuple -> Note
@@ -124,9 +127,14 @@ update msg model =
                 note =
                     newNote model
             in
-            ( { model | noteList = model.noteList ++ [ note ], activeNoteId = note.id }
-            , Cmd.none
-            )
+            case note of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just note ->
+                    ( { model | noteList = model.noteList ++ [ note ], activeNoteId = note.id }
+                    , Cmd.none
+                    )
 
         Blur ->
             let
