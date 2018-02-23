@@ -7,7 +7,7 @@ import Html.Attributes exposing (style)
 appContainer : Bool -> Attribute msg
 appContainer isVisible =
     if isVisible then
-        style <| [ ( "margin-left", "-400px" ) ]
+        style <| [ ( "margin-left", "-40%" ) ]
     else
         style <| [ ( "margin-left", "0" ) ]
 
@@ -17,11 +17,11 @@ appList isVisible =
     let
         baseStyles =
             [ ( "position", "absolute" )
-            , ( "width", "400px" )
+            , ( "width", "40%" )
             , ( "height", "100%" )
-            , ( "background", "#000" )
+            , ( "background", "#333" )
             , ( "top", "0" )
-            , ( "right", "-400px" )
+            , ( "right", "-40%" )
             , ( "color", "#fff" )
             , ( "text-align", "center" )
             ]
@@ -29,4 +29,4 @@ appList isVisible =
     if isVisible then
         style <| baseStyles ++ [ ( "right", "0" ) ]
     else
-        style <| baseStyles ++ [ ( "right", "-400px" ) ]
+        style <| baseStyles ++ [ ( "right", "-40%" ) ]

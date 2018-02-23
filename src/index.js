@@ -9,7 +9,6 @@ var node = document.getElementById('root');
 var app = Main.embed(node, startingState);
 app.ports.setStorage.subscribe(function(state) {
   localStorage.setItem('elm-editor-save', JSON.stringify(state));
-  console.info(state);
 });
 
 registerServiceWorker();

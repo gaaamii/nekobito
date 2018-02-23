@@ -55,6 +55,7 @@ type Msg
     | ToggleNoteList
     | AddNewNote
     | Blur
+    | OpenNote Int
 
 
 type alias NoteStatusTuple =
@@ -148,6 +149,9 @@ update msg model =
             , Cmd.none
             )
 
+        OpenNote id ->
+            ( { model | activeNoteId = id }, Cmd.none )
+
 
 getFirstNote : List Note -> Note
 getFirstNote list =
@@ -167,10 +171,12 @@ getFirstNote list =
 ---- VIEW ----
 
 
-viewNoteListItem : Note -> Html msg
+viewNoteListItem : Note -> Html Msg
 viewNoteListItem note =
     div [ class "app-list__item" ]
-        [ a [ href "#" ] [ text (String.slice 0 30 note.body) ]
+        [ a
+            [ onClick (OpenNote note.id) ]
+            [ text (String.slice 0 30 note.body) ]
         ]
 
 
@@ -181,10 +187,10 @@ view model =
             [ header [ class "app-header" ]
                 [ h1 [ class "page-header" ]
                     [ text "Nekobito" ]
-                , button [ class "btn-control-point", onClick AddNewNote ]
-                    [ i [ class "material-icons" ] [ text "control_point" ] ]
                 , button [ class "btn-list", onClick ToggleNoteList ]
                     [ i [ class "material-icons" ] [ text "list" ] ]
+                , button [ class "btn-control-point", onClick AddNewNote ]
+                    [ i [ class "material-icons" ] [ text "control_point" ] ]
                 ]
             , div [ class "app-editor", onClick Blur ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
