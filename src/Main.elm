@@ -40,6 +40,11 @@ emptyModel =
     }
 
 
+emptyNote : Note
+emptyNote =
+    { id = 1, body = "" }
+
+
 init : Maybe Model -> ( Model, Cmd Msg )
 init savedModel =
     Maybe.withDefault emptyModel savedModel ! []
@@ -151,6 +156,22 @@ update msg model =
 
         OpenNote id ->
             ( { model | activeNoteId = id }, Cmd.none )
+
+
+deleteNote : Model -> Int -> Model
+deleteNote model id =
+    let
+        newNoteList =
+            List.filter (\note -> note.id /= id) model.noteList
+    in
+    if List.isEmpty newNoteList then
+        -- if noteList is empty after the note deleted, open new note
+        { model | noteList = [ emptyNote ] }
+    else if model.activeNoteId == id then
+        -- if active note is deleted, open last note
+        { model | noteList = newNoteList, activeNoteId = lastNoteId newNoteList }
+    else
+        { model | noteList = newNoteList }
 
 
 getFirstNote : List Note -> Note

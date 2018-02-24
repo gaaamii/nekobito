@@ -8,16 +8,47 @@ import Test exposing (..)
 -- Check out http://package.elm-lang.org/packages/elm-community/elm-test/latest to learn more about testing in Elm!
 
 
-dummyModel : Main.Model
+dummyModel : Model
 dummyModel =
     { listVisible = False
     , activeNoteId = 1
-    , noteList = [ { id = 1, body = "This is not active" } ]
+    , noteList = [ { id = 1, body = "This is active" } ]
     }
 
 
-emptyNoteModel : Main.Model
-emptyNoteModel =
+dummyModelWithOneNote : Model
+dummyModelWithOneNote =
+    { listVisible = False
+    , activeNoteId = 1
+    , noteList = [ { id = 1, body = "This is active" } ]
+    }
+
+
+dummyModelWithTwoNotes : Model
+dummyModelWithTwoNotes =
+    { listVisible = False
+    , activeNoteId = 1
+    , noteList =
+        [ { id = 1, body = "This is active" }
+        , { id = 2, body = "This is not active" }
+        ]
+    }
+
+
+dummyModelWithThreeNotes : Model
+dummyModelWithThreeNotes =
+    { listVisible = False
+    , activeNoteId = 1
+    , noteList =
+        [ { id = 1, body = "This is active" }
+        , { id = 2, body = "This is not active" }
+        , { id = 3, body = "This is not active" }
+        ]
+    }
+
+
+dummyModelWithEmptyNote : Model
+dummyModelWithEmptyNote =
     { listVisible = False
     , activeNoteId = 1
     , noteList = [ { id = 1, body = "" } ]
@@ -72,8 +103,39 @@ all =
                 \_ ->
                     let
                         subject =
-                            newNote emptyNoteModel
+                            newNote dummyModelWithEmptyNote
                     in
                     Expect.equal subject Nothing
+            ]
+        , describe "deleteNote"
+            [ test "1件のとき, 指定したIDのノートを消して新しい空のノートを作成して開く" <|
+                \_ ->
+                    let
+                        subject =
+                            deleteNote dummyModelWithOneNote 1
+                    in
+                    Expect.equal subject dummyModelWithEmptyNote
+            , test "3件のとき, 現在開いてるノートを消すと最新（最後）のノートを開く" <|
+                \_ ->
+                    let
+                        subject =
+                            let
+                                currentActiveNoteId =
+                                    1
+                            in
+                            (deleteNote dummyModelWithThreeNotes currentActiveNoteId).activeNoteId
+                    in
+                    Expect.equal subject 3
+            , test "3件のとき, 現在開いてないノートを消すと開いているノートはそのまま" <|
+                \_ ->
+                    let
+                        subject =
+                            let
+                                currentActiveNoteId =
+                                    1
+                            in
+                            (deleteNote dummyModelWithThreeNotes 2).activeNoteId
+                    in
+                    Expect.equal subject 1
             ]
         ]
