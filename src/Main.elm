@@ -56,7 +56,7 @@ init savedModel =
 
 type Msg
     = OnInput String
-    | DeleteNote
+    | DeleteNote Int
     | ToggleNoteList
     | AddNewNote
     | Blur
@@ -122,8 +122,8 @@ update msg model =
             in
             ( { model | noteList = list }, Cmd.none )
 
-        DeleteNote ->
-            ( model, Cmd.none )
+        DeleteNote id ->
+            ( deleteNote model id, Cmd.none )
 
         ToggleNoteList ->
             ( { model | listVisible = not model.listVisible }, Cmd.none )
@@ -216,7 +216,11 @@ view model =
             , div [ class "app-editor", onClick Blur ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
                 ]
-            , Markdown.toHtml [ class "app-preview", onClick Blur ] (activeNote model).body
+            , div [ class "app-preview" ]
+                [ div [ class "app-preview__control" ]
+                    [ i [ class "material-icons", onClick (DeleteNote (activeNote model).id) ] [ text "delete" ] ]
+                , Markdown.toHtml [ onClick Blur ] (activeNote model).body
+                ]
             ]
         , div [ class "app-list", Styles.appList model.listVisible ]
             (List.map viewNoteListItem model.noteList)

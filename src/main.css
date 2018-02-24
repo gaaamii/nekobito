@@ -90,6 +90,9 @@ h6 { font-size: 1em; font-weight: bold; }
   border-left: 1px solid #ddd;
   overflow: scroll;
 }
+.app-preview__control { color: #fff; transition: .2s; float: right; cursor: pointer; }
+.app-preview:hover .app-preview__control { color: #999; }
+.app-preview:hover .app-preview__control:hover { color: #000; }
 .page-header {
   display: inline;
   font-size: 1em;
