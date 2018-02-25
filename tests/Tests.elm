@@ -5,9 +5,6 @@ import Main exposing (..)
 import Test exposing (..)
 
 
--- Check out http://package.elm-lang.org/packages/elm-community/elm-test/latest to learn more about testing in Elm!
-
-
 dummyModel : Model
 dummyModel =
     { listVisible = False
@@ -59,7 +56,7 @@ all : Test
 all =
     describe "Main"
         [ describe "getFirstNote"
-            [ test "get first note" <|
+            [ test "Get first note" <|
                 \_ ->
                     let
                         subject =
@@ -68,7 +65,7 @@ all =
                     Expect.equal subject.body "first note"
             ]
         , describe "activeNote"
-            [ test "get active note" <|
+            [ test "Get active note" <|
                 \_ ->
                     let
                         subject =
@@ -84,7 +81,7 @@ all =
                     Expect.equal subject.body "This note is active"
             ]
         , describe "newNote"
-            [ test "modelを渡すと新しいノートに自動連番で新しいidを振って返す" <|
+            [ test "Return new note with an automatic serial number as id" <|
                 \_ ->
                     let
                         note =
@@ -99,7 +96,7 @@ all =
 
                         Just subject ->
                             Expect.equal subject.id 2
-            , test "選択中のノートの本体が空白の場合は新しいノートをつくらないこと" <|
+            , test "Not to create new note if active note's body is empty" <|
                 \_ ->
                     let
                         subject =
@@ -108,14 +105,14 @@ all =
                     Expect.equal subject Nothing
             ]
         , describe "deleteNote"
-            [ test "1件のとき, 指定したIDのノートを消して新しい空のノートを作成して開く" <|
+            [ test "With one note, create new one and open it after the note specified by id is deleted" <|
                 \_ ->
                     let
                         subject =
                             deleteNote dummyModelWithOneNote 1
                     in
                     Expect.equal subject dummyModelWithEmptyNote
-            , test "3件のとき, 現在開いてるノートを消すと最新（最後）のノートを開く" <|
+            , test "With three notes, open last note in the noteList if current active note is deleted" <|
                 \_ ->
                     let
                         subject =
@@ -126,7 +123,7 @@ all =
                             (deleteNote dummyModelWithThreeNotes currentActiveNoteId).activeNoteId
                     in
                     Expect.equal subject 3
-            , test "3件のとき, 現在開いてないノートを消すと開いているノートはそのまま" <|
+            , test "With three notes, activeNoteId is not changed if an inactive note is deleted" <|
                 \_ ->
                     let
                         subject =
