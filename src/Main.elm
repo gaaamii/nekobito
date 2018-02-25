@@ -10,15 +10,19 @@ import Styles
 ---- MODEL ----
 
 
+type alias Id =
+    Int
+
+
 type alias Note =
-    { id : Int, body : String }
+    { id : Id, body : String }
 
 
 type alias Model =
-    { listVisible : Bool, noteList : List Note, activeNoteId : Int }
+    { listVisible : Bool, noteList : List Note, activeNoteId : Id }
 
 
-lastNoteId : List Note -> Int
+lastNoteId : List Note -> Id
 lastNoteId noteList =
     let
         note =
@@ -56,11 +60,11 @@ init savedModel =
 
 type Msg
     = OnInput String
-    | DeleteNote Int
+    | DeleteNote Id
     | ToggleNoteList
     | AddNewNote
     | Blur
-    | OpenNote Int
+    | OpenNote Id
 
 
 type alias NoteStatusTuple =
@@ -158,7 +162,7 @@ update msg model =
             ( { model | activeNoteId = id }, Cmd.none )
 
 
-deleteNote : Model -> Int -> Model
+deleteNote : Model -> Id -> Model
 deleteNote model id =
     let
         newNoteList =
