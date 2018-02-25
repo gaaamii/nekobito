@@ -208,7 +208,7 @@ viewNoteListItem note =
 view : Model -> Html Msg
 view model =
     div [ class "app-wrapper" ]
-        [ div [ class "app-container", Styles.appContainer model.listVisible ]
+        [ div [ class "app-container", Styles.appContainer model.listVisible, onClick Blur ]
             [ header [ class "app-header" ]
                 [ h1 [ class "page-header" ]
                     [ text "Nekobito" ]
@@ -217,7 +217,7 @@ view model =
                 , button [ class "btn-control-point", onClick AddNewNote ]
                     [ i [ class "material-icons" ] [ text "control_point" ] ]
                 ]
-            , div [ class "app-editor", onClick Blur ]
+            , div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
                 ]
             , div [ class "app-preview" ]
