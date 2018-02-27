@@ -18,6 +18,12 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+pre {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 1em;
+}
 ul { padding: 0 1em; }
 :focus { outline: 0; }
 html, body {
