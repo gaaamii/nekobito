@@ -33,6 +33,7 @@ body {
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
   color: #293c4b;
   font-size: 16px;
+  overflow: hidden;
 }
 * { box-sizing: border-box; }
 h1, h2, h3, h4, h5, h6, p, ul, pre { margin-top: 1em; }
@@ -48,6 +49,8 @@ h6 { font-size: 1em; font-weight: bold; }
 
 #root, .app-wrapper {
   height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 /* Component Styles */
 .app-container {
