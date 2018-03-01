@@ -104,6 +104,23 @@ all =
                     in
                     Expect.equal subject Nothing
             ]
+        , describe "filterPresentNote"
+            [ test "Get only notes those bodies are present" <|
+                \_ ->
+                    let
+                        subject =
+                            let
+                                notes =
+                                    filterPresentNote
+                                        [ { id = 1, body = "" }
+                                        , { id = 2, body = "This note is active" }
+                                        , { id = 3, body = "This note is not active" }
+                                        ]
+                            in
+                            List.map (\note -> note.id) notes
+                    in
+                    Expect.equal subject [ 2, 3 ]
+            ]
         , describe "deleteNote"
             [ test "With one note, create new one and open it after the note specified by id is deleted" <|
                 \_ ->

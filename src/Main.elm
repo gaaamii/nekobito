@@ -116,13 +116,20 @@ updateActiveNoteBody newBody noteStatus =
         Tuple.first noteStatus
 
 
+filterPresentNote : List Note -> List Note
+filterPresentNote noteList =
+    List.filter (\note -> note.body /= "") noteList
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnInput newBody ->
             let
                 list =
-                    noteStatusTuples model |> List.map (updateActiveNoteBody newBody)
+                    noteStatusTuples model
+                        |> List.map (updateActiveNoteBody newBody)
+                        |> filterPresentNote
             in
             ( { model | noteList = list }, Cmd.none )
 
@@ -198,11 +205,14 @@ getFirstNote list =
 
 viewNoteListItem : Note -> Html Msg
 viewNoteListItem note =
-    div [ class "app-list__item" ]
-        [ a
-            [ onClick (OpenNote note.id) ]
-            [ text (String.slice 0 30 note.body) ]
-        ]
+    if note.body == "" then
+        div [] []
+    else
+        div [ class "app-list__item" ]
+            [ a
+                [ onClick (OpenNote note.id) ]
+                [ text (String.slice 0 30 note.body) ]
+            ]
 
 
 view : Model -> Html Msg
