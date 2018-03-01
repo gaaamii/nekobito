@@ -52,6 +52,30 @@ dummyModelWithEmptyNote =
     }
 
 
+dummyModelWithOneEmptyNoteInThree : Model
+dummyModelWithOneEmptyNoteInThree =
+    { listVisible = False
+    , activeNoteId = 3
+    , noteList =
+        [ { id = 1, body = "" }
+        , { id = 2, body = "this is present" }
+        , { id = 3, body = "this is present" }
+        ]
+    }
+
+
+dummyModelWithOneActiveEmptyNoteInThree : Model
+dummyModelWithOneActiveEmptyNoteInThree =
+    { listVisible = False
+    , activeNoteId = 1
+    , noteList =
+        [ { id = 1, body = "" }
+        , { id = 2, body = "this is present" }
+        , { id = 3, body = "this is present" }
+        ]
+    }
+
+
 all : Test
 all =
     describe "Main"
@@ -111,15 +135,22 @@ all =
                         subject =
                             let
                                 notes =
-                                    filterPresentNote
-                                        [ { id = 1, body = "" }
-                                        , { id = 2, body = "This note is active" }
-                                        , { id = 3, body = "This note is not active" }
-                                        ]
+                                    (filterPresentNote dummyModelWithOneEmptyNoteInThree).noteList
                             in
                             List.map (\note -> note.id) notes
                     in
                     Expect.equal subject [ 2, 3 ]
+            , test "Get all notes even if active note's body is empty" <|
+                \_ ->
+                    let
+                        subject =
+                            let
+                                notes =
+                                    (filterPresentNote dummyModelWithOneActiveEmptyNoteInThree).noteList
+                            in
+                            List.map (\note -> note.id) notes
+                    in
+                    Expect.equal subject [ 1, 2, 3 ]
             ]
         , describe "deleteNote"
             [ test "With one note, create new one and open it after the note specified by id is deleted" <|
@@ -128,7 +159,7 @@ all =
                         subject =
                             deleteNote dummyModelWithOneNote 1
                     in
-                    Expect.equal subject dummyModelWithEmptyNote
+                    Expect.equal subject { dummyModelWithEmptyNote | noteList = [ { id = 2, body = "" } ], activeNoteId = 2 }
             , test "With three notes, open last note in the noteList if current active note is deleted" <|
                 \_ ->
                     let

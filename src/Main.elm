@@ -44,9 +44,9 @@ emptyModel =
     }
 
 
-emptyNote : Note
-emptyNote =
-    { id = 1, body = "" }
+emptyNote : Id -> Note
+emptyNote id =
+    { id = id, body = "" }
 
 
 init : Maybe Model -> ( Model, Cmd Msg )
@@ -71,28 +71,23 @@ type alias NoteStatusTuple =
     ( Note, Bool )
 
 
-isActiveNote : NoteStatusTuple -> Bool
-isActiveNote statusTuple =
-    Tuple.second statusTuple
-
-
-noteStatusTuples : Model -> List NoteStatusTuple
-noteStatusTuples model =
-    List.map (\note -> ( note, model.activeNoteId == note.id )) model.noteList
+isActiveNote : Model -> Id -> Bool
+isActiveNote model id =
+    model.activeNoteId == id
 
 
 activeNote : Model -> Note
 activeNote model =
     let
-        noteStatus =
-            noteStatusTuples model |> List.filter isActiveNote |> List.head
+        note =
+            model.noteList |> List.filter (\note -> isActiveNote model note.id) |> List.head
     in
-    case noteStatus of
+    case note of
         Nothing ->
             getFirstNote model.noteList
 
-        Just noteStatus ->
-            Tuple.first noteStatus
+        Just note ->
+            note
 
 
 updateNoteBody : Note -> String -> Note
@@ -108,17 +103,29 @@ newNote model =
         Just { id = lastNoteId model.noteList + 1, body = "" }
 
 
-updateActiveNoteBody : String -> NoteStatusTuple -> Note
-updateActiveNoteBody newBody noteStatus =
-    if isActiveNote noteStatus then
-        updateNoteBody (Tuple.first noteStatus) newBody
-    else
-        Tuple.first noteStatus
+updateActiveNoteBody : Model -> String -> Model
+updateActiveNoteBody model newBody =
+    let
+        list =
+            List.map
+                (\note ->
+                    if note.id == model.activeNoteId then
+                        updateNoteBody note newBody
+                    else
+                        note
+                )
+                model.noteList
+    in
+    { model | noteList = list }
 
 
-filterPresentNote : List Note -> List Note
-filterPresentNote noteList =
-    List.filter (\note -> note.body /= "") noteList
+filterPresentNote : Model -> Model
+filterPresentNote model =
+    let
+        list =
+            List.filter (\note -> note.id == model.activeNoteId || note.body /= "") model.noteList
+    in
+    { model | noteList = list }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -126,12 +133,11 @@ update msg model =
     case msg of
         OnInput newBody ->
             let
-                list =
-                    noteStatusTuples model
-                        |> List.map (updateActiveNoteBody newBody)
+                newModel =
+                    updateActiveNoteBody model newBody
                         |> filterPresentNote
             in
-            ( { model | noteList = list }, Cmd.none )
+            ( newModel, Cmd.none )
 
         DeleteNote id ->
             ( deleteNote model id, Cmd.none )
@@ -176,8 +182,12 @@ deleteNote model id =
             List.filter (\note -> note.id /= id) model.noteList
     in
     if List.isEmpty newNoteList then
+        let
+            newId =
+                id + 1
+        in
         -- if noteList is empty after the note deleted, open new note
-        { model | noteList = [ emptyNote ] }
+        { model | noteList = [ emptyNote newId ], activeNoteId = newId }
     else if model.activeNoteId == id then
         -- if active note is deleted, open last note
         { model | noteList = newNoteList, activeNoteId = lastNoteId newNoteList }
