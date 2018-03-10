@@ -63,7 +63,6 @@ type Msg
     | DeleteNote Id
     | ToggleNoteList
     | AddNewNote
-    | Blur
     | OpenNote Id
 
 
@@ -159,18 +158,6 @@ update msg model =
                     , Cmd.none
                     )
 
-        Blur ->
-            let
-                nextModel =
-                    if model.listVisible then
-                        { model | listVisible = False }
-                    else
-                        model
-            in
-            ( nextModel
-            , Cmd.none
-            )
-
         OpenNote id ->
             ( { model | activeNoteId = id }, Cmd.none )
 
@@ -221,7 +208,7 @@ viewNoteListItem note =
         div [ class "app-list__item" ]
             [ a
                 [ onClick (OpenNote note.id) ]
-                [ text (String.slice 0 30 note.body) ]
+                [ text (String.slice 0 40 note.body) ]
             ]
 
 
@@ -237,13 +224,13 @@ view model =
                 , button [ class "btn-control-point", onClick AddNewNote ]
                     [ i [ class "material-icons" ] [ text "control_point" ] ]
                 ]
-            , div [ class "app-editor", onClick Blur ]
+            , div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
                 ]
-            , div [ class "app-preview", onClick Blur ]
+            , div [ class "app-preview" ]
                 [ div [ class "app-preview__control" ]
                     [ i [ class "material-icons", onClick (DeleteNote (activeNote model).id) ] [ text "delete" ] ]
-                , Markdown.toHtml [ onClick Blur ] (activeNote model).body
+                , Markdown.toHtml [] (activeNote model).body
                 ]
             ]
         , div [ class "app-list", Styles.appList model.listVisible ]
