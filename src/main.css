@@ -37,6 +37,7 @@ pre {
   border: 1px solid #eee;
   border-radius: 5px;
   padding: 1em;
+  overflow-x: scroll;
 }
 ul { padding: 0 1em; }
 :focus { outline: 0; }
