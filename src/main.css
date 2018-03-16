@@ -39,7 +39,9 @@ pre {
   padding: 1em;
   overflow-x: scroll;
 }
-ul { padding: 0 1em; }
+ul { padding: 0 1.5em; list-style: disc; }
+ul ul { margin: .3em 0 0 0; }
+li { margin-top: .3em; }
 :focus { outline: 0; }
 html, body {
   height: 100%;
@@ -52,13 +54,12 @@ body {
 }
 * { box-sizing: border-box; }
 h1, h2, h3, h4, h5, h6, p, ul, pre { margin-top: 1em; }
-li { margin-top: .2em; }
-h1 { font-size: 2em; font-weight: bold;   margin-bottom: 0.5em;  }
-h2 { font-size: 1.8em; font-weight: bold; margin-bottom: 0.5em;  }
-h3 { font-size: 1.6em; font-weight: bold; margin-bottom: 0.5em;  }
-h4 { font-size: 1.4em; font-weight: bold; margin-bottom: 0.5em;  }
-h5 { font-size: 1.2em; font-weight: bold; margin-bottom: 0.5em;  }
-h6 { font-size: 1em; font-weight: bold; }
+h1 { font-size: 2em; font-weight: 500;   margin-bottom: 0.5em;  }
+h2 { font-size: 1.8em; font-weight: 500; margin-bottom: 0.5em;  }
+h3 { font-size: 1.6em; font-weight: 500; margin-bottom: 0.5em;  }
+h4 { font-size: 1.4em; font-weight: 500; margin-bottom: 0.5em;  }
+h5 { font-size: 1.2em; font-weight: 500; margin-bottom: 0.5em;  }
+h6 { font-size: 1em; font-weight: 500; }
 
 .material-icons { vertical-align: bottom; }
 
