@@ -40,8 +40,8 @@ pre {
   overflow-x: scroll;
 }
 ul { padding: 0 1.5em; list-style: disc; }
-ul ul { margin: .3em 0 0 0; }
-li { margin-top: .3em; }
+ul ul { margin: .35em 0 0 0; }
+li { margin-top: .35em; }
 :focus { outline: 0; }
 html, body {
   height: 100%;
