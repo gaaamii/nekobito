@@ -269,6 +269,14 @@ viewNoteListItem ( note, activeNoteId ) =
             ]
 
 
+listIcon : Bool -> String
+listIcon listVisible =
+    if listVisible then
+        "keyboard_arrow_right"
+    else
+        "list"
+
+
 view : Model -> Html Msg
 view model =
     div [ class <| appWrapperClassName model ]
@@ -277,7 +285,7 @@ view model =
                 [ h1 [ class "page-header" ]
                     [ text "Nekobito" ]
                 , button [ class "btn btn-list", onClick ToggleNoteList ]
-                    [ i [ class "material-icons" ] [ text "list" ] ]
+                    [ i [ class "material-icons" ] [ text (listIcon model.listVisible) ] ]
                 , button [ class "btn btn-control-point", onClick AddNewNote ]
                     [ i [ class "material-icons" ] [ text "control_point" ] ]
                 , button [ class "btn btn-text", onClick SwitchColorTheme ]
