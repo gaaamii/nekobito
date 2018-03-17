@@ -19,7 +19,27 @@ type alias Note =
 
 
 type alias Model =
-    { listVisible : Bool, noteList : List Note, activeNoteId : Id }
+    { colorTheme : ColorTheme
+    , listVisible : Bool
+    , noteList : List Note
+    , activeNoteId : Id
+    }
+
+
+type alias ModelExposedToStorage =
+    { listVisible : Bool
+    , noteList : List Note
+    , activeNoteId : Int
+    }
+
+
+
+---- Color Theme for this app ----
+
+
+type ColorTheme
+    = WhiteTheme
+    | DarkTheme
 
 
 lastNoteId : List Note -> Id
@@ -38,7 +58,8 @@ lastNoteId noteList =
 
 emptyModel : Model
 emptyModel =
-    { noteList = [ { id = 1, body = "" } ]
+    { colorTheme = WhiteTheme
+    , noteList = [ { id = 1, body = "" } ]
     , listVisible = False
     , activeNoteId = 1
     }
@@ -49,9 +70,23 @@ emptyNote id =
     { id = id, body = "" }
 
 
-init : Maybe Model -> ( Model, Cmd Msg )
+savedModelToModel : Maybe ModelExposedToStorage -> Model
+savedModelToModel savedModel =
+    case savedModel of
+        Nothing ->
+            emptyModel
+
+        Just savedModel ->
+            { listVisible = savedModel.listVisible
+            , noteList = savedModel.noteList
+            , activeNoteId = savedModel.activeNoteId
+            , colorTheme = WhiteTheme
+            }
+
+
+init : Maybe ModelExposedToStorage -> ( Model, Cmd Msg )
 init savedModel =
-    Maybe.withDefault emptyModel savedModel ! []
+    savedModelToModel savedModel ! []
 
 
 
@@ -64,10 +99,21 @@ type Msg
     | ToggleNoteList
     | AddNewNote
     | OpenNote Id
+    | SwitchColorTheme
 
 
 type alias NoteStatusTuple =
     ( Note, Bool )
+
+
+switchColorTheme : Model -> Model
+switchColorTheme model =
+    case model.colorTheme of
+        WhiteTheme ->
+            { model | colorTheme = DarkTheme }
+
+        DarkTheme ->
+            { model | colorTheme = WhiteTheme }
 
 
 isActiveNote : Model -> Id -> Bool
@@ -161,6 +207,9 @@ update msg model =
         OpenNote id ->
             ( { model | activeNoteId = id }, Cmd.none )
 
+        SwitchColorTheme ->
+            ( switchColorTheme model, Cmd.none )
+
 
 deleteNote : Model -> Id -> Model
 deleteNote model id =
@@ -214,7 +263,7 @@ viewNoteListItem note =
 
 view : Model -> Html Msg
 view model =
-    div [ class "app-wrapper" ]
+    div [ class <| appWrapperClassName model ]
         [ div [ class "app-container", Styles.appContainer model.listVisible ]
             [ header [ class "app-header" ]
                 [ h1 [ class "page-header" ]
@@ -223,8 +272,8 @@ view model =
                     [ i [ class "material-icons" ] [ text "list" ] ]
                 , button [ class "btn btn-control-point", onClick AddNewNote ]
                     [ i [ class "material-icons" ] [ text "control_point" ] ]
-                , button [ class "btn btn-text", onClick AddNewNote ]
-                    [ text "Switch themes" ]
+                , button [ class "btn btn-text", onClick SwitchColorTheme ]
+                    [ text "Switch theme" ]
                 ]
             , div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
@@ -242,7 +291,17 @@ view model =
         ]
 
 
-port setStorage : Model -> Cmd msg
+port setStorage : ModelExposedToStorage -> Cmd msg
+
+
+appWrapperClassName : Model -> String
+appWrapperClassName model =
+    case model.colorTheme of
+        WhiteTheme ->
+            "app-wrapper app-wrapper--white-theme"
+
+        DarkTheme ->
+            "app-wrapper app-wrapper--dark-theme"
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
@@ -252,7 +311,14 @@ updateWithStorage msg model =
             update msg model
     in
     ( newModel
-    , Cmd.batch [ setStorage newModel, cmds ]
+    , Cmd.batch
+        [ setStorage
+            { listVisible = newModel.listVisible
+            , noteList = newModel.noteList
+            , activeNoteId = newModel.activeNoteId
+            }
+        , cmds
+        ]
     )
 
 
@@ -260,7 +326,7 @@ updateWithStorage msg model =
 ---- PROGRAM ----
 
 
-main : Program (Maybe Model) Model Msg
+main : Program (Maybe ModelExposedToStorage) Model Msg
 main =
     Html.programWithFlags
         { view = view

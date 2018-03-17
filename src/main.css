@@ -36,8 +36,15 @@ blockquote {
 }
 blockquote p:first-child { margin: 0; }
 
-pre {
+.app-wrapper--white-theme pre {
   background: #fafafa;
+  color: #333;
+}
+.app-wrapper--dark-theme pre {
+  background: #f3f3f3;
+  color: #333;
+}
+pre {
   border: 1px solid #eee;
   border-radius: 5px;
   padding: 1em;
@@ -78,6 +85,23 @@ h6 { font-size: 1em; font-weight: 500; }
   width: 100%;
   overflow-x: hidden;
 }
+.app-wrapper--white-theme,
+.app-wrapper--white-theme textarea,
+.app-wrapper--white-theme .page-header {
+  background: #fff;
+}
+.app-wrapper--dark-theme,
+.app-wrapper--dark-theme textarea,
+.app-wrapper--dark-theme .page-header {
+  background: #333;
+  color: #fff;
+}
+.app-wrapper--dark-theme .material-icons,
+.app-wrapper--dark-theme .btn {
+  background: #333;
+  color: #eee;
+}
+
 .app-container {
   width: 100%;
   height: 100%;
@@ -92,7 +116,9 @@ h6 { font-size: 1em; font-weight: 500; }
   font-weight: 300;
   grid-area: header;
 }
-.app-list { }
+.app-wrapper--dark-theme .app-header {
+  border-bottom: 1px solid #292929;
+}
 .app-list__item a {
   color: #eee;
   text-align: left;
@@ -104,17 +130,17 @@ h6 { font-size: 1em; font-weight: 500; }
   cursor: pointer;
 }
 .app-list__item a:hover {
-  background: #222;
+  background: #111;
   color: #fff;
 }
-.app-editor { grid-area: editor; }
+.app-editor { grid-area: editor; padding-bottom: 2em;}
 .app-editor textarea {
   border: 0;
-  padding: 1em;
   font-size: 1em;
   width: 100%;
   height: 100%;
   overflow: scroll;
+  padding: 1em;
 }
 .app-editor textarea:focus { outline: 0; }
 .app-preview {
@@ -124,6 +150,10 @@ h6 { font-size: 1em; font-weight: 500; }
   border-left: 1px solid #ddd;
   overflow: scroll;
 }
+.app-wrapper--dark-theme .app-preview {
+  border-left: 1px solid #292929;
+}
+
 .app-preview__control { color: #fff; transition: .2s; float: right; cursor: pointer; }
 .app-preview:hover .app-preview__control { color: #999; }
 .app-preview:hover .app-preview__control:hover { color: #000; }

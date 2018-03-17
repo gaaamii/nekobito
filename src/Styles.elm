@@ -22,7 +22,7 @@ appList isVisible =
             [ ( "position", "absolute" )
             , ( "width", "35%" )
             , ( "height", "100%" )
-            , ( "background", "#333" )
+            , ( "background", "#222" )
             , ( "top", "0" )
             , ( "right", "-35%" )
             , ( "color", "#fff" )
