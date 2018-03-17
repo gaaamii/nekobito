@@ -204,13 +204,12 @@ h6 { font-size: 1em; }
   padding: .7em 1em;
   margin-top: -3px;
 }
-.btn-text:hover {
-  border-color: #000;
-}
-.btn:hover,
+.app-wrapper--white-theme .btn-text:hover { border-color: #000; }
+.app-wrapper--dark-theme .btn-text:hover { border-color: #eee; }
+.app-wrapper--white-theme .btn:hover{ color: #000; }
+.app-wrapper--dark-theme .btn:hover{ color: #eee; }
 .btn:hover,
 .btn-control-point:hover {
-  color: #000;
   opacity: 1;
   outline: 0;
 }
