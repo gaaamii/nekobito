@@ -24,6 +24,7 @@ time, mark, audio, video {
 /**
  * Styles for particular elements
  */
+p { line-height: 1.75em; }
 a, a:visited {
   color: #42aef0;
 }
@@ -74,7 +75,7 @@ body {
   color: #393939;
   overflow: hidden;
 }
-body { font-size: 16px; }
+body { font-size: 15px; }
 * { box-sizing: border-box; }
 h1, h2, h3, h4, h5, h6, p, ul, pre, blockquote { margin-top: 1em; }
 h1, h2, h3, h4, h5, h6 { font-weight: 400; letter-spacing: 1px; }
@@ -119,7 +120,7 @@ h6 { font-size: 1em; }
   height: 100%;
   display: grid;
   grid-template-columns: 40% 1fr;
-  grid-template-rows: 60px 1fr;
+  grid-template-rows: 60px 0.98fr;
   grid-template-areas: 'header header' 'editor preview';
 }
 .app-header {
@@ -136,8 +137,9 @@ h6 { font-size: 1em; }
 .app-list {
   overflow-y: scroll;
 }
+
 .app-list__item a {
-  color: #aaa;
+  color: #eee;
   text-align: left;
   border-bottom: 1px solid #111;
   padding: 1.2em;
@@ -145,10 +147,11 @@ h6 { font-size: 1em; }
   text-decoration: none;
   transition: .1s;
   cursor: pointer;
+  line-height: 1.8em;
 }
-.app-list__item a:hover {
-  background: #111;
-  color: #fff;
+.app-list__item a:hover, .app-list__item--active a {
+  background: #000;
+  color: #aaa;
 }
 .app-editor {
   grid-area: editor;
@@ -207,7 +210,7 @@ h6 { font-size: 1em; }
 .app-wrapper--white-theme .btn-text:hover { border-color: #000; }
 .app-wrapper--dark-theme .btn-text:hover { border-color: #eee; }
 .app-wrapper--white-theme .btn:hover{ color: #000; }
-.app-wrapper--dark-theme .btn:hover{ color: #eee; }
+.app-wrapper--dark-theme .btn:hover{ color: #ddd; }
 .btn:hover,
 .btn-control-point:hover {
   opacity: 1;

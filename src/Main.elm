@@ -249,12 +249,20 @@ getFirstNote list =
 ---- VIEW ----
 
 
-viewNoteListItem : Note -> Html Msg
-viewNoteListItem note =
+appListItemClass : Bool -> String
+appListItemClass isActive =
+    if isActive then
+        "app-list__item app-list__item--active"
+    else
+        "app-list__item"
+
+
+viewNoteListItem : ( Note, Id ) -> Html Msg
+viewNoteListItem ( note, activeNoteId ) =
     if note.body == "" then
         div [] []
     else
-        div [ class "app-list__item" ]
+        div [ class <| appListItemClass <| activeNoteId == note.id ]
             [ a
                 [ onClick (OpenNote note.id) ]
                 [ text (String.slice 0 40 note.body) ]
@@ -287,7 +295,7 @@ view model =
                 ]
             ]
         , div [ class "app-list", Styles.appList model.listVisible ]
-            (List.map viewNoteListItem model.noteList)
+            (List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
         ]
 
 
