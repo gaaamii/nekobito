@@ -24,6 +24,9 @@ time, mark, audio, video {
 /**
  * Styles for particular elements
  */
+a, a:visited {
+  color: #42aef0;
+}
 hr {
   border-top: 0;
   border-bottom: 1px solid #ddd;
@@ -36,8 +39,10 @@ blockquote {
 }
 blockquote p:first-child { margin: 0; }
 
+.app-wrapper--white-theme { background: #fff; }
+.app-wrapper--dark-theme { background: #333; }
 .app-wrapper--white-theme pre {
-  background: #fafafa;
+  background: #f3f3f3;
   color: #333;
 }
 .app-wrapper--dark-theme pre {
@@ -49,10 +54,12 @@ blockquote p:first-child { margin: 0; }
   color: #ccc;
 }
 pre {
-  border: 1px solid #eee;
-  border-radius: 5px;
-  padding: 1em;
+  padding: 1em 2em;
   overflow-x: scroll;
+  word-spacing: 4px;
+  line-height: 1.4em;
+  width: 111%;
+  margin-left: -6%;
 }
 ul { padding: 0 1.5em; list-style: disc; }
 ul ul { margin: .35em 0 0 0; }
@@ -64,18 +71,19 @@ html, body {
 } 
 body {
   font-family: 'Roboto', 'Noto Sans Jp', sans-serif;
-  color: #293c4b;
-  font-size: 16px;
+  color: #393939;
   overflow: hidden;
 }
+body { font-size: 16px; }
 * { box-sizing: border-box; }
 h1, h2, h3, h4, h5, h6, p, ul, pre, blockquote { margin-top: 1em; }
-h1 { font-size: 2em; font-weight: 500;   margin-bottom: 0.5em;  }
-h2 { font-size: 1.8em; font-weight: 500; margin-bottom: 0.5em;  }
-h3 { font-size: 1.6em; font-weight: 500; margin-bottom: 0.5em;  }
-h4 { font-size: 1.4em; font-weight: 500; margin-bottom: 0.5em;  }
-h5 { font-size: 1.2em; font-weight: 500; margin-bottom: 0.5em;  }
-h6 { font-size: 1em; font-weight: 500; }
+h1, h2, h3, h4, h5, h6 { font-weight: 400; letter-spacing: 1px; }
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.45em; }
+h3 { font-size: 1.3em; }
+h4 { font-size: 1.2em; }
+h5 { font-size: 1.1em; }
+h6 { font-size: 1em; }
 
 /**
  * Styles for classes
@@ -89,16 +97,16 @@ h6 { font-size: 1em; font-weight: 500; }
   width: 100%;
   overflow-x: hidden;
 }
-.app-wrapper--white-theme,
+.app-wrapper--white-theme { background: #fff; }
 .app-wrapper--white-theme textarea,
 .app-wrapper--white-theme .page-header {
-  background: #fff;
+  background: transparent;
 }
-.app-wrapper--dark-theme,
+.app-wrapper--dark-theme { background: #333; color: #eee; }
 .app-wrapper--dark-theme textarea,
 .app-wrapper--dark-theme .page-header {
-  background: #333;
-  color: #fff;
+  background: transparent;
+  color: #ddd;
 }
 .app-wrapper--dark-theme .material-icons,
 .app-wrapper--dark-theme .btn {
@@ -115,19 +123,24 @@ h6 { font-size: 1em; font-weight: 500; }
   grid-template-areas: 'header header' 'editor preview';
 }
 .app-header {
-  border-bottom: 1px solid #eee;
   padding: 20px 3em;
   font-weight: 300;
   grid-area: header;
 }
+.app-wrapper--white-theme .app-header {
+  box-shadow: 1px 1px 1px #eee;
+}
 .app-wrapper--dark-theme .app-header {
-  border-bottom: 1px solid #292929;
+  box-shadow: 1px 1px 1px #292929;
+}
+.app-list {
+  overflow-y: scroll;
 }
 .app-list__item a {
-  color: #eee;
+  color: #aaa;
   text-align: left;
-  border-bottom: 1px solid #222;
-  padding: 1.5em;
+  border-bottom: 1px solid #111;
+  padding: 1.2em;
   display: block;
   text-decoration: none;
   transition: .1s;
@@ -137,7 +150,11 @@ h6 { font-size: 1em; font-weight: 500; }
   background: #111;
   color: #fff;
 }
-.app-editor { grid-area: editor; padding-bottom: 2em;}
+.app-editor {
+  grid-area: editor;
+  padding-bottom: 2em;
+  border-right: 1px solid #eee;
+}
 .app-editor textarea {
   border: 0;
   font-size: 1em;
@@ -145,17 +162,17 @@ h6 { font-size: 1em; font-weight: 500; }
   height: 100%;
   overflow: scroll;
   padding: 1em;
+  word-spacing: 2px;
 }
 .app-editor textarea:focus { outline: 0; }
 .app-preview {
   grid-area: preview;
   text-align: left;
-  padding: 1em 2em;
-  border-left: 1px solid #ddd;
+  padding: 1em 5%;
   overflow: scroll;
 }
-.app-wrapper--dark-theme .app-preview {
-  border-left: 1px solid #292929;
+.app-wrapper--dark-theme .app-editor {
+  border-right: 1px solid #292929;
 }
 
 .app-preview__control { color: #fff; transition: .2s; float: right; cursor: pointer; }
@@ -178,6 +195,7 @@ h6 { font-size: 1em; font-weight: 500; }
   float: right;
   font-size: .7em;
   margin: 0 15px;
+  background: transparent;
 }
 /* An icon without any icon */
 .btn-text {
