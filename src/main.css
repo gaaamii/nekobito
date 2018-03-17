@@ -44,6 +44,10 @@ blockquote p:first-child { margin: 0; }
   background: #f3f3f3;
   color: #333;
 }
+.app-wrapper--dark-theme blockquote {
+  background: #222;
+  color: #ccc;
+}
 pre {
   border: 1px solid #eee;
   border-radius: 5px;
