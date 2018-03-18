@@ -2,6 +2,7 @@ module Styles exposing (..)
 
 import Html exposing (Attribute)
 import Html.Attributes exposing (style)
+import Types exposing (..)
 
 
 appContainer : Bool -> Attribute msg
@@ -15,19 +16,35 @@ appContainer isVisible =
         style <| [ ( "margin-left", "0" ) ]
 
 
-appList : Bool -> Attribute msg
-appList isVisible =
+type alias ColorStyles =
+    { color : String, background : String }
+
+
+appListColorStyles : ColorTheme -> ColorStyles
+appListColorStyles colorTheme =
+    if colorTheme == DarkTheme then
+        { color = "#fff", background = "#363636" }
+    else
+        { color = "#333", background = "#fafafa" }
+
+
+appList : ( Bool, ColorTheme ) -> Attribute msg
+appList ( isVisible, colorTheme ) =
     let
         baseStyles =
+            let
+                colors =
+                    appListColorStyles colorTheme
+            in
             [ ( "position", "absolute" )
             , ( "width", "20%" )
             , ( "height", "100%" )
-            , ( "background", "#222" )
             , ( "top", "0" )
             , ( "right", "-20%" )
-            , ( "color", "#fff" )
             , ( "font-size", ".8em" )
             , ( "text-align", "center" )
+            , ( "background", colors.background )
+            , ( "color", colors.color )
             ]
     in
     if isVisible then

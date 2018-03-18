@@ -5,6 +5,7 @@ import Html.Attributes exposing (class, href, placeholder, src, style, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
 import Styles
+import Types exposing (..)
 
 
 ---- MODEL ----
@@ -31,15 +32,6 @@ type alias ModelExposedToStorage =
     , noteList : List Note
     , activeNoteId : Int
     }
-
-
-
----- Color Theme for this app ----
-
-
-type ColorTheme
-    = WhiteTheme
-    | DarkTheme
 
 
 lastNoteId : List Note -> Id
@@ -264,7 +256,7 @@ viewNoteListItem ( note, activeNoteId ) =
     else
         div [ class <| appListItemClass <| activeNoteId == note.id ]
             [ a
-                [ onClick (OpenNote note.id) ]
+                [ class "app-list__item__link", onClick (OpenNote note.id) ]
                 [ text (String.slice 0 40 note.body) ]
             ]
 
@@ -302,7 +294,7 @@ view model =
                 , Markdown.toHtml [] (activeNote model).body
                 ]
             ]
-        , div [ class "app-list", Styles.appList model.listVisible ]
+        , div [ class "app-list", Styles.appList ( model.listVisible, model.colorTheme ) ]
             (List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
         ]
 

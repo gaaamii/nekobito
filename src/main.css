@@ -136,9 +136,7 @@ h6 { font-size: 1em; }
 }
 
 .app-list__item a {
-  color: #eee;
   text-align: left;
-  border-bottom: 1px solid #111;
   padding: 1.2em;
   display: block;
   text-decoration: none;
@@ -146,9 +144,13 @@ h6 { font-size: 1em; }
   cursor: pointer;
   line-height: 1.8em;
 }
-.app-list__item a:hover, .app-list__item--active a {
-  background: #000;
-  color: #aaa;
+.app-wrapper--white-theme .app-list__item__link { color: #333; }
+.app-wrapper--dark-theme .app-list__item__link { color: #eee; }
+
+.app-list__item__link:hover,
+.app-list__item--active .app-list__item__link {
+  background: #5387a5;
+  color: #fff;
 }
 .app-editor {
   grid-area: editor;
