@@ -79,12 +79,14 @@ body { font-size: 15px; }
 * { box-sizing: border-box; }
 h1, h2, h3, h4, h5, h6, p, ul, pre, blockquote { margin-top: 1em; }
 h1, h2, h3, h4, h5, h6 { font-weight: 400; letter-spacing: 1px; }
-h1 { font-size: 1.6em; }
-h2 { font-size: 1.45em; }
-h3 { font-size: 1.3em; }
-h4 { font-size: 1.2em; }
-h5 { font-size: 1.1em; }
-h6 { font-size: 1em; }
+textarea { resize: none; }
+.app-preview h1 { font-size: 1.7em; }
+.app-preview h2 { font-size: 1.55em; }
+.app-preview h3 { font-size: 1.5em; }
+.app-preview h4 { font-size: 1.4em; }
+.app-preview h5 { font-size: 1.3em; }
+.app-preview h6 { font-size: 1.2em; }
+.app-preview p { font-size: 1.2em; }
 
 /**
  * Styles for classes
@@ -120,10 +122,12 @@ h6 { font-size: 1em; }
   grid-template-areas: 'header header' 'editor preview';
 }
 .app-header {
-  padding: 20px 2em;
+  padding: 0 2em;
   font-weight: 300;
   grid-area: header;
 }
+.app-header__buttons { float: right; }
+.app-header__buttons__btn { padding: 20px 0; }
 .app-wrapper--white-theme .app-header {
   box-shadow: 1px 1px 1px #eee;
 }
@@ -177,41 +181,35 @@ h6 { font-size: 1em; }
   border-right: 1px solid #292929;
 }
 
-.app-preview__control { color: #fff; transition: .2s; float: right; cursor: pointer; opacity: 0; }
+.app-preview__control {
+  color: #fff;
+  transition: .2s;
+  cursor: pointer;
+  opacity: 0;
+  float: right;
+}
 .app-preview:hover .app-preview__control { opacity: 0.7; }
 .app-preview:hover .app-preview__control:hover { opacity: 1; }
 .page-header {
-  display: inline;
+  display: inline-block;
   font-size: .9em;;
   color: #333;
+  padding: 10px 0;
 }
 
 /* Buttons */
 .btn {
   cursor: pointer;
   box-sizing: border-box;
-  padding: 0;
   border: 0;
-  color: #999;
+  color: #ccc;
   opacity: .5;
-  float: right;
   font-size: .7em;
   margin-left: 2.5em;
   background: transparent;
+  vertical-align: middle;
 }
-.btn:active {
-  opacity: 1;
-  text-shadow: 1px 1px 1px #555;
-}
-.btn-text:active {
-  text-shadow: none;
-  box-shadow: 1px 1px 1px #555;
-}
-.btn:hover,
-.btn-control-point:hover {
-  opacity: .7;
-  outline: 0;
-}
+.btn:hover { outline: 0; }
 /* An icon without any icon */
 .btn-text {
   border: 1px solid #eee;
@@ -221,12 +219,10 @@ h6 { font-size: 1em; }
 }
 .app-wrapper--white-theme .btn-text { border-color: #eee; }
 .app-wrapper--dark-theme .btn-text { border-color: #999; }
-/*
-.app-wrapper--white-theme .btn-text:hover { border-color: #000; }
-.app-wrapper--dark-theme .btn-text:hover { border-color: #eee; }
-.app-wrapper--white-theme .btn:hover{ color: #000; }
-.app-wrapper--dark-theme .btn:hover{ color: #ddd; }
-*/
+.app-wrapper--white-theme .btn { color: #666; }
+.app-wrapper--dark-theme .btn { color: #999; }
+.app-wrapper--white-theme .btn:hover { color: #000; }
+.app-wrapper--dark-theme .btn:hover { color: #fff; }
 
 /* Visibility */
 .hidden { display: none; }
