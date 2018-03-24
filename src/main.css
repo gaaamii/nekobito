@@ -43,12 +43,12 @@ blockquote p:first-child { margin: 0; }
 .app-wrapper--white-theme { background: #fff; }
 .app-wrapper--dark-theme { background: #333; }
 .app-wrapper--white-theme pre {
-  background: #f3f3f3;
-  color: #333;
+  background: #333;
+  color: #bbb;
 }
 .app-wrapper--dark-theme pre {
-  background: #f3f3f3;
-  color: #333;
+  background: #222;
+  color: #bbb;
 }
 .app-wrapper--dark-theme blockquote {
   background: #222;
@@ -193,11 +193,24 @@ h6 { font-size: 1em; }
   padding: 0;
   border: 0;
   color: #999;
-  opacity: .8;
+  opacity: .5;
   float: right;
   font-size: .7em;
   margin-left: 2.5em;
   background: transparent;
+}
+.btn:active {
+  opacity: 1;
+  text-shadow: 1px 1px 1px #555;
+}
+.btn-text:active {
+  text-shadow: none;
+  box-shadow: 1px 1px 1px #555;
+}
+.btn:hover,
+.btn-control-point:hover {
+  opacity: .7;
+  outline: 0;
 }
 /* An icon without any icon */
 .btn-text {
@@ -208,15 +221,12 @@ h6 { font-size: 1em; }
 }
 .app-wrapper--white-theme .btn-text { border-color: #eee; }
 .app-wrapper--dark-theme .btn-text { border-color: #999; }
+/*
 .app-wrapper--white-theme .btn-text:hover { border-color: #000; }
 .app-wrapper--dark-theme .btn-text:hover { border-color: #eee; }
 .app-wrapper--white-theme .btn:hover{ color: #000; }
 .app-wrapper--dark-theme .btn:hover{ color: #ddd; }
-.btn:hover,
-.btn-control-point:hover {
-  opacity: 1;
-  outline: 0;
-}
+*/
 
 /* Visibility */
 .hidden { display: none; }

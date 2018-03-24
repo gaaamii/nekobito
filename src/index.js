@@ -11,4 +11,8 @@ app.ports.setStorage.subscribe(function(state) {
   localStorage.setItem('elm-editor-save', JSON.stringify(state));
 });
 
+window.onload = function() {
+  document.getElementsByTagName("textarea")[0].focus();
+}
+
 registerServiceWorker();
