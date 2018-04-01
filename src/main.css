@@ -1,5 +1,3 @@
-@import url(//fonts.googleapis.com/earlyaccess/notosansjp.css);
-
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -71,8 +69,8 @@ html, body {
   height: 100%;
 } 
 body {
-  font-family: 'Noto Sans Jp', sans-serif;
-  color: #393939;
+  font-family: "Sawarabi Gothic", sans-serif;
+  color: #3b3b3b;
   overflow: hidden;
   font-weight: 300;
 }
@@ -87,7 +85,7 @@ textarea { resize: none; }
 .app-preview h4 { font-size: 1.4em; }
 .app-preview h5 { font-size: 1.3em; }
 .app-preview h6 { font-size: 1.2em; }
-.app-preview p { font-size: 1.2em; }
+.app-preview p { font-size: 1.1em; letter-spacing: 1px; }
 
 /**
  * Styles for classes
