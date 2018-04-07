@@ -166,7 +166,7 @@ textarea { resize: none; }
   width: 100%;
   height: 100%;
   overflow: scroll;
-  padding: 1em;
+  padding: 1em 2em;
   word-spacing: 2px;
 }
 .app-editor textarea:focus { outline: 0; }
