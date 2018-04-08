@@ -155,6 +155,7 @@ textarea { resize: none; }
   background: #5387a5;
   color: #fff;
 }
+.app-list__item__link:active { background: #4f6c85; }
 .app-editor {
   grid-area: editor;
   padding-bottom: 2em;
