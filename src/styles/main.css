@@ -38,20 +38,6 @@ blockquote {
 }
 blockquote p:first-child { margin: 0; }
 
-.app-wrapper--white-theme { background: #fff; }
-.app-wrapper--dark-theme { background: #333; }
-.app-wrapper--white-theme pre {
-  background: #333;
-  color: #bbb;
-}
-.app-wrapper--dark-theme pre {
-  background: #222;
-  color: #bbb;
-}
-.app-wrapper--dark-theme blockquote {
-  background: #222;
-  color: #ccc;
-}
 pre {
   padding: 1em 2em;
   overflow-x: scroll;
@@ -99,19 +85,6 @@ textarea { resize: none; }
   width: 100%;
   overflow-x: hidden;
 }
-.app-wrapper--white-theme { background: #fff; }
-.app-wrapper--white-theme textarea,
-.app-wrapper--white-theme .page-header {
-  background: transparent;
-}
-.app-wrapper--dark-theme { background: #333; color: #eee; }
-.app-wrapper--dark-theme textarea {
-  background: transparent;
-  color: #ddd;
-}
-.app-wrapper--dark-theme .page-header {
-  color: #aaa;
-}
 .app-container {
   width: 100%;
   height: 100%;
@@ -124,7 +97,6 @@ textarea { resize: none; }
   padding: 0 0 0 2em;
   font-weight: 300;
   grid-area: sidebar;
-  border-left: 1px solid #ddd;
 }
 .app-sidebar__buttons { float: right; margin: -3px 0; }
 .app-sidebar__buttons__btn {
@@ -132,16 +104,7 @@ textarea { resize: none; }
   width: 60px;
   transition: .4s;
 }
-.app-wrapper--white-theme .app-sidebar {
-  box-shadow: 1px 1px 1px #eee;
-}
-.app-wrapper--dark-theme .app-sidebar {
-  box-shadow: 1px 1px 1px #303030;
-  background: #363636;
-}
-.app-list {
-  overflow-y: scroll;
-}
+.app-list { overflow-y: scroll; }
 
 .app-list__item a {
   text-align: left;
@@ -152,15 +115,7 @@ textarea { resize: none; }
   cursor: pointer;
   line-height: 1.8em;
 }
-.app-wrapper--white-theme .app-list__item__link { color: #333; }
-.app-wrapper--dark-theme .app-list__item__link { color: #eee; }
 
-.app-list__item__link:hover,
-.app-list__item--active .app-list__item__link {
-  background: #5387a5;
-  color: #fff;
-}
-.app-list__item__link:active { background: #4f6c85; }
 .app-editor {
   grid-area: editor;
   padding-bottom: 2em;
@@ -181,9 +136,6 @@ textarea { resize: none; }
   text-align: left;
   padding: 1em 5%;
   overflow: scroll;
-}
-.app-wrapper--dark-theme .app-editor {
-  border-right: 1px solid #292929;
 }
 
 .app-preview__control {
@@ -215,20 +167,6 @@ textarea { resize: none; }
   vertical-align: middle;
 }
 .btn:hover { outline: 0; }
-.app-wrapper--white-theme .btn { color: #666; }
-.app-wrapper--dark-theme .btn { color: #999; }
-.app-wrapper--white-theme .btn:hover { color: #000; }
-.app-wrapper--dark-theme .btn:hover { color: #fff; }
 
-.app-wrapper--white-theme .btn-list:hover,
-.app-wrapper--dark-theme .btn-list:hover {
-  opacity: 1;
-  color: #fff;
-}
-.app-wrapper--white-theme .btn-list,
-.app-wrapper--dark-theme .btn-list {
-  background: #022f4f;
-  color: #fff;
-}
 /* Visibility */
 .hidden { display: none; }

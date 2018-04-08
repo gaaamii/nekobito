@@ -1,0 +1,47 @@
+/* html elements */
+.app-wrapper--dark-theme pre {
+  background: #222;
+  color: #bbb;
+}
+.app-wrapper--dark-theme blockquote {
+  background: #222;
+  color: #ccc;
+}
+.app-wrapper--dark-theme textarea {
+  background: transparent;
+  color: #ddd;
+}
+
+/* root elment */
+.app-wrapper--dark-theme { background: #333; color: #eee; }
+
+/* sidebar */
+.app-wrapper--dark-theme .app-sidebar {
+  box-shadow: 1px 1px 1px #303030;
+  background: #363636;
+  border-left: 1px solid #292929;
+}
+
+/* list item link*/
+.app-wrapper--dark-theme .app-list__item__link { color: #eee; }
+.app-wrapper--dark-theme .app-list__item__link:hover,
+.app-wrapper--dark-theme .app-list__item--active .app-list__item__link {
+  background: #5387a5;
+  color: #fff;
+}
+.app-wrapper--dark-theme .app-list__item__link:active { background: #4f6c85; }
+
+/* editor */
+.app-wrapper--dark-theme .app-editor { border-right: 1px solid #292929; }
+
+/* button */
+.app-wrapper--dark-theme .btn { color: #999; }
+.app-wrapper--dark-theme .btn:hover { color: #fff; }
+.app-wrapper--dark-theme .btn-list:hover {
+  opacity: 1;
+  color: #fff;
+}
+.app-wrapper--dark-theme .btn-list {
+  background: #022f4f;
+  color: #fff;
+}

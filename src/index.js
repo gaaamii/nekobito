@@ -1,4 +1,6 @@
-import './main.css';
+import './styles/main.css';
+import './styles/themes/dark.css';
+import './styles/themes/white.css';
 import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 

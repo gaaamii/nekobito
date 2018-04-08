@@ -1,0 +1,32 @@
+/* html elements */
+.app-wrapper--white-theme pre {
+  background: #333;
+  color: #bbb;
+}
+.app-wrapper--white-theme textarea { background: transparent; }
+
+/* root element */
+.app-wrapper--white-theme { background: #fff; }
+
+/* sidebar */
+.app-wrapper--white-theme .app-sidebar {
+  border-left: 1px solid #eee;
+}
+
+/* list item link */
+.app-wrapper--white-theme .app-list__item__link { color: #333; }
+.app-wrapper--white-theme .app-list__item__link:hover,
+.app-wrapper--white-theme .app-list__item--active .app-list__item__link {
+  background: #5387a5;
+  color: #fff;
+}
+.app-wrapper--white-theme .app-list__item__link:active { background: #4f6c85; }
+
+/* button */
+.app-wrapper--white-theme .btn { color: #666; }
+.app-wrapper--white-theme .btn:hover { color: #000; }
+.app-wrapper--white-theme .btn-list,
+.app-wrapper--white-theme .btn-list:hover {
+  background: #022f4f;
+  color: #fff;
+}
