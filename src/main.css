@@ -121,11 +121,11 @@ textarea { resize: none; }
   grid-template-areas: 'header header' 'editor preview';
 }
 .app-header {
-  padding: 0 2em;
+  padding: 0 0 0 2em;
   font-weight: 300;
   grid-area: header;
 }
-.app-header__buttons { float: right; }
+.app-header__buttons { float: right; margin: -3px 0; }
 .app-header__buttons__btn { padding: 20px 0; }
 .app-wrapper--white-theme .app-header {
   box-shadow: 1px 1px 1px #eee;
@@ -202,7 +202,7 @@ textarea { resize: none; }
   box-sizing: border-box;
   border: 0;
   color: #ccc;
-  opacity: .5;
+  opacity: .7;
   font-size: .7em;
   margin-left: 2.5em;
   background: transparent;
@@ -223,5 +223,16 @@ textarea { resize: none; }
 .app-wrapper--white-theme .btn:hover { color: #000; }
 .app-wrapper--dark-theme .btn:hover { color: #fff; }
 
+.app-wrapper--white-theme .btn-list:hover,
+.app-wrapper--dark-theme .btn-list:hover {
+  opacity: 1;
+  color: #fff;
+}
+.btn-list { width: 60px; transition: .4s; }
+.app-wrapper--white-theme .btn-list,
+.app-wrapper--dark-theme .btn-list {
+  background: #022f4f;
+  color: #fff;
+}
 /* Visibility */
 .hidden { display: none; }
