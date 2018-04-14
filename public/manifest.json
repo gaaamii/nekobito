@@ -3,9 +3,14 @@
   "name": "Nekobito - A Browser-based Markdown editor",
   "icons": [
     {
-      "src": "nekobito.jpg",
+      "src": "nekobito.png",
       "sizes": "192x192",
       "type": "image/png"
+    }
+    , {
+      "src": "nekobito.jpg",
+      "sizes": "720x1280",
+      "type": "image/jpg"
     }
   ],
   "start_url": "./index.html",
