@@ -1,9 +1,9 @@
 {
-  "short_name": "Elm App",
-  "name": "Create Elm App Sample",
+  "short_name": "Nekobito",
+  "name": "Nekobito - A Browser-based Markdown editor",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "nekobito.jpg",
       "sizes": "192x192",
       "type": "image/png"
     }
