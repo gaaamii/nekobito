@@ -6,7 +6,6 @@ import registerServiceWorker from './registerServiceWorker';
 
 var storedState = localStorage.getItem('elm-editor-save');
 var startingState = storedState ? JSON.parse(storedState) : null;
-
 var node = document.getElementById('root');
 var app = Main.embed(node, startingState);
 app.ports.setStorage.subscribe(function(state) {
