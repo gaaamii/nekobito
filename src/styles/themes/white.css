@@ -11,6 +11,7 @@
 /* sidebar */
 .app-wrapper--white-theme .app-sidebar {
   border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
 }
 
 /* list item link */
