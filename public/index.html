@@ -11,14 +11,27 @@
     <meta name="twitter:image" content="https://nekobito.github.io/assets/images/nekobito.png">
     <meta name="twitter:description" content="A browser-based Markdown editor for you">
     <meta name="twitter:creator" content="@gaaamii">
+
     <!--
       manifest.json provides metadata used when your web app is added to the
       homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
     -->
-    <link href="https://fonts.googleapis.com/earlyaccess/sawarabigothic.css" rel="stylesheet" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/nekobito.png">
+
+    <!--
+      for Safari
+      https://developer.apple.com/library/content/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
+    -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Nekobito">
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/nekobito.jpg">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/earlyaccess/sawarabigothic.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Assets -->
     <link rel="stylesheet" href="%PUBLIC_URL%/assets/highlightjs/styles/solarized-dark.css">
     <script src="%PUBLIC_URL%/assets/highlightjs/highlight.pack.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
