@@ -136,12 +136,13 @@ textarea { resize: none; }
 }
 .app-editor textarea {
   border: 0;
-  font-size: 1em;
+  font-size: .95em;
   width: 100%;
   height: 100%;
   overflow: scroll;
   padding: 3em;
   word-spacing: 2px;
+  line-height: 1.85em;
 }
 .app-editor textarea:focus { outline: 0; }
 .app-preview {
