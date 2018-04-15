@@ -3,6 +3,9 @@
   background: #222;
   color: #bbb;
 }
+.app-wrapper--dark-theme code {
+  background: #222;
+}
 .app-wrapper--dark-theme blockquote {
   background: #222;
   color: #ccc;

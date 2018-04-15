@@ -46,6 +46,10 @@ pre {
   width: 111%;
   margin-left: -6%;
 }
+code {
+  padding: 3px 5px;
+  border-radius: 3px;
+}
 ul { padding: 0 1.5em; list-style: disc; }
 ul ul { margin: .35em 0 0 0; }
 li { margin-top: .35em; }

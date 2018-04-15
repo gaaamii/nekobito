@@ -3,6 +3,9 @@
   background: #333;
   color: #bbb;
 }
+.app-wrapper--white-theme code {
+  background: #eee;
+}
 .app-wrapper--white-theme textarea { background: transparent; }
 
 /* root element */
