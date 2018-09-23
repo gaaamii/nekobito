@@ -13,7 +13,9 @@ app.ports.setStorage.subscribe(function(state) {
 });
 
 window.onload = function() {
-  document.getElementsByTagName("textarea")[0].focus();
+  requestAnimationFrame(() => {
+    document.getElementsByTagName("textarea")[0].focus();
+  });
 }
 
 registerServiceWorker();
