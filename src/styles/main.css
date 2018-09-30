@@ -55,7 +55,7 @@ ul ul { margin: .35em 0 0 0; }
 li { margin-top: .35em; }
 :focus { outline: 0; }
 img { max-width: 100%; }
-html, body {
+html, body, body > div {
   height: 100%;
 } 
 body {

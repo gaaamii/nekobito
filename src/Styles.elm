@@ -3,17 +3,18 @@ module Styles exposing (..)
 import Html exposing (Attribute)
 import Html.Attributes exposing (style)
 import Types exposing (..)
+import List exposing (..)
 
 
-appContainer : Bool -> Attribute msg
+appContainer : Bool -> List (Attribute msg)
 appContainer isVisible =
     if isVisible then
-        style <|
-            [ ( "margin-left", "0" )
-            , ( "width", "80%" )
-            ]
+        [
+          style "margin-left" "0"
+          , style "width" "80%"
+        ]
     else
-        style <| [ ( "margin-left", "0" ) ]
+        [ style "margin-left" "0" ]
 
 
 type alias ColorStyles =
@@ -28,7 +29,7 @@ appListColorStyles colorTheme =
         { color = "#333", background = "#fafafa" }
 
 
-appList : ( Bool, ColorTheme ) -> Attribute msg
+appList : ( Bool, ColorTheme ) -> List (Attribute msg)
 appList ( isVisible, colorTheme ) =
     let
         baseStyles =
@@ -36,18 +37,18 @@ appList ( isVisible, colorTheme ) =
                 colors =
                     appListColorStyles colorTheme
             in
-            [ ( "position", "absolute" )
-            , ( "width", "20%" )
-            , ( "height", "100%" )
-            , ( "top", "0" )
-            , ( "right", "-20%" )
-            , ( "font-size", ".8em" )
-            , ( "text-align", "center" )
-            , ( "background", colors.background )
-            , ( "color", colors.color )
+            [
+              style "position" "absolute"
+              , style "width" "20%"
+              , style "height" "100%"
+              , style "top" "0"
+              , style "font-size" ".8em"
+              , style "text-align" "center"
+              , style "background" colors.background
+              , style "color" colors.color
             ]
     in
     if isVisible then
-        style <| baseStyles ++ [ ( "right", "0" ) ]
+        List.concat [[ style "right" "0" ], baseStyles]
     else
-        style <| baseStyles ++ [ ( "right", "-20%" ) ]
+        List.concat [[ style "right" "-20%" ], baseStyles]

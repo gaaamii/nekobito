@@ -1,7 +1,8 @@
 port module Main exposing (..)
 
+import Browser exposing (..)
 import Html exposing (Html, a, button, div, h1, header, i, img, p, text, textarea)
-import Html.Attributes exposing (class, href, placeholder, src, style, value)
+import Html.Attributes exposing (class, href, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
 import Styles
@@ -37,10 +38,10 @@ type alias ModelExposedToStorage =
 lastNoteId : List Note -> Id
 lastNoteId noteList =
     let
-        note =
+        maybeNote =
             List.reverse noteList |> List.head
     in
-    case note of
+    case maybeNote of
         Nothing ->
             1
 
@@ -63,8 +64,8 @@ emptyNote id =
 
 
 savedModelToModel : Maybe ModelExposedToStorage -> Model
-savedModelToModel savedModel =
-    case savedModel of
+savedModelToModel maybeSavedModel =
+    case maybeSavedModel of
         Nothing ->
             emptyModel
 
@@ -78,7 +79,7 @@ savedModelToModel savedModel =
 
 init : Maybe ModelExposedToStorage -> ( Model, Cmd Msg )
 init savedModel =
-    savedModelToModel savedModel ! []
+    (savedModelToModel savedModel, Cmd.none)
 
 
 
@@ -116,10 +117,10 @@ isActiveNote model id =
 activeNote : Model -> Note
 activeNote model =
     let
-        note =
+        maybeNote =
             model.noteList |> List.filter (\note -> isActiveNote model note.id) |> List.head
     in
-    case note of
+    case maybeNote of
         Nothing ->
             getFirstNote model.noteList
 
@@ -184,10 +185,10 @@ update msg model =
 
         AddNewNote ->
             let
-                note =
+                maybeNote =
                     newNote model
             in
-            case note of
+            case maybeNote of
                 Nothing ->
                     ( model, Cmd.none )
 
@@ -226,10 +227,10 @@ deleteNote model id =
 getFirstNote : List Note -> Note
 getFirstNote list =
     let
-        note =
+        maybeNote =
             List.head list
     in
-    case note of
+    case maybeNote of
         Nothing ->
             { id = 1, body = "" }
 
@@ -272,7 +273,7 @@ listIcon listVisible =
 view : Model -> Html Msg
 view model =
     div [ class <| appWrapperClassName model ]
-        [ div [ class "app-container", Styles.appContainer model.listVisible ]
+        [ div (List.concat [ [class "app-container"], Styles.appContainer model.listVisible ])
             [ header [ class "app-sidebar" ]
                 [ div [ class "app-sidebar__buttons" ]
                     [ button [ class "app-sidebar__buttons__btn btn btn-list", onClick ToggleNoteList ]
@@ -294,7 +295,7 @@ view model =
                 , Markdown.toHtml [] (activeNote model).body
                 ]
             ]
-        , div [ class "app-list", Styles.appList ( model.listVisible, model.colorTheme ) ]
+        , div (List.concat [[ class "app-list" ], Styles.appList ( model.listVisible, model.colorTheme )])
             (List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
         ]
 
@@ -336,7 +337,7 @@ updateWithStorage msg model =
 
 main : Program (Maybe ModelExposedToStorage) Model Msg
 main =
-    Html.programWithFlags
+    Browser.element
         { view = view
         , init = init
         , update = updateWithStorage
