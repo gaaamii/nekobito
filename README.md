@@ -1,6 +1,8 @@
-Nekobito
-========
+# Nekobito
+## elm version
+0.19
 
-Previous version is [here](https://github.com/gaaamii/nekobito-backbone).
-
-This repo is under development.
+## how to run
+```
+elm-app start
+```
