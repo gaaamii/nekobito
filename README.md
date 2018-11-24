@@ -2,7 +2,21 @@
 ## elm version
 0.19
 
-## how to run
+## Development
+
+### Install node modules
 ```
-elm-app start
+yarn
+```
+
+### Start dev server
+
+
+```
+yarn run start
+```
+
+### Build
+```
+yarn run build
 ```
