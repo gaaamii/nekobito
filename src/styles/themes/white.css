@@ -15,22 +15,24 @@
 .app-wrapper--white-theme .app-sidebar {
   border-left: 1px solid #eee;
   border-right: 1px solid #eee;
+  background: #fff;
 }
 
 /* list item link */
+.app-list {
+  background: #000;
+}
 .app-wrapper--white-theme .app-list__item__link { color: #333; }
 .app-wrapper--white-theme .app-list__item__link:hover,
-.app-wrapper--white-theme .app-list__item--active .app-list__item__link {
-  background: #5387a5;
+.app-wrapper--white-theme .app-list__item--active a {
+  background: #4e9cc5;
   color: #fff;
 }
-.app-wrapper--white-theme .app-list__item__link:active { background: #4f6c85; }
 
 /* button */
-.app-wrapper--white-theme .btn { color: #666; }
-.app-wrapper--white-theme .btn:hover { color: #000; }
-.app-wrapper--white-theme .btn-list,
+.app-wrapper--white-theme .btn,
+.app-wrapper--white-theme .btn-list { color: #333; }
+.app-wrapper--white-theme .btn:hover,
 .app-wrapper--white-theme .btn-list:hover {
-  background: #022f4f;
-  color: #fff;
+  color: #5387a5
 }
