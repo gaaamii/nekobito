@@ -1,23 +1,17 @@
-port module Main exposing (..)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, appWrapperClassName, deleteNote, emptyModel, filterPresentNote, init, isActiveNote, listIcon, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
 
 import Browser exposing (..)
 import Html exposing (Html, a, button, div, h1, header, i, img, p, text, textarea)
 import Html.Attributes exposing (class, href, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
+import Note exposing (..)
 import Styles
 import Types exposing (..)
 
 
+
 ---- MODEL ----
-
-
-type alias Id =
-    Int
-
-
-type alias Note =
-    { id : Id, body : String }
 
 
 type alias Model =
@@ -35,20 +29,6 @@ type alias ModelExposedToStorage =
     }
 
 
-lastNoteId : List Note -> Id
-lastNoteId noteList =
-    let
-        maybeNote =
-            List.reverse noteList |> List.head
-    in
-    case maybeNote of
-        Nothing ->
-            1
-
-        Just note ->
-            note.id
-
-
 emptyModel : Model
 emptyModel =
     { colorTheme = WhiteTheme
@@ -56,11 +36,6 @@ emptyModel =
     , listVisible = False
     , activeNoteId = 1
     }
-
-
-emptyNote : Id -> Note
-emptyNote id =
-    { id = id, body = "" }
 
 
 savedModelToModel : Maybe ModelExposedToStorage -> Model
@@ -79,7 +54,7 @@ savedModelToModel maybeSavedModel =
 
 init : Maybe ModelExposedToStorage -> ( Model, Cmd Msg )
 init savedModel =
-    (savedModelToModel savedModel, Cmd.none)
+    ( savedModelToModel savedModel, Cmd.none )
 
 
 
@@ -93,10 +68,6 @@ type Msg
     | AddNewNote
     | OpenNote Id
     | SwitchColorTheme
-
-
-type alias NoteStatusTuple =
-    ( Note, Bool )
 
 
 switchColorTheme : Model -> Model
@@ -128,15 +99,11 @@ activeNote model =
             note
 
 
-updateNoteBody : Note -> String -> Note
-updateNoteBody note newBody =
-    { note | body = newBody }
-
-
 newNote : Model -> Maybe Note
 newNote model =
     if (activeNote model).body == "" then
         Nothing
+
     else
         Just { id = lastNoteId model.noteList + 1, body = "" }
 
@@ -149,6 +116,7 @@ updateActiveNoteBody model newBody =
                 (\note ->
                     if note.id == model.activeNoteId then
                         updateNoteBody note newBody
+
                     else
                         note
                 )
@@ -217,25 +185,13 @@ deleteNote model id =
         in
         -- if noteList is empty after the note deleted, open new note
         { model | noteList = [ emptyNote newId ], activeNoteId = newId }
+
     else if model.activeNoteId == id then
         -- if active note is deleted, open last note
         { model | noteList = newNoteList, activeNoteId = lastNoteId newNoteList }
+
     else
         { model | noteList = newNoteList }
-
-
-getFirstNote : List Note -> Note
-getFirstNote list =
-    let
-        maybeNote =
-            List.head list
-    in
-    case maybeNote of
-        Nothing ->
-            { id = 1, body = "" }
-
-        Just note ->
-            note
 
 
 
@@ -246,6 +202,7 @@ appListItemClass : Bool -> String
 appListItemClass isActive =
     if isActive then
         "app-list__item app-list__item--active"
+
     else
         "app-list__item"
 
@@ -254,6 +211,7 @@ viewNoteListItem : ( Note, Id ) -> Html Msg
 viewNoteListItem ( note, activeNoteId ) =
     if note.body == "" then
         div [] []
+
     else
         div [ class <| appListItemClass <| activeNoteId == note.id ]
             [ a
@@ -266,6 +224,7 @@ listIcon : Bool -> String
 listIcon listVisible =
     if listVisible then
         "keyboard_arrow_right"
+
     else
         "list"
 
@@ -273,7 +232,7 @@ listIcon listVisible =
 view : Model -> Html Msg
 view model =
     div [ class <| appWrapperClassName model ]
-        [ div (List.concat [ [class "app-container"], Styles.appContainer model.listVisible ])
+        [ div (List.concat [ [ class "app-container" ], Styles.appContainer model.listVisible ])
             [ header [ class "app-sidebar" ]
                 [ div [ class "app-sidebar__buttons" ]
                     [ button [ class "app-sidebar__buttons__btn btn btn-list", onClick ToggleNoteList ]
@@ -295,8 +254,8 @@ view model =
                 , Markdown.toHtml [] (activeNote model).body
                 ]
             ]
-        , div (List.concat [[ class "app-list" ], Styles.appList ( model.listVisible, model.colorTheme )])
-            (List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
+        , div (List.concat [ [ class "app-list" ], Styles.appList ( model.listVisible, model.colorTheme ) ])
+            (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
         ]
 
 
