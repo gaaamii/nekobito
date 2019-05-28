@@ -23,6 +23,10 @@
   box-shadow: 1px 1px 1px #303030;
   border-left: 1px solid #292929;
   border-right: 1px solid #292929;
+  background: #333536;
+}
+.app-wrapper--dark-theme .app-list {
+  border-left: 1px solid #292929;
 }
 
 /* list item link*/

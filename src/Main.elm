@@ -1,7 +1,7 @@
 port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, appWrapperClassName, deleteNote, emptyModel, filterPresentNote, init, isActiveNote, listIcon, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
 
 import Browser exposing (..)
-import Html exposing (Html, a, button, div, h1, header, i, img, p, text, textarea)
+import Html exposing (Html, a, aside, button, div, h1, i, img, p, text, textarea)
 import Html.Attributes exposing (class, href, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
@@ -233,17 +233,7 @@ view : Model -> Html Msg
 view model =
     div [ class <| appWrapperClassName model ]
         [ div (List.concat [ [ class "app-container" ], Styles.appContainer model.listVisible ])
-            [ header [ class "app-sidebar" ]
-                [ div [ class "app-sidebar__buttons" ]
-                    [ button [ class "app-sidebar__buttons__btn btn btn-list", onClick ToggleNoteList ]
-                        [ i [ class "material-icons" ] [ text (listIcon model.listVisible) ] ]
-                    , button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
-                        [ i [ class "material-icons" ] [ text "note_add" ] ]
-                    , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
-                        [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
-                    ]
-                ]
-            , div [ class "app-editor" ]
+            [ div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
                 ]
             , div [ class "app-preview" ]
@@ -256,6 +246,16 @@ view model =
             ]
         , div (List.concat [ [ class "app-list" ], Styles.appList ( model.listVisible, model.colorTheme ) ])
             (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
+        , aside [ class "app-sidebar" ]
+            [ div [ class "app-sidebar__buttons" ]
+                [ button [ class "app-sidebar__buttons__btn btn btn-list", onClick ToggleNoteList ]
+                    [ i [ class "material-icons" ] [ text (listIcon model.listVisible) ] ]
+                , button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
+                    [ i [ class "material-icons" ] [ text "note_add" ] ]
+                , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
+                    [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
+                ]
+            ]
         ]
 
 

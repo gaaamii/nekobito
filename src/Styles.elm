@@ -50,7 +50,7 @@ appList ( isVisible, colorTheme ) =
             ]
     in
     if isVisible then
-        List.concat [ [ style "right" "0" ], baseStyles ]
+        List.concat [ [ style "right" "60px" ], baseStyles ]
 
     else
         List.concat [ [ style "right" "-20%" ], baseStyles ]
