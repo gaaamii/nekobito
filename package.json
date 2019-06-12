@@ -10,10 +10,10 @@
   "author": "gaaamii <i1shi4ga4mi1@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "elm": "^0.19.0-bugfix2"
+    "elm": "^0.19.0"
   },
   "devDependencies": {
-    "create-elm-app": "^2.2.3",
+    "create-elm-app": "^3.0.8",
     "elm-format": "^0.8.1"
   }
 }
