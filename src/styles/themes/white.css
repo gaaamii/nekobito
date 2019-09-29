@@ -21,6 +21,7 @@
 /* list item link */
 .app-list {
   background: #000;
+  border-right: 1px solid #eee;
 }
 .app-wrapper--white-theme .app-list__item__link { color: #333; }
 .app-wrapper--white-theme .app-list__item__link:hover,

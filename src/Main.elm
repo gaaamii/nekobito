@@ -223,7 +223,7 @@ viewNoteListItem ( note, activeNoteId ) =
 listIcon : Bool -> String
 listIcon listVisible =
     if listVisible then
-        "keyboard_arrow_right"
+        "keyboard_arrow_left"
 
     else
         "list"
@@ -232,8 +232,20 @@ listIcon listVisible =
 view : Model -> Html Msg
 view model =
     div [ class <| appWrapperClassName model ]
-        [ div (List.concat [ [ class "app-container" ], Styles.appContainer model.listVisible ])
-            [ div [ class "app-editor" ]
+        [ div [ class "app-container" ]
+            [ aside [ class "app-sidebar" ]
+                [ div [ class "app-sidebar__buttons" ]
+                    [ button [ class "app-sidebar__buttons__btn btn btn-list", onClick ToggleNoteList ]
+                        [ i [ class "material-icons" ] [ text (listIcon model.listVisible) ] ]
+                    , button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
+                        [ i [ class "material-icons" ] [ text "note_add" ] ]
+                    , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
+                        [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
+                    ]
+                ]
+            , div (List.concat [ [ class "app-list" ], Styles.appList ( model.listVisible, model.colorTheme ) ])
+                (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
+            , div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
                 ]
             , div [ class "app-preview" ]
@@ -242,18 +254,6 @@ view model =
                         [ i [ class "material-icons" ] [ text "delete" ] ]
                     ]
                 , Markdown.toHtml [] (activeNote model).body
-                ]
-            ]
-        , div (List.concat [ [ class "app-list" ], Styles.appList ( model.listVisible, model.colorTheme ) ])
-            (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
-        , aside [ class "app-sidebar" ]
-            [ div [ class "app-sidebar__buttons" ]
-                [ button [ class "app-sidebar__buttons__btn btn btn-list", onClick ToggleNoteList ]
-                    [ i [ class "material-icons" ] [ text (listIcon model.listVisible) ] ]
-                , button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
-                    [ i [ class "material-icons" ] [ text "note_add" ] ]
-                , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
-                    [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
                 ]
             ]
         ]

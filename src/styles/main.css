@@ -106,19 +106,15 @@ textarea { resize: none; }
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 40% 1fr;
+  grid-template-columns: 60px auto 1fr 1.5fr;
   grid-template-rows: 1fr;
-  grid-template-areas: 'editor preview';
-  transition: .4s ease-in-out;
+  grid-template-areas: 'sidebar list editor preview';
+  transition: all .4s ease-in-out;
 }
 .app-sidebar {
   padding: 0 0 0 2em;
   font-weight: 300;
-  position: fixed;
-  right: 0;
-  top: 0;
   height: 100%;
-  width: 60px;
 }
 .app-sidebar__buttons { float: right; margin: -3px 0; }
 .app-sidebar__buttons__btn {
@@ -129,8 +125,7 @@ textarea { resize: none; }
 .app-list {
   overflow-y: scroll;
   transition: .4s;
-  right: 60px;
-  border-left: 1px solid #eee;
+  overflow-x: hidden;
 }
 
 .app-list__item a {
@@ -141,6 +136,7 @@ textarea { resize: none; }
   transition: .1s;
   cursor: pointer;
   line-height: 1.8em;
+  width: 250px;
 }
 
 .app-editor {
