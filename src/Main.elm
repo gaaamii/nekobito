@@ -216,7 +216,7 @@ viewNoteListItem ( note, activeNoteId ) =
         div [ class <| appListItemClass <| activeNoteId == note.id ]
             [ a
                 [ class "app-list__item__link", onClick (OpenNote note.id) ]
-                [ text (String.slice 0 40 note.body) ]
+                [ text (note.body |> toNoteTitle) ]
             ]
 
 
@@ -288,6 +288,15 @@ updateWithStorage msg model =
         , cmds
         ]
     )
+
+
+toNoteTitle : String -> String
+toNoteTitle text =
+    text
+        |> String.lines
+        |> List.head
+        |> Maybe.withDefault ""
+        |> String.replace "#" ""
 
 
 
