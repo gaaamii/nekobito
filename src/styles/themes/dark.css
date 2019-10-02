@@ -33,10 +33,9 @@
 .app-wrapper--dark-theme .app-list__item__link { color: #eee; }
 .app-wrapper--dark-theme .app-list__item__link:hover,
 .app-wrapper--dark-theme .app-list__item--active .app-list__item__link {
-  background: #5387a5;
   color: #fff;
+  border-left: 5px solid #4e9cc5;
 }
-.app-wrapper--dark-theme .app-list__item__link:active { background: #4f6c85; }
 
 /* editor */
 .app-wrapper--dark-theme .app-editor { border-right: 1px solid #292929; }

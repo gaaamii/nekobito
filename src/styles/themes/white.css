@@ -13,9 +13,7 @@
 
 /* sidebar */
 .app-wrapper--white-theme .app-sidebar {
-  border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
-  background: #fff;
+  background: #333536;
 }
 
 /* list item link */
@@ -26,13 +24,13 @@
 .app-wrapper--white-theme .app-list__item__link { color: #333; }
 .app-wrapper--white-theme .app-list__item__link:hover,
 .app-wrapper--white-theme .app-list__item--active a {
-  background: #4e9cc5;
-  color: #fff;
+  border-left: 5px solid #4e9cc5;
+  color: #000;
 }
 
 /* button */
 .app-wrapper--white-theme .btn,
-.app-wrapper--white-theme .btn-list { color: #333; }
+.app-wrapper--white-theme .btn-list { color: #fff; }
 .app-wrapper--white-theme .btn:hover,
 .app-wrapper--white-theme .btn-list:hover {
   color: #5387a5
