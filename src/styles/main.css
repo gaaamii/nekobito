@@ -106,7 +106,7 @@ textarea { resize: none; }
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 60px auto 1fr 1.5fr;
+  grid-template-columns: 60px auto 1fr 1.6fr;
   grid-template-rows: 1fr;
   grid-template-areas: 'sidebar list editor preview';
   transition: all .4s ease-in-out;
