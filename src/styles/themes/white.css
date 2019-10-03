@@ -21,7 +21,7 @@
   background: #000;
   border-right: 1px solid #eee;
 }
-.app-wrapper--white-theme .app-list__item__link { color: #333; }
+.app-wrapper--white-theme .app-list__item__link { color: #333; border-bottom: 1px solid #eee; }
 .app-wrapper--white-theme .app-list__item__link:hover,
 .app-wrapper--white-theme .app-list__item--active a {
   border-left: 5px solid #4e9cc5;

@@ -30,7 +30,7 @@
 }
 
 /* list item link*/
-.app-wrapper--dark-theme .app-list__item__link { color: #eee; }
+.app-wrapper--dark-theme .app-list__item__link { color: #eee; border-bottom: 1px solid #222; }
 .app-wrapper--dark-theme .app-list__item__link:hover,
 .app-wrapper--dark-theme .app-list__item--active .app-list__item__link {
   color: #fff;
