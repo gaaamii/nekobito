@@ -109,7 +109,6 @@ textarea { resize: none; }
   grid-template-columns: 60px auto 1fr 1.6fr;
   grid-template-rows: 1fr;
   grid-template-areas: 'sidebar list editor preview';
-  transition: all .4s ease-in-out;
 }
 .app-sidebar {
   padding: 0 0 0 2em;
@@ -120,23 +119,34 @@ textarea { resize: none; }
 .app-sidebar__buttons__btn {
   padding: 20px 0;
   width: 60px;
-  transition: .4s;
 }
 .app-list {
   overflow-y: scroll;
-  transition: .4s;
+  transition: width .2s ease-in-out;
   overflow-x: hidden;
+  height: 100%;
+  font-size: .8em;
+  text-align: center;
+  width: 0;
+}
+.app-list.app-list--visible {
+  width: 250px;
 }
 
-.app-list__item a {
+.app-list__item__link {
   text-align: left;
-  padding: 1.2em;
+  padding: 1.8em 1.4em;
   display: block;
   text-decoration: none;
-  transition: .1s;
   cursor: pointer;
   line-height: 1.8em;
   width: 250px;
+  font-weight: 500;
+  transition: .1s border-left-width ease-in-out;
+}
+.app-list__item__link:hover,
+.app-list__item--active .app-list__item__link {
+  border-left: 5px solid #4e9cc5;
 }
 
 .app-editor {
@@ -164,7 +174,6 @@ textarea { resize: none; }
 
 .app-preview__control {
   color: #fff;
-  transition: .2s;
   cursor: pointer;
   opacity: 0;
   float: right;
@@ -184,7 +193,7 @@ textarea { resize: none; }
   cursor: pointer;
   box-sizing: border-box;
   border: 0;
-  color: #ccc;
+  color: #eee;
   opacity: .7;
   font-size: .7em;
   margin-left: 2.5em;

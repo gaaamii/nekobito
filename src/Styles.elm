@@ -1,41 +1,15 @@
-module Styles exposing (ColorStyles, appList, appListColorStyles)
+module Styles exposing (appList)
 
 import Html exposing (Attribute)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class)
 import List exposing (..)
 import Types exposing (..)
 
 
-type alias ColorStyles =
-    { color : String, background : String }
-
-
-appListColorStyles : ColorTheme -> ColorStyles
-appListColorStyles colorTheme =
-    if colorTheme == DarkTheme then
-        { color = "#fff", background = "#363636" }
-
-    else
-        { color = "#333", background = "#fff" }
-
-
-appList : ( Bool, ColorTheme ) -> List (Attribute msg)
-appList ( isVisible, colorTheme ) =
-    let
-        baseStyles =
-            let
-                colors =
-                    appListColorStyles colorTheme
-            in
-            [ style "height" "100%"
-            , style "font-size" ".8em"
-            , style "text-align" "center"
-            , style "background" colors.background
-            , style "color" colors.color
-            ]
-    in
+appList : Bool -> List (Attribute msg)
+appList isVisible =
     if isVisible then
-        List.concat [ [ style "width" "250px" ], baseStyles ]
+        [ class "app-list--visible" ]
 
     else
-        List.concat [ [ style "width" "0" ], baseStyles ]
+        []

@@ -243,7 +243,7 @@ view model =
                         [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
                     ]
                 ]
-            , div (List.concat [ [ class "app-list" ], Styles.appList ( model.listVisible, model.colorTheme ) ])
+            , div (List.concat [ [ class "app-list" ], Styles.appList model.listVisible ])
                 (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
             , div [ class "app-editor" ]
                 [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
