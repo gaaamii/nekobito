@@ -1,4 +1,4 @@
-module Note exposing (Id, Note, NoteStatusTuple, emptyNote, getFirstNote, lastNoteId, updateNoteBody)
+module Note exposing (Id, Note, NoteStatusTuple, emptyNote, getFirstNote, lastNoteId, toTitle, updateNoteBody)
 
 
 type alias Id =
@@ -49,3 +49,12 @@ getFirstNote list =
 
         Just note ->
             note
+
+
+toTitle : Note -> String
+toTitle note =
+    note.body
+        |> String.lines
+        |> List.head
+        |> Maybe.withDefault ""
+        |> String.replace "#" ""
