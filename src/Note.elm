@@ -1,4 +1,4 @@
-module Note exposing (Id, Note, NoteStatusTuple, emptyNote, getFirstNote, lastNoteId, toTitle, updateNoteBody)
+module Note exposing (Id, Note, emptyNote, getFirstNote, lastNoteId, toTitle, updateNoteBody)
 
 
 type alias Id =
@@ -26,10 +26,6 @@ lastNoteId noteList =
 emptyNote : Id -> Note
 emptyNote id =
     { id = id, body = "" }
-
-
-type alias NoteStatusTuple =
-    ( Note, Bool )
 
 
 updateNoteBody : Note -> String -> Note

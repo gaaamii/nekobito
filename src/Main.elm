@@ -105,7 +105,7 @@ newNote model =
         Nothing
 
     else
-        Just { id = lastNoteId model.noteList + 1, body = "" }
+        Just { id = lastNoteId model.noteList + 1, body = "# New note" }
 
 
 updateActiveNoteBody : Model -> String -> Model
