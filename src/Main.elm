@@ -1,11 +1,11 @@
-port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, appWrapperClassName, deleteNote, emptyModel, filterPresentNote, init, isActiveNote, listIcon, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, appWrapperClassName, deleteNote, emptyModel, init, isActiveNote, listIcon, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
 
 import Browser exposing (..)
 import Html exposing (Html, a, aside, button, div, h1, i, img, p, text, textarea)
 import Html.Attributes exposing (class, href, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
 import Markdown
-import Note exposing (..)
+import Note exposing (Note)
 import Styles
 import Types exposing (..)
 
@@ -18,14 +18,14 @@ type alias Model =
     { colorTheme : ColorTheme
     , listVisible : Bool
     , noteList : List Note
-    , activeNoteId : Id
+    , activeNoteId : Note.Id
     }
 
 
 type alias ModelExposedToStorage =
     { listVisible : Bool
     , noteList : List Note
-    , activeNoteId : Int
+    , activeNoteId : Note.Id
     }
 
 
@@ -63,10 +63,10 @@ init savedModel =
 
 type Msg
     = OnInput String
-    | DeleteNote Id
+    | DeleteNote Note.Id
     | ToggleNoteList
     | AddNewNote
-    | OpenNote Id
+    | OpenNote Note.Id
     | SwitchColorTheme
 
 
@@ -80,7 +80,7 @@ switchColorTheme model =
             { model | colorTheme = WhiteTheme }
 
 
-isActiveNote : Model -> Id -> Bool
+isActiveNote : Model -> Note.Id -> Bool
 isActiveNote model id =
     model.activeNoteId == id
 
@@ -93,7 +93,7 @@ activeNote model =
     in
     case maybeNote of
         Nothing ->
-            getFirstNote model.noteList
+            Note.getFirst model.noteList
 
         Just note ->
             note
@@ -105,7 +105,7 @@ newNote model =
         Nothing
 
     else
-        Just { id = lastNoteId model.noteList + 1, body = "# New note" }
+        Just { id = Note.lastId model.noteList + 1, body = "# New note" }
 
 
 updateActiveNoteBody : Model -> String -> Model
@@ -115,7 +115,7 @@ updateActiveNoteBody model newBody =
             List.map
                 (\note ->
                     if note.id == model.activeNoteId then
-                        updateNoteBody note newBody
+                        { note | body = newBody }
 
                     else
                         note
@@ -125,23 +125,19 @@ updateActiveNoteBody model newBody =
     { model | noteList = list }
 
 
-filterPresentNote : Model -> Model
-filterPresentNote model =
-    let
-        list =
-            List.filter (\note -> note.id == model.activeNoteId || note.body /= "") model.noteList
-    in
-    { model | noteList = list }
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnInput newBody ->
             let
-                newModel =
+                updated =
                     updateActiveNoteBody model newBody
-                        |> filterPresentNote
+
+                newModel =
+                    { model
+                        | noteList =
+                            Note.excludeBlank updated.noteList model.activeNoteId
+                    }
             in
             ( newModel, Cmd.none )
 
@@ -172,7 +168,7 @@ update msg model =
             ( switchColorTheme model, Cmd.none )
 
 
-deleteNote : Model -> Id -> Model
+deleteNote : Model -> Note.Id -> Model
 deleteNote model id =
     let
         newNoteList =
@@ -184,11 +180,11 @@ deleteNote model id =
                 id + 1
         in
         -- if noteList is empty after the note deleted, open new note
-        { model | noteList = [ emptyNote newId ], activeNoteId = newId }
+        { model | noteList = [ Note.new newId ], activeNoteId = newId }
 
     else if model.activeNoteId == id then
         -- if active note is deleted, open last note
-        { model | noteList = newNoteList, activeNoteId = lastNoteId newNoteList }
+        { model | noteList = newNoteList, activeNoteId = Note.lastId newNoteList }
 
     else
         { model | noteList = newNoteList }
@@ -207,7 +203,7 @@ appListItemClass isActive =
         "app-list__item"
 
 
-viewNoteListItem : ( Note, Id ) -> Html Msg
+viewNoteListItem : ( Note, Note.Id ) -> Html Msg
 viewNoteListItem ( note, activeNoteId ) =
     if note.body == "" then
         div [] []
@@ -216,7 +212,7 @@ viewNoteListItem ( note, activeNoteId ) =
         div [ class <| appListItemClass <| activeNoteId == note.id ]
             [ a
                 [ class "app-list__item__link", onClick (OpenNote note.id) ]
-                [ text (note |> toTitle) ]
+                [ text (note |> Note.toTitle) ]
             ]
 
 

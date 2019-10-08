@@ -1,4 +1,7 @@
-module Note exposing (Id, Note, emptyNote, getFirstNote, lastNoteId, toTitle, updateNoteBody)
+-- Types
+
+
+module Note exposing (Id, Note, excludeBlank, getFirst, lastId, new, toTitle)
 
 
 type alias Id =
@@ -9,42 +12,35 @@ type alias Note =
     { id : Id, body : String }
 
 
-lastNoteId : List Note -> Id
-lastNoteId noteList =
-    let
-        maybeNote =
-            List.reverse noteList |> List.head
-    in
-    case maybeNote of
-        Nothing ->
-            1
 
-        Just note ->
-            note.id
+-- Constructor
 
 
-emptyNote : Id -> Note
-emptyNote id =
+new : Id -> Note
+new id =
     { id = id, body = "" }
 
 
-updateNoteBody : Note -> String -> Note
-updateNoteBody note newBody =
-    { note | body = newBody }
+
+-- List Note
 
 
-getFirstNote : List Note -> Note
-getFirstNote list =
-    let
-        maybeNote =
-            List.head list
-    in
-    case maybeNote of
-        Nothing ->
-            { id = 1, body = "" }
+lastId : List Note -> Id
+lastId noteList =
+    List.reverse noteList
+        |> List.head
+        |> Maybe.withDefault (new 1)
+        |> .id
 
-        Just note ->
-            note
+
+getFirst : List Note -> Note
+getFirst list =
+    List.head list
+        |> Maybe.withDefault (new 1)
+
+
+
+-- Note
 
 
 toTitle : Note -> String
@@ -54,3 +50,9 @@ toTitle note =
         |> List.head
         |> Maybe.withDefault ""
         |> String.replace "#" ""
+
+
+excludeBlank : List Note -> Id -> List Note
+excludeBlank list activeId =
+    list
+        |> List.filter (\note -> note.id == activeId || note.body /= "")
