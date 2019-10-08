@@ -4,6 +4,8 @@ import Browser exposing (..)
 import Html exposing (Html, a, aside, button, div, h1, i, img, p, text, textarea)
 import Html.Attributes exposing (class, href, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
+import Json.Decode as Decode
+import Json.Encode as Encode
 import Markdown
 import Note exposing (Note)
 import Styles
@@ -23,7 +25,8 @@ type alias Model =
 
 
 type alias ModelExposedToStorage =
-    { listVisible : Bool
+    { colorTheme : ColorTheme
+    , listVisible : Bool
     , noteList : List Note
     , activeNoteId : Note.Id
     }
@@ -38,21 +41,89 @@ emptyModel =
     }
 
 
-savedModelToModel : Maybe ModelExposedToStorage -> Model
-savedModelToModel maybeSavedModel =
-    case maybeSavedModel of
-        Nothing ->
-            emptyModel
 
-        Just savedModel ->
-            { listVisible = savedModel.listVisible
-            , noteList = savedModel.noteList
-            , activeNoteId = savedModel.activeNoteId
-            , colorTheme = WhiteTheme
-            }
+-- Decoders
 
 
-init : Maybe ModelExposedToStorage -> ( Model, Cmd Msg )
+noteDecoder : Decode.Decoder Note
+noteDecoder =
+    Decode.map2 Note
+        (Decode.field "id" Decode.int)
+        (Decode.field "body" Decode.string)
+
+
+decodeColorTheme =
+    Decode.string
+        |> Decode.andThen
+            (\str ->
+                case str of
+                    "DarkTheme" ->
+                        Decode.succeed DarkTheme
+
+                    _ ->
+                        Decode.succeed WhiteTheme
+            )
+
+
+modelDecoder : Decode.Decoder Model
+modelDecoder =
+    Decode.map4 Model
+        (Decode.field "colorTheme" decodeColorTheme)
+        (Decode.field "listVisible" Decode.bool)
+        (Decode.field "noteList" (Decode.list noteDecoder))
+        (Decode.field "activeNoteId" Decode.int)
+
+
+
+-- Encoders
+
+
+noteEncoder : Note -> Encode.Value
+noteEncoder note =
+    Encode.object
+        [ ( "id", Encode.int note.id )
+        , ( "body", Encode.string note.body )
+        ]
+
+
+encodeColorTheme : ColorTheme -> Encode.Value
+encodeColorTheme colorTheme =
+    case colorTheme of
+        DarkTheme ->
+            Encode.string "DarkTheme"
+
+        _ ->
+            Encode.string "WhiteTheme"
+
+
+encodeModel : Model -> Encode.Value
+encodeModel model =
+    Encode.object
+        [ ( "colorTheme", encodeColorTheme model.colorTheme )
+        , ( "listVisible", Encode.bool model.listVisible )
+        , ( "noteList", Encode.list noteEncoder model.noteList )
+        , ( "activeNoteId", Encode.int model.activeNoteId )
+        ]
+
+
+savedModelToModel : Decode.Value -> Model
+savedModelToModel savedValue =
+    let
+        result =
+            Decode.decodeValue modelDecoder savedValue
+
+        maybeModel =
+            case result of
+                Result.Ok model ->
+                    Just model
+
+                _ ->
+                    Nothing
+    in
+    Maybe.withDefault emptyModel maybeModel
+
+
+init : Decode.Value -> ( Model, Cmd Msg )
 init savedModel =
     ( savedModelToModel savedModel, Cmd.none )
 
@@ -255,7 +326,7 @@ view model =
         ]
 
 
-port setStorage : ModelExposedToStorage -> Cmd msg
+port setStorage : Decode.Value -> Cmd msg
 
 
 appWrapperClassName : Model -> String
@@ -276,13 +347,7 @@ updateWithStorage msg model =
     in
     ( newModel
     , Cmd.batch
-        [ setStorage
-            { listVisible = newModel.listVisible
-            , noteList = newModel.noteList
-            , activeNoteId = newModel.activeNoteId
-            }
-        , cmds
-        ]
+        [ setStorage <| encodeModel newModel, cmds ]
     )
 
 
@@ -290,7 +355,7 @@ updateWithStorage msg model =
 ---- PROGRAM ----
 
 
-main : Program (Maybe ModelExposedToStorage) Model Msg
+main : Program Decode.Value Model Msg
 main =
     Browser.element
         { view = view
