@@ -221,7 +221,6 @@ textarea { resize: none; }
   cursor: pointer;
   box-sizing: border-box;
   border: 0;
-  color: #eee;
   opacity: .7;
   font-size: .7em;
   background: transparent;
@@ -231,3 +230,5 @@ textarea { resize: none; }
 
 /* Visibility */
 .hidden { display: none; }
+
+@import "./common/modal.css";
