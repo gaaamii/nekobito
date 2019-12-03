@@ -121,7 +121,7 @@ type Msg
     | SwitchLayout LayoutMode
     | OpenSettingModal
     | CloseSettingModal
-    | UpdateSetting
+    | OnSyncSetting
 
 
 switchColorTheme : Model -> Model
@@ -224,14 +224,14 @@ update msg model =
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
 
-        UpdateSetting ->
-            ( model, Cmd.none )
-
         CloseSettingModal ->
             ( { model | showModal = False }, Cmd.none )
 
         OpenSettingModal ->
             ( { model | showModal = True }, Cmd.none )
+
+        OnSyncSetting ->
+            ( model, Cmd.batch [ syncSetting "sync setting" ] )
 
 
 deleteNote : Model -> Note.Id -> Model
@@ -352,21 +352,30 @@ viewControl model =
 
 viewSettingModal : Bool -> Html Msg
 viewSettingModal visible =
-    Modal.view { visible = visible, title = "Sync with your local direcotry", children = viewSetting } CloseSettingModal
+    Modal.view { visible = visible, title = "Sync with local direcotry", children = viewSetting } CloseSettingModal
 
 
 viewSetting : Html Msg
 viewSetting =
-    div [ class "app-storage-setting", onClick UpdateSetting ]
+    div [ class "app-storage-setting" ]
         [ div [ class "app-storage-setting__radio-buttons" ]
-            [ input [ type_ "file", id "storage-setting-file", name "storage" ] []
+            [ button [ onClick OnSyncSetting ] [ text "Sync with local directory" ]
             ]
-        , button [] [ text "Update Setting" ]
         ]
 
 
 
+-- ports
+
+
+port setStorage : Decode.Value -> Cmd msg
+
+
+
 -- classeNames
+
+
+port syncSetting : String -> Cmd msg
 
 
 themeClass : ColorTheme -> String
@@ -391,13 +400,6 @@ appListItemClass isActive =
 layoutClass : LayoutMode -> String
 layoutClass layoutMode =
     "app-container--" ++ (layoutMode |> LayoutMode.toString |> String.toLower)
-
-
-
--- ports
-
-
-port setStorage : Decode.Value -> Cmd msg
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
