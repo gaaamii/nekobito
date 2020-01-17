@@ -1,5 +1,13 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
+    "revision": "741a6bd749cf68c3a6bcec79d2c0df19",
+    "url": "/.DS_Store"
+  },
+  {
+    "revision": "3fc3e8ec3f4615853005eedcffba2f73",
+    "url": "/assets/.DS_Store"
+  },
+  {
     "revision": "ec39d75cbc4de8171c2f6656a26816a3",
     "url": "/assets/highlightjs/LICENSE"
   },
@@ -348,7 +356,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/favicon.ico"
   },
   {
-    "revision": "4d650aa193deb57d9be6cd575514cf29",
+    "revision": "97c59dea12fdce5a256d3baf432da42e",
     "url": "/index.html"
   },
   {
@@ -360,12 +368,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/manifest.json"
   },
   {
-    "revision": "cd76d589a55bed6540ec",
-    "url": "/static/css/main.090ac637.chunk.css"
+    "revision": "7435e7f62a56e5085459",
+    "url": "/static/css/main.c8bebdf7.chunk.css"
   },
   {
-    "revision": "cd76d589a55bed6540ec",
-    "url": "/static/js/main.cd76d589.chunk.js"
+    "revision": "7435e7f62a56e5085459",
+    "url": "/static/js/main.7435e7f6.chunk.js"
   },
   {
     "revision": "1b922744246c39b6bc43",
