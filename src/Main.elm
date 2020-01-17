@@ -1,4 +1,4 @@
-port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, appWrapperClassName, deleteNote, emptyModel, init, isActiveNote, listIcon, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, appWrapperClassName, deleteNote, emptyModel, init, isActiveNote, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
 
 import Browser exposing (..)
 import Html exposing (Html, a, aside, button, div, h1, i, img, p, text, textarea)
@@ -6,6 +6,7 @@ import Html.Attributes exposing (class, href, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
 import Json.Encode as Encode
+import LayoutMode exposing (LayoutMode)
 import Markdown
 import Note exposing (Note)
 import Styles
@@ -21,6 +22,7 @@ type alias Model =
     , listVisible : Bool
     , noteList : List Note
     , activeNoteId : Note.Id
+    , layoutMode : LayoutMode
     }
 
 
@@ -29,6 +31,7 @@ type alias ModelExposedToStorage =
     , listVisible : Bool
     , noteList : List Note
     , activeNoteId : Note.Id
+    , layoutMode : LayoutMode
     }
 
 
@@ -38,6 +41,7 @@ emptyModel =
     , noteList = [ { id = 1, body = "" } ]
     , listVisible = False
     , activeNoteId = 1
+    , layoutMode = LayoutMode.Write
     }
 
 
@@ -67,11 +71,12 @@ decodeColorTheme =
 
 modelDecoder : Decode.Decoder Model
 modelDecoder =
-    Decode.map4 Model
+    Decode.map5 Model
         (Decode.field "colorTheme" decodeColorTheme)
         (Decode.field "listVisible" Decode.bool)
         (Decode.field "noteList" (Decode.list noteDecoder))
         (Decode.field "activeNoteId" Decode.int)
+        (Decode.field "layoutMode" LayoutMode.decode)
 
 
 
@@ -103,6 +108,7 @@ encodeModel model =
         , ( "listVisible", Encode.bool model.listVisible )
         , ( "noteList", Encode.list noteEncoder model.noteList )
         , ( "activeNoteId", Encode.int model.activeNoteId )
+        , ( "layoutMode", LayoutMode.encode model.layoutMode )
         ]
 
 
@@ -117,10 +123,10 @@ savedModelToModel savedValue =
                 Result.Ok model ->
                     Just model
 
-                _ ->
+                Result.Err err ->
                     Nothing
     in
-    Maybe.withDefault emptyModel maybeModel
+    maybeModel |> Maybe.withDefault emptyModel
 
 
 init : Decode.Value -> ( Model, Cmd Msg )
@@ -139,6 +145,7 @@ type Msg
     | AddNewNote
     | OpenNote Note.Id
     | SwitchColorTheme
+    | SwitchLayout LayoutMode
 
 
 switchColorTheme : Model -> Model
@@ -238,6 +245,9 @@ update msg model =
         SwitchColorTheme ->
             ( switchColorTheme model, Cmd.none )
 
+        SwitchLayout mode ->
+            ( { model | layoutMode = mode }, Cmd.none )
+
 
 deleteNote : Model -> Note.Id -> Model
 deleteNote model id =
@@ -287,27 +297,23 @@ viewNoteListItem ( note, activeNoteId ) =
             ]
 
 
-listIcon : Bool -> String
-listIcon listVisible =
-    if listVisible then
-        "keyboard_arrow_left"
-
-    else
-        "list"
+layoutClass : LayoutMode -> String
+layoutClass layoutMode =
+    "app-container--" ++ (layoutMode |> LayoutMode.toString |> String.toLower)
 
 
 view : Model -> Html Msg
 view model =
     div [ class <| appWrapperClassName model ]
-        [ div [ class "app-container" ]
+        [ div [ class <| "app-container " ++ layoutClass model.layoutMode ]
             [ aside [ class "app-sidebar" ]
                 [ div [ class "app-sidebar__buttons" ]
-                    [ button [ class "app-sidebar__buttons__btn btn btn-list", onClick ToggleNoteList ]
-                        [ i [ class "material-icons" ] [ text (listIcon model.listVisible) ] ]
-                    , button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
+                    [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
                         [ i [ class "material-icons" ] [ text "note_add" ] ]
                     , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
                         [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
+                    , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.next)) ]
+                        [ i [ class "material-icons" ] [ text "view_compact" ] ]
                     ]
                 ]
             , div (List.concat [ [ class "app-list" ], Styles.appList model.listVisible ])
@@ -319,6 +325,8 @@ view model =
                 [ div [ class "app-preview__control" ]
                     [ button [ class "btn btn-delete", onClick (DeleteNote (activeNote model).id) ]
                         [ i [ class "material-icons" ] [ text "delete" ] ]
+                    , button [ class "btn btn-delete", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToEditableMode)) ]
+                        [ i [ class "material-icons" ] [ text "edit" ] ]
                     ]
                 , Markdown.toHtml [] (activeNote model).body
                 ]
