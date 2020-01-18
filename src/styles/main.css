@@ -142,10 +142,6 @@ textarea { resize: none; }
   font-size: .8em;
   text-align: center;
 }
-.app-list.app-list--visible {
-  width: 250px;
-}
-
 .app-list__item__link {
   text-align: left;
   padding: 1.8em 1.4em;

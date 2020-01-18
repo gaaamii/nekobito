@@ -1,7 +1,9 @@
 -- Types
 
 
-module Note exposing (Id, Note, excludeBlank, getFirst, lastId, new, toTitle)
+module Note exposing (Id, Note, encode, excludeBlank, getFirst, lastId, new, toTitle)
+
+import Json.Encode as Encode
 
 
 type alias Id =
@@ -56,3 +58,11 @@ excludeBlank : List Note -> Id -> List Note
 excludeBlank list activeId =
     list
         |> List.filter (\note -> note.id == activeId || note.body /= "")
+
+
+encode : Note -> Encode.Value
+encode note =
+    Encode.object
+        [ ( "id", Encode.int note.id )
+        , ( "body", Encode.string note.body )
+        ]

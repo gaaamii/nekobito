@@ -1,6 +1,7 @@
-port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, appWrapperClassName, deleteNote, emptyModel, init, isActiveNote, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, deleteNote, emptyModel, init, isActiveNote, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
 
 import Browser exposing (..)
+import ColorTheme exposing (ColorTheme)
 import Html exposing (Html, a, aside, button, div, h1, i, img, p, text, textarea)
 import Html.Attributes exposing (class, href, placeholder, src, value)
 import Html.Events exposing (onClick, onInput)
@@ -9,8 +10,6 @@ import Json.Encode as Encode
 import LayoutMode exposing (LayoutMode)
 import Markdown
 import Note exposing (Note)
-import Styles
-import Types exposing (..)
 
 
 
@@ -37,7 +36,7 @@ type alias ModelExposedToStorage =
 
 emptyModel : Model
 emptyModel =
-    { colorTheme = WhiteTheme
+    { colorTheme = ColorTheme.White
     , noteList = [ { id = 1, body = "" } ]
     , listVisible = False
     , activeNoteId = 1
@@ -56,23 +55,10 @@ noteDecoder =
         (Decode.field "body" Decode.string)
 
 
-decodeColorTheme =
-    Decode.string
-        |> Decode.andThen
-            (\str ->
-                case str of
-                    "DarkTheme" ->
-                        Decode.succeed DarkTheme
-
-                    _ ->
-                        Decode.succeed WhiteTheme
-            )
-
-
 modelDecoder : Decode.Decoder Model
 modelDecoder =
     Decode.map5 Model
-        (Decode.field "colorTheme" decodeColorTheme)
+        (Decode.field "colorTheme" ColorTheme.decode)
         (Decode.field "listVisible" Decode.bool)
         (Decode.field "noteList" (Decode.list noteDecoder))
         (Decode.field "activeNoteId" Decode.int)
@@ -83,30 +69,12 @@ modelDecoder =
 -- Encoders
 
 
-noteEncoder : Note -> Encode.Value
-noteEncoder note =
-    Encode.object
-        [ ( "id", Encode.int note.id )
-        , ( "body", Encode.string note.body )
-        ]
-
-
-encodeColorTheme : ColorTheme -> Encode.Value
-encodeColorTheme colorTheme =
-    case colorTheme of
-        DarkTheme ->
-            Encode.string "DarkTheme"
-
-        _ ->
-            Encode.string "WhiteTheme"
-
-
 encodeModel : Model -> Encode.Value
 encodeModel model =
     Encode.object
-        [ ( "colorTheme", encodeColorTheme model.colorTheme )
+        [ ( "colorTheme", ColorTheme.encode model.colorTheme )
         , ( "listVisible", Encode.bool model.listVisible )
-        , ( "noteList", Encode.list noteEncoder model.noteList )
+        , ( "noteList", Encode.list Note.encode model.noteList )
         , ( "activeNoteId", Encode.int model.activeNoteId )
         , ( "layoutMode", LayoutMode.encode model.layoutMode )
         ]
@@ -151,11 +119,11 @@ type Msg
 switchColorTheme : Model -> Model
 switchColorTheme model =
     case model.colorTheme of
-        WhiteTheme ->
-            { model | colorTheme = DarkTheme }
+        ColorTheme.White ->
+            { model | colorTheme = ColorTheme.Dark }
 
-        DarkTheme ->
-            { model | colorTheme = WhiteTheme }
+        ColorTheme.Dark ->
+            { model | colorTheme = ColorTheme.White }
 
 
 isActiveNote : Model -> Note.Id -> Bool
@@ -273,15 +241,43 @@ deleteNote model id =
 
 
 ---- VIEW ----
+-- main view
 
 
-appListItemClass : Bool -> String
-appListItemClass isActive =
-    if isActive then
-        "app-list__item app-list__item--active"
+view : Model -> Html Msg
+view model =
+    div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
+        [ div [ class <| "app-container " ++ layoutClass model.layoutMode ]
+            [ viewSidebar model
+            , viewNoteList model
+            , viewEditor model
+            , viewPreview model
+            ]
+        ]
 
-    else
-        "app-list__item"
+
+
+-- sub views
+
+
+viewSidebar : Model -> Html Msg
+viewSidebar model =
+    aside [ class "app-sidebar" ]
+        [ div [ class "app-sidebar__buttons" ]
+            [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
+                [ i [ class "material-icons" ] [ text "note_add" ] ]
+            , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
+                [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
+            , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.next)) ]
+                [ i [ class "material-icons" ] [ text "view_compact" ] ]
+            ]
+        ]
+
+
+viewNoteList : Model -> Html Msg
+viewNoteList model =
+    div [ class "app-list" ]
+        (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
 
 
 viewNoteListItem : ( Note, Note.Id ) -> Html Msg
@@ -297,54 +293,59 @@ viewNoteListItem ( note, activeNoteId ) =
             ]
 
 
+viewEditor : Model -> Html Msg
+viewEditor model =
+    div [ class "app-editor" ]
+        [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
+        ]
+
+
+viewPreview : Model -> Html Msg
+viewPreview model =
+    div [ class "app-preview" ]
+        [ div [ class "app-preview__control" ]
+            [ button [ class "btn btn-delete", onClick (DeleteNote (activeNote model).id) ]
+                [ i [ class "material-icons" ] [ text "delete" ] ]
+            , button [ class "btn btn-delete", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToEditableMode)) ]
+                [ i [ class "material-icons" ] [ text "edit" ] ]
+            ]
+        , Markdown.toHtml [] (activeNote model).body
+        ]
+
+
+
+-- classeNames
+
+
+themeClass : ColorTheme -> String
+themeClass colorTheme =
+    case colorTheme of
+        ColorTheme.White ->
+            "app-wrapper--white-theme"
+
+        ColorTheme.Dark ->
+            "app-wrapper--dark-theme"
+
+
+appListItemClass : Bool -> String
+appListItemClass isActive =
+    if isActive then
+        "app-list__item app-list__item--active"
+
+    else
+        "app-list__item"
+
+
 layoutClass : LayoutMode -> String
 layoutClass layoutMode =
     "app-container--" ++ (layoutMode |> LayoutMode.toString |> String.toLower)
 
 
-view : Model -> Html Msg
-view model =
-    div [ class <| appWrapperClassName model ]
-        [ div [ class <| "app-container " ++ layoutClass model.layoutMode ]
-            [ aside [ class "app-sidebar" ]
-                [ div [ class "app-sidebar__buttons" ]
-                    [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
-                        [ i [ class "material-icons" ] [ text "note_add" ] ]
-                    , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
-                        [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
-                    , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.next)) ]
-                        [ i [ class "material-icons" ] [ text "view_compact" ] ]
-                    ]
-                ]
-            , div (List.concat [ [ class "app-list" ], Styles.appList model.listVisible ])
-                (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
-            , div [ class "app-editor" ]
-                [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
-                ]
-            , div [ class "app-preview" ]
-                [ div [ class "app-preview__control" ]
-                    [ button [ class "btn btn-delete", onClick (DeleteNote (activeNote model).id) ]
-                        [ i [ class "material-icons" ] [ text "delete" ] ]
-                    , button [ class "btn btn-delete", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToEditableMode)) ]
-                        [ i [ class "material-icons" ] [ text "edit" ] ]
-                    ]
-                , Markdown.toHtml [] (activeNote model).body
-                ]
-            ]
-        ]
+
+-- ports
 
 
 port setStorage : Decode.Value -> Cmd msg
-
-
-appWrapperClassName : Model -> String
-appWrapperClassName model =
-    case model.colorTheme of
-        WhiteTheme ->
-            "app-wrapper app-wrapper--white-theme"
-
-        DarkTheme ->
-            "app-wrapper app-wrapper--dark-theme"
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
