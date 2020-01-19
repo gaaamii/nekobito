@@ -1,4 +1,6 @@
 # Nekobito
+![](https://github.com/gaaamii/nekobito/workflows/Run%20Tests/badge.svg)
+
 Nekobito is a browser-based markdown editor.
 
 ![screenshot of Nekobito](nekobito_screen.png)
