@@ -18,17 +18,17 @@ If you use Google Chrome, you can install Nekobito as a progressive web app.
 
 ### Install node modules
 ```
-yarn
+npm i
 ```
 
 ### Start dev server
 
 
 ```
-yarn run start
+npm run start
 ```
 
 ### Build
 ```
-yarn run build
+npm run build
 ```
