@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "elm-app start",
-    "build": "elm-app build"
+    "build": "elm-app build",
+    "test": "elm-app test"
   },
   "name": "nekobito",
   "version": "1.0.0",
