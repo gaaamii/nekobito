@@ -33,3 +33,6 @@
 .app-wrapper--white-theme .btn-list:hover {
   color: #5387a5
 }
+.app-wrapper--white-theme .app-control > button {
+  color: #000;
+}

@@ -50,3 +50,6 @@
 .app-wrapper--dark-theme .btn-list {
   color: #fff;
 }
+.app-wrapper--dark-theme .app-control > button {
+  color: #fff;
+}

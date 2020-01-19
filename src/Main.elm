@@ -252,6 +252,7 @@ view model =
             , viewNoteList model
             , viewEditor model
             , viewPreview model
+            , viewControl model
             ]
         ]
 
@@ -302,14 +303,28 @@ viewEditor model =
 
 viewPreview : Model -> Html Msg
 viewPreview model =
-    div [ class "app-preview" ]
-        [ div [ class "app-preview__control" ]
-            [ button [ class "btn btn-delete", onClick (DeleteNote (activeNote model).id) ]
-                [ i [ class "material-icons" ] [ text "delete" ] ]
-            , button [ class "btn btn-delete", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToEditableMode)) ]
-                [ i [ class "material-icons" ] [ text "edit" ] ]
-            ]
-        , Markdown.toHtml [] (activeNote model).body
+    div [ class "app-preview" ] [ Markdown.toHtml [] (activeNote model).body ]
+
+
+viewControl : Model -> Html Msg
+viewControl model =
+    let
+        viewSwitchModeIcon =
+            if model.layoutMode == LayoutMode.Write then
+                div [] []
+
+            else if model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Modify then
+                button [ class "btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToPreviewMode)) ]
+                    [ i [ class "material-icons" ] [ text "remove_red_eye" ] ]
+
+            else
+                button [ class "btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToEditableMode)) ]
+                    [ i [ class "material-icons" ] [ text "edit" ] ]
+    in
+    div [ class "app-control" ]
+        [ button [ class "btn", onClick (DeleteNote (activeNote model).id) ]
+            [ i [ class "material-icons" ] [ text "delete" ] ]
+        , viewSwitchModeIcon
         ]
 
 

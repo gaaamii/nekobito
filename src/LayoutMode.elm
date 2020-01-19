@@ -1,4 +1,4 @@
-module LayoutMode exposing (LayoutMode(..), decode, encode, next, toString, transitToEditableMode)
+module LayoutMode exposing (LayoutMode(..), decode, encode, next, toString, transitToEditableMode, transitToPreviewMode)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -62,21 +62,12 @@ toString layoutMode =
 
 
 next : LayoutMode -> LayoutMode
-next layoutMode =
-    case layoutMode of
+next currentMode =
+    case currentMode of
         Write ->
-            Focus
-
-        Focus ->
-            Read
-
-        Read ->
-            Modify
-
-        Modify ->
             Preview
 
-        Preview ->
+        _ ->
             Write
 
 
@@ -88,6 +79,19 @@ transitToEditableMode currentMode =
 
         Preview ->
             Modify
+
+        _ ->
+            Write
+
+
+transitToPreviewMode : LayoutMode -> LayoutMode
+transitToPreviewMode currentMode =
+    case currentMode of
+        Focus ->
+            Read
+
+        Modify ->
+            Preview
 
         _ ->
             Write

@@ -191,15 +191,23 @@ textarea { resize: none; }
   overflow: scroll;
 }
 
-.app-preview__control {
-  color: #fff;
+.app-control {
+  position: absolute;
+  right: 0;
+  padding: 10px;
   cursor: pointer;
   opacity: 0;
   float: right;
   margin-right: 60px;
+  opacity: 0.7;
 }
-.app-preview:hover .app-preview__control { opacity: 0.7; }
-.app-preview:hover .app-preview__control:hover { opacity: 1; }
+.app-control > button {
+  margin: 0 1em;
+}
+.app-control > button:hover {
+  opacity: 1;
+}
+
 .page-header {
   display: inline-block;
   font-size: .9em;;
@@ -215,7 +223,6 @@ textarea { resize: none; }
   color: #eee;
   opacity: .7;
   font-size: .7em;
-  margin-left: 2.5em;
   background: transparent;
   vertical-align: middle;
 }
