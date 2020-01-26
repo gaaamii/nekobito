@@ -1,4 +1,4 @@
-module LayoutMode exposing (LayoutMode(..), decode, encode, next, toString, transitToEditableMode, transitToPreviewMode)
+module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggleList, toggleMainColumns, transitToComparableMode, transitToEditableMode, transitToPreviewMode)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -10,8 +10,10 @@ type LayoutMode
     | Read
     | Modify
     | Preview
+    | OpenAll
 
 
+decode : Decode.Decoder LayoutMode
 decode =
     Decode.string
         |> Decode.andThen
@@ -31,6 +33,9 @@ decode =
 
                     "Preview" ->
                         Decode.succeed Preview
+
+                    "OpenAll" ->
+                        Decode.succeed OpenAll
 
                     _ ->
                         Decode.succeed Write
@@ -60,15 +65,54 @@ toString layoutMode =
         Preview ->
             "Preview"
 
+        OpenAll ->
+            "OpenAll"
 
-next : LayoutMode -> LayoutMode
-next currentMode =
+
+toggleList : LayoutMode -> LayoutMode
+toggleList currentMode =
     case currentMode of
+        -- Open list
         Write ->
+            OpenAll
+
+        Focus ->
+            Modify
+
+        Read ->
             Preview
 
-        _ ->
+        -- Close list
+        Modify ->
+            Focus
+
+        Preview ->
+            Read
+
+        OpenAll ->
             Write
+
+
+toggleMainColumns : LayoutMode -> LayoutMode
+toggleMainColumns currentMode =
+    case currentMode of
+        Focus ->
+            Write
+
+        Read ->
+            Write
+
+        Modify ->
+            OpenAll
+
+        Preview ->
+            OpenAll
+
+        Write ->
+            Focus
+
+        OpenAll ->
+            Modify
 
 
 transitToEditableMode : LayoutMode -> LayoutMode
@@ -92,6 +136,25 @@ transitToPreviewMode currentMode =
 
         Modify ->
             Preview
+
+        _ ->
+            Write
+
+
+transitToComparableMode : LayoutMode -> LayoutMode
+transitToComparableMode currentMode =
+    case currentMode of
+        Focus ->
+            Write
+
+        Read ->
+            Write
+
+        Modify ->
+            OpenAll
+
+        Preview ->
+            OpenAll
 
         _ ->
             Write

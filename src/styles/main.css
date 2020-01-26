@@ -110,6 +110,9 @@ textarea { resize: none; }
   grid-template-areas: 'sidebar list editor preview';
   transition: all .2s;
 }
+.app-container--openall {
+  grid-template-columns: 60px 250px 1fr 1.6fr;
+}
 .app-container--write {
   grid-template-columns: 60px 0 1fr 1.6fr;
 }
@@ -151,7 +154,6 @@ textarea { resize: none; }
   line-height: 1.8em;
   width: 250px;
   font-weight: 500;
-  transition: .1s border-left-width ease-in-out;
 }
 .app-list__item__link:hover,
 .app-list__item--active .app-list__item__link {

@@ -265,12 +265,14 @@ viewSidebar : Model -> Html Msg
 viewSidebar model =
     aside [ class "app-sidebar" ]
         [ div [ class "app-sidebar__buttons" ]
-            [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
+            [ button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleList)) ]
+                [ i [ class "material-icons" ] [ text "list" ] ]
+            , button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
                 [ i [ class "material-icons" ] [ text "note_add" ] ]
             , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
                 [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.next)) ]
-                [ i [ class "material-icons" ] [ text "view_compact" ] ]
+            , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
+                [ i [ class "material-icons" ] [ text "compare" ] ]
             ]
         ]
 
@@ -310,7 +312,7 @@ viewControl : Model -> Html Msg
 viewControl model =
     let
         viewSwitchModeIcon =
-            if model.layoutMode == LayoutMode.Write then
+            if model.layoutMode == LayoutMode.Write || model.layoutMode == LayoutMode.OpenAll then
                 div [] []
 
             else if model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Modify then
