@@ -178,7 +178,6 @@ textarea { resize: none; }
   overflow: scroll;
   word-spacing: 2px;
   line-height: 1.85em;
-  overflow: hidden;
   padding: 2rem;
 }
 .app-editor textarea:focus { outline: 0; }
