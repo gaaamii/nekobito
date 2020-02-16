@@ -1,9 +1,9 @@
 -- Types
 
 
-module Note exposing (Id, Note, encode, excludeBlank, getFirst, lastId, new, toTitle)
+module Note exposing (Id, Note, decode, new, toTitle)
 
-import Json.Encode as Encode
+import Json.Decode as Decode
 
 
 type alias Id =
@@ -11,34 +11,19 @@ type alias Id =
 
 
 type alias Note =
-    { id : Id, body : String }
+    { name : String
+    , lastModified : Maybe Int
+    , text : String
+    }
 
 
 
 -- Constructor
 
 
-new : Id -> Note
-new id =
-    { id = id, body = "" }
-
-
-
--- List Note
-
-
-lastId : List Note -> Id
-lastId noteList =
-    List.reverse noteList
-        |> List.head
-        |> Maybe.withDefault (new 1)
-        |> .id
-
-
-getFirst : List Note -> Note
-getFirst list =
-    List.head list
-        |> Maybe.withDefault (new 1)
+new : Note
+new =
+    { name = "", lastModified = Nothing, text = "" }
 
 
 
@@ -47,22 +32,20 @@ getFirst list =
 
 toTitle : Note -> String
 toTitle note =
-    note.body
+    note.text
         |> String.lines
         |> List.head
         |> Maybe.withDefault ""
         |> String.replace "#" ""
 
 
-excludeBlank : List Note -> Id -> List Note
-excludeBlank list activeId =
-    list
-        |> List.filter (\note -> note.id == activeId || note.body /= "")
-
-
-encode : Note -> Encode.Value
-encode note =
-    Encode.object
-        [ ( "id", Encode.int note.id )
-        , ( "body", Encode.string note.body )
-        ]
+decode : Decode.Value -> Result Decode.Error Note
+decode value =
+    let
+        decoder =
+            Decode.map3 Note
+                (Decode.field "name" Decode.string)
+                (Decode.field "lastModified" (Decode.int |> Decode.nullable))
+                (Decode.field "text" Decode.string)
+    in
+    Decode.decodeValue decoder value

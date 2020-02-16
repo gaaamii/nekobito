@@ -13,20 +13,15 @@ app.ports.setStorage.subscribe(function(state) {
 });
 
 app.ports.syncSetting.subscribe(async function(str) {
-  const opts = { type: 'openDirectory' };
-  const fileHandle = await window.chooseFileSystemEntries(opts);
-  const entries = await fileHandle.getEntries();
-  window.app = { fileHandles: [] };
-  for await (const entry of entries) {
-    const kind = entry.isFile ? 'File' : 'Directory';
-    console.log(kind, entry.name);
-    console.log(entry);
-    if (entry.isFile) {
-      window.app.fileHandles.push(entry);
-    }
-  }
-
-  console.info(window.app.fileHandles)
+  const fileHandle = await window.chooseFileSystemEntries();
+  const file = await fileHandle.getFile();
+  const text = await file.text();
+  const { name, lastModified } = file
+  app.ports.fileLoaded.send({
+    name,
+    lastModified, 
+    text,
+  });
 });
 
 const onAfterInitialRender = () => {

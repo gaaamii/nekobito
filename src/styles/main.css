@@ -107,26 +107,17 @@ textarea { resize: none; }
   height: 100%;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-areas: 'sidebar list editor preview';
+  grid-template-areas: 'sidebar editor preview';
   transition: all .2s;
 }
-.app-container--openall {
-  grid-template-columns: 60px 250px 1fr 1.6fr;
-}
 .app-container--write {
-  grid-template-columns: 60px 0 1fr 1.6fr;
+  grid-template-columns: 60px 1fr 1.6fr;
 }
 .app-container--focus {
-  grid-template-columns: 60px 0 1fr 0;
+  grid-template-columns: 60px 1fr 0;
 }
 .app-container--read {
-  grid-template-columns: 60px 0 0 1fr;
-}
-.app-container--modify {
-  grid-template-columns: 60px 250px 1fr 0;
-}
-.app-container--preview {
-  grid-template-columns: 60px 250px 0 1fr;
+  grid-template-columns: 60px 0 1fr;
 }
 .app-sidebar {
   padding: 0 0 0 2em;
@@ -138,28 +129,6 @@ textarea { resize: none; }
   padding: 20px 0;
   width: 60px;
 }
-.app-list {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 100%;
-  font-size: .8em;
-  text-align: center;
-}
-.app-list__item__link {
-  text-align: left;
-  padding: 1.8em 1.4em;
-  display: block;
-  text-decoration: none;
-  cursor: pointer;
-  line-height: 1.8em;
-  width: 250px;
-  font-weight: 500;
-}
-.app-list__item__link:hover,
-.app-list__item--active .app-list__item__link {
-  border-left: 5px solid #4e9cc5;
-}
-
 .app-editor {
   grid-area: editor;
   padding-bottom: 2em;
@@ -171,6 +140,7 @@ textarea { resize: none; }
   padding: 0;
 }
 .app-editor > textarea {
+  display: block;
   border: 0;
   font-size: .95em;
   width: 100%;
@@ -179,6 +149,8 @@ textarea { resize: none; }
   word-spacing: 2px;
   line-height: 1.85em;
   padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 .app-editor textarea:focus { outline: 0; }
 .app-editor__btn {
@@ -190,6 +162,8 @@ textarea { resize: none; }
   text-align: left;
   padding: 1em 5%;
   overflow: scroll;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .app-control {
