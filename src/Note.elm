@@ -23,7 +23,7 @@ type alias Note =
 
 new : Note
 new =
-    { name = "", lastModified = Nothing, text = "" }
+    { name = "text.md", lastModified = Nothing, text = "" }
 
 
 

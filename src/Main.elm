@@ -1,11 +1,12 @@
-port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, deleteNote, emptyModel, init, main, setStorage, switchColorTheme, update, updateWithStorage, view)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, switchColorTheme, update, updateWithStorage, view)
 
 import Browser
 import ColorTheme exposing (ColorTheme)
 import Html exposing (Html, aside, button, div, i, text, textarea)
-import Html.Attributes exposing (class, placeholder, value)
+import Html.Attributes exposing (class, id, placeholder, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
+import Json.Encode as Encode
 import LayoutMode exposing (LayoutMode)
 import LocalStorageValue
 import Markdown
@@ -72,8 +73,10 @@ type Msg
     | AddNewNote
     | SwitchColorTheme
     | SwitchLayout LayoutMode
-    | OnSyncSetting
     | FileLoaded Decode.Value
+    | FileWritten Bool
+    | SaveFile
+    | OpenFile
 
 
 switchColorTheme : Model -> Model
@@ -94,7 +97,9 @@ update msg model =
                 note =
                     model.note
             in
-            ( { model | note = { note | text = newBody } }, Cmd.none )
+            ( { model | note = { note | text = newBody } }
+            , Cmd.none
+            )
 
         AddNewNote ->
             ( { model | note = Note.new }, Cmd.none )
@@ -105,8 +110,8 @@ update msg model =
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
 
-        OnSyncSetting ->
-            ( model, Cmd.batch [ syncSetting "sync setting" ] )
+        OpenFile ->
+            ( model, Cmd.batch [ openFile () ] )
 
         FileLoaded value ->
             let
@@ -123,11 +128,11 @@ update msg model =
             in
             ( { model | note = note }, Cmd.none )
 
+        FileWritten _ ->
+            ( model, Cmd.none )
 
-deleteNote : Model -> Model
-deleteNote model =
-    -- TODO delete note from local file system, if possible.
-    { model | note = Note.new }
+        SaveFile ->
+            ( model, Cmd.batch [ writeFile model.note.text ] )
 
 
 
@@ -157,7 +162,9 @@ viewSidebar model =
         [ div [ class "app-sidebar__buttons" ]
             [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
                 [ i [ class "material-icons" ] [ text "note_add" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick OnSyncSetting ]
+            , button [ class "app-sidebar__buttons__btn btn", onClick SaveFile ]
+                [ i [ class "material-icons" ] [ text "save" ] ]
+            , button [ id "openFileButton", class "app-sidebar__buttons__btn btn", onClick OpenFile ]
                 [ i [ class "material-icons" ] [ text "folder" ] ]
             , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
                 [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
@@ -201,13 +208,19 @@ viewControl model =
 -- ports
 
 
-port setStorage : Decode.Value -> Cmd msg
+port setStorage : Encode.Value -> Cmd msg
+
+
+port writeFile : String -> Cmd msg
 
 
 port fileLoaded : (Decode.Value -> msg) -> Sub msg
 
 
-port syncSetting : String -> Cmd msg
+port fileWritten : (Bool -> msg) -> Sub msg
+
+
+port openFile : () -> Cmd msg
 
 
 themeClass : ColorTheme -> String
@@ -252,12 +265,12 @@ updateWithStorage msg model =
 
 
 
----- Subscripitions ----
+---- Subscriptions ----
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.batch [ fileLoaded FileLoaded ]
+    Sub.batch [ fileLoaded FileLoaded, fileWritten FileWritten ]
 
 
 
