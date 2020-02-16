@@ -77,6 +77,7 @@ type Msg
     | FileWritten Bool
     | SaveFile
     | OpenFile
+    | NewFileBuilt String
 
 
 switchColorTheme : Model -> Model
@@ -98,11 +99,11 @@ update msg model =
                     model.note
             in
             ( { model | note = { note | text = newBody } }
-            , Cmd.none
+            , Cmd.batch [ changeText newBody ]
             )
 
         AddNewNote ->
-            ( { model | note = Note.new }, Cmd.none )
+            ( model, Cmd.batch [ newFile () ] )
 
         SwitchColorTheme ->
             ( switchColorTheme model, Cmd.none )
@@ -112,6 +113,13 @@ update msg model =
 
         OpenFile ->
             ( model, Cmd.batch [ openFile () ] )
+
+        NewFileBuilt filename ->
+            let
+                newNote =
+                    Note.new
+            in
+            ( { model | note = { newNote | name = filename } }, Cmd.none )
 
         FileLoaded value ->
             let
@@ -204,25 +212,6 @@ viewControl model =
     div [ class "app-control" ] [ viewSwitchModeIcon ]
 
 
-
--- ports
-
-
-port setStorage : Encode.Value -> Cmd msg
-
-
-port writeFile : String -> Cmd msg
-
-
-port fileLoaded : (Decode.Value -> msg) -> Sub msg
-
-
-port fileWritten : (Bool -> msg) -> Sub msg
-
-
-port openFile : () -> Cmd msg
-
-
 themeClass : ColorTheme -> String
 themeClass colorTheme =
     case colorTheme of
@@ -265,12 +254,40 @@ updateWithStorage msg model =
 
 
 
+-- ports
+
+
+port changeText : String -> Cmd msg
+
+
+port setStorage : Encode.Value -> Cmd msg
+
+
+port writeFile : String -> Cmd msg
+
+
+port fileLoaded : (Decode.Value -> msg) -> Sub msg
+
+
+port fileWritten : (Bool -> msg) -> Sub msg
+
+
+port fileBuilt : (String -> msg) -> Sub msg
+
+
+port openFile : () -> Cmd msg
+
+
+port newFile : () -> Cmd msg
+
+
+
 ---- Subscriptions ----
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.batch [ fileLoaded FileLoaded, fileWritten FileWritten ]
+    Sub.batch [ fileLoaded FileLoaded, fileWritten FileWritten, fileBuilt NewFileBuilt ]
 
 
 

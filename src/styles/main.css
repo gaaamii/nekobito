@@ -134,8 +134,7 @@ textarea { resize: none; }
   padding-bottom: 2em;
   border-right: 1px solid #eee;
 }
-.app-container--read > .app-editor > textarea,
-.app-container--preview > .app-editor > textarea {
+.app-container--read > .app-editor > textarea {
   width: 0;
   padding: 0;
 }
@@ -149,6 +148,10 @@ textarea { resize: none; }
   word-spacing: 2px;
   line-height: 1.85em;
   padding: 2rem;
+  margin: 0 auto;
+}
+.app-container--focus textarea,
+.app-container--read .app-preview {
   max-width: 800px;
   margin: 0 auto;
 }
@@ -158,12 +161,11 @@ textarea { resize: none; }
   margin: 15px;
 }
 .app-preview {
+  width: 100%;
   grid-area: preview;
   text-align: left;
   padding: 1em 5%;
   overflow: scroll;
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 .app-control {
