@@ -12,7 +12,7 @@
 }
 .app-wrapper--dark-theme textarea {
   background: transparent;
-  color: #ddd;
+  color: #eee;
 }
 
 /* root elment */
@@ -23,18 +23,6 @@
   box-shadow: 1px 1px 1px #303030;
   border-left: 1px solid #292929;
   border-right: 1px solid #292929;
-}
-.app-wrapper--dark-theme .app-list {
-  border-right: 1px solid #292929;
-  background: #333536;
-  color: #fff;
-}
-
-/* list item link*/
-.app-wrapper--dark-theme .app-list__item__link { color: #eee; border-bottom: 1px solid #222; }
-.app-wrapper--dark-theme .app-list__item__link:hover,
-.app-wrapper--dark-theme .app-list__item--active .app-list__item__link {
-  color: #fff;
 }
 
 /* editor */

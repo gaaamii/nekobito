@@ -1,4 +1,4 @@
-module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggleList, toggleMainColumns, transitToComparableMode, transitToEditableMode, transitToPreviewMode)
+module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggleMainColumns, transitToComparableMode, transitToEditableMode, transitToPreviewMode)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -8,9 +8,6 @@ type LayoutMode
     = Write
     | Focus
     | Read
-    | Modify
-    | Preview
-    | OpenAll
 
 
 decode : Decode.Decoder LayoutMode
@@ -27,15 +24,6 @@ decode =
 
                     "Read" ->
                         Decode.succeed Read
-
-                    "Modify" ->
-                        Decode.succeed Modify
-
-                    "Preview" ->
-                        Decode.succeed Preview
-
-                    "OpenAll" ->
-                        Decode.succeed OpenAll
 
                     _ ->
                         Decode.succeed Write
@@ -59,39 +47,6 @@ toString layoutMode =
         Read ->
             "Read"
 
-        Modify ->
-            "Modify"
-
-        Preview ->
-            "Preview"
-
-        OpenAll ->
-            "OpenAll"
-
-
-toggleList : LayoutMode -> LayoutMode
-toggleList currentMode =
-    case currentMode of
-        -- Open list
-        Write ->
-            OpenAll
-
-        Focus ->
-            Modify
-
-        Read ->
-            Preview
-
-        -- Close list
-        Modify ->
-            Focus
-
-        Preview ->
-            Read
-
-        OpenAll ->
-            Write
-
 
 toggleMainColumns : LayoutMode -> LayoutMode
 toggleMainColumns currentMode =
@@ -102,17 +57,8 @@ toggleMainColumns currentMode =
         Read ->
             Write
 
-        Modify ->
-            OpenAll
-
-        Preview ->
-            OpenAll
-
         Write ->
             Focus
-
-        OpenAll ->
-            Modify
 
 
 transitToEditableMode : LayoutMode -> LayoutMode
@@ -120,9 +66,6 @@ transitToEditableMode currentMode =
     case currentMode of
         Read ->
             Focus
-
-        Preview ->
-            Modify
 
         _ ->
             Write
@@ -134,8 +77,8 @@ transitToPreviewMode currentMode =
         Focus ->
             Read
 
-        Modify ->
-            Preview
+        Read ->
+            Focus
 
         _ ->
             Write
@@ -149,12 +92,6 @@ transitToComparableMode currentMode =
 
         Read ->
             Write
-
-        Modify ->
-            OpenAll
-
-        Preview ->
-            OpenAll
 
         _ ->
             Write

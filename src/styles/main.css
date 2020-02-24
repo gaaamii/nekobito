@@ -77,10 +77,12 @@ body {
   overflow: hidden;
   font-weight: 300;
 }
-body { font-size: 15px; }
+body { font-size: 16px; }
 * { box-sizing: border-box; }
-h1, h2, h3, h4, h5, h6, p, ul, pre, blockquote { margin-top: 1em; }
-h1, h2, h3, h4, h5, h6 { font-weight: 400; }
+h1, h2 { margin-top: 1.4em; }
+h3, h4, h5, h6 { margin-top: 1.2em; }
+p, ul, pre, blockquote { margin-top: 1em; }
+h1, h2, h3, h4, h5, h6 { font-weight: 400;  }
 textarea { resize: none; }
 .app-preview h1 { font-size: 1.7em; }
 .app-preview h2 { font-size: 1.55em; }
@@ -107,70 +109,43 @@ textarea { resize: none; }
   height: 100%;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-areas: 'sidebar list editor preview';
+  grid-template-areas: 'editor preview';
   transition: all .2s;
-}
-.app-container--openall {
-  grid-template-columns: 60px 250px 1fr 1.6fr;
+  padding-top: 40px;
 }
 .app-container--write {
-  grid-template-columns: 60px 0 1fr 1.6fr;
+  grid-template-columns: 1fr 1.6fr;
 }
 .app-container--focus {
-  grid-template-columns: 60px 0 1fr 0;
+  grid-template-columns: 1fr 0;
 }
 .app-container--read {
-  grid-template-columns: 60px 0 0 1fr;
-}
-.app-container--modify {
-  grid-template-columns: 60px 250px 1fr 0;
-}
-.app-container--preview {
-  grid-template-columns: 60px 250px 0 1fr;
+  grid-template-columns: 0 1fr;
 }
 .app-sidebar {
-  padding: 0 0 0 2em;
+  padding: 0.2em 1em;
   font-weight: 300;
-  height: 100%;
+  width: 100%;
+  background: #000;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
-.app-sidebar__buttons { float: right; margin: -3px 0; }
+.app-sidebar__buttons {
+}
 .app-sidebar__buttons__btn {
-  padding: 20px 0;
-  width: 60px;
 }
-.app-list {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 100%;
-  font-size: .8em;
-  text-align: center;
-}
-.app-list__item__link {
-  text-align: left;
-  padding: 1.8em 1.4em;
-  display: block;
-  text-decoration: none;
-  cursor: pointer;
-  line-height: 1.8em;
-  width: 250px;
-  font-weight: 500;
-}
-.app-list__item__link:hover,
-.app-list__item--active .app-list__item__link {
-  border-left: 5px solid #4e9cc5;
-}
-
 .app-editor {
   grid-area: editor;
   padding-bottom: 2em;
   border-right: 1px solid #eee;
 }
-.app-container--read > .app-editor > textarea,
-.app-container--preview > .app-editor > textarea {
+.app-container--read > .app-editor > textarea {
   width: 0;
   padding: 0;
 }
 .app-editor > textarea {
+  display: block;
   border: 0;
   font-size: .95em;
   width: 100%;
@@ -179,6 +154,12 @@ textarea { resize: none; }
   word-spacing: 2px;
   line-height: 1.85em;
   padding: 2rem;
+  margin: 0 auto;
+}
+.app-container--focus textarea,
+.app-container--read .app-preview {
+  max-width: 800px;
+  margin: 0 auto;
 }
 .app-editor textarea:focus { outline: 0; }
 .app-editor__btn {
@@ -186,6 +167,7 @@ textarea { resize: none; }
   margin: 15px;
 }
 .app-preview {
+  width: 100%;
   grid-area: preview;
   text-align: left;
   padding: 1em 5%;
@@ -221,7 +203,6 @@ textarea { resize: none; }
   cursor: pointer;
   box-sizing: border-box;
   border: 0;
-  color: #eee;
   opacity: .7;
   font-size: .7em;
   background: transparent;
@@ -231,3 +212,5 @@ textarea { resize: none; }
 
 /* Visibility */
 .hidden { display: none; }
+
+@import "./common/modal.css";
