@@ -16,18 +16,8 @@
   background: #333536;
 }
 
-/* list item link */
-.app-list {
-  border-right: 1px solid #eee;
-}
-.app-wrapper--white-theme .app-list__item__link { color: #333; border-bottom: 1px solid #eee; }
-.app-wrapper--white-theme .app-list__item__link:hover,
-.app-wrapper--white-theme .app-list__item--active a {
-  color: #000;
-}
-
 /* button */
-.app-wrapper--white-theme .btn,
+.app-wrapper--white-theme .app-sidebar__buttons__btn,
 .app-wrapper--white-theme .btn-list { color: #fff; }
 .app-wrapper--white-theme .btn:hover,
 .app-wrapper--white-theme .btn-list:hover {

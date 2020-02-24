@@ -1,13 +1,14 @@
-port module Main exposing (Model, ModelExposedToStorage, Msg(..), activeNote, appListItemClass, deleteNote, emptyModel, init, isActiveNote, main, newNote, savedModelToModel, setStorage, switchColorTheme, update, updateActiveNoteBody, updateWithStorage, view, viewNoteListItem)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, switchColorTheme, update, updateWithStorage, view)
 
-import Browser exposing (..)
+import Browser
 import ColorTheme exposing (ColorTheme)
-import Html exposing (Html, a, aside, button, div, h1, i, img, p, text, textarea)
-import Html.Attributes exposing (class, href, placeholder, src, value)
+import Html exposing (Html, aside, button, div, i, text, textarea)
+import Html.Attributes exposing (class, id, placeholder, title, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import LayoutMode exposing (LayoutMode)
+import LocalStorageValue
 import Markdown
 import Note exposing (Note)
 
@@ -18,18 +19,13 @@ import Note exposing (Note)
 
 type alias Model =
     { colorTheme : ColorTheme
-    , listVisible : Bool
-    , noteList : List Note
-    , activeNoteId : Note.Id
+    , note : Note
     , layoutMode : LayoutMode
     }
 
 
 type alias ModelExposedToStorage =
     { colorTheme : ColorTheme
-    , listVisible : Bool
-    , noteList : List Note
-    , activeNoteId : Note.Id
     , layoutMode : LayoutMode
     }
 
@@ -37,69 +33,35 @@ type alias ModelExposedToStorage =
 emptyModel : Model
 emptyModel =
     { colorTheme = ColorTheme.White
-    , noteList = [ { id = 1, body = "" } ]
-    , listVisible = False
-    , activeNoteId = 1
+    , note = Note.new
     , layoutMode = LayoutMode.Write
     }
 
 
-
--- Decoders
-
-
-noteDecoder : Decode.Decoder Note
-noteDecoder =
-    Decode.map2 Note
-        (Decode.field "id" Decode.int)
-        (Decode.field "body" Decode.string)
-
-
-modelDecoder : Decode.Decoder Model
-modelDecoder =
-    Decode.map5 Model
-        (Decode.field "colorTheme" ColorTheme.decode)
-        (Decode.field "listVisible" Decode.bool)
-        (Decode.field "noteList" (Decode.list noteDecoder))
-        (Decode.field "activeNoteId" Decode.int)
-        (Decode.field "layoutMode" LayoutMode.decode)
-
-
-
--- Encoders
-
-
-encodeModel : Model -> Encode.Value
-encodeModel model =
-    Encode.object
-        [ ( "colorTheme", ColorTheme.encode model.colorTheme )
-        , ( "listVisible", Encode.bool model.listVisible )
-        , ( "noteList", Encode.list Note.encode model.noteList )
-        , ( "activeNoteId", Encode.int model.activeNoteId )
-        , ( "layoutMode", LayoutMode.encode model.layoutMode )
-        ]
-
-
-savedModelToModel : Decode.Value -> Model
-savedModelToModel savedValue =
+buildModelFrom : Decode.Value -> Model
+buildModelFrom value =
     let
-        result =
-            Decode.decodeValue modelDecoder savedValue
+        decoded =
+            value |> LocalStorageValue.decode
 
-        maybeModel =
-            case result of
-                Result.Ok model ->
-                    Just model
+        maybeValue =
+            case decoded of
+                Result.Ok v ->
+                    Just v
 
-                Result.Err err ->
+                Result.Err _ ->
                     Nothing
+
+        decodedValue =
+            maybeValue
+                |> Maybe.withDefault { layoutMode = emptyModel.layoutMode, colorTheme = emptyModel.colorTheme }
     in
-    maybeModel |> Maybe.withDefault emptyModel
+    { emptyModel | layoutMode = decodedValue.layoutMode, colorTheme = decodedValue.colorTheme }
 
 
 init : Decode.Value -> ( Model, Cmd Msg )
-init savedModel =
-    ( savedModelToModel savedModel, Cmd.none )
+init value =
+    ( buildModelFrom value, Cmd.none )
 
 
 
@@ -108,12 +70,14 @@ init savedModel =
 
 type Msg
     = OnInput String
-    | DeleteNote Note.Id
-    | ToggleNoteList
     | AddNewNote
-    | OpenNote Note.Id
     | SwitchColorTheme
     | SwitchLayout LayoutMode
+    | FileLoaded Decode.Value
+    | FileWritten Bool
+    | SaveFile
+    | OpenFile
+    | NewFileBuilt String
 
 
 switchColorTheme : Model -> Model
@@ -126,89 +90,20 @@ switchColorTheme model =
             { model | colorTheme = ColorTheme.White }
 
 
-isActiveNote : Model -> Note.Id -> Bool
-isActiveNote model id =
-    model.activeNoteId == id
-
-
-activeNote : Model -> Note
-activeNote model =
-    let
-        maybeNote =
-            model.noteList |> List.filter (\note -> isActiveNote model note.id) |> List.head
-    in
-    case maybeNote of
-        Nothing ->
-            Note.getFirst model.noteList
-
-        Just note ->
-            note
-
-
-newNote : Model -> Maybe Note
-newNote model =
-    if (activeNote model).body == "" then
-        Nothing
-
-    else
-        Just { id = Note.lastId model.noteList + 1, body = "# New note" }
-
-
-updateActiveNoteBody : Model -> String -> Model
-updateActiveNoteBody model newBody =
-    let
-        list =
-            List.map
-                (\note ->
-                    if note.id == model.activeNoteId then
-                        { note | body = newBody }
-
-                    else
-                        note
-                )
-                model.noteList
-    in
-    { model | noteList = list }
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnInput newBody ->
             let
-                updated =
-                    updateActiveNoteBody model newBody
-
-                newModel =
-                    { model
-                        | noteList =
-                            Note.excludeBlank updated.noteList model.activeNoteId
-                    }
+                note =
+                    model.note
             in
-            ( newModel, Cmd.none )
-
-        DeleteNote id ->
-            ( deleteNote model id, Cmd.none )
-
-        ToggleNoteList ->
-            ( { model | listVisible = not model.listVisible }, Cmd.none )
+            ( { model | note = { note | text = newBody } }
+            , Cmd.batch [ changeText newBody ]
+            )
 
         AddNewNote ->
-            let
-                maybeNote =
-                    newNote model
-            in
-            case maybeNote of
-                Nothing ->
-                    ( model, Cmd.none )
-
-                Just note ->
-                    ( { model | noteList = model.noteList ++ [ note ], activeNoteId = note.id }
-                    , Cmd.none
-                    )
-
-        OpenNote id ->
-            ( { model | activeNoteId = id }, Cmd.none )
+            ( model, Cmd.batch [ newFile () ] )
 
         SwitchColorTheme ->
             ( switchColorTheme model, Cmd.none )
@@ -216,27 +111,36 @@ update msg model =
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
 
+        OpenFile ->
+            ( model, Cmd.batch [ openFile () ] )
 
-deleteNote : Model -> Note.Id -> Model
-deleteNote model id =
-    let
-        newNoteList =
-            List.filter (\note -> note.id /= id) model.noteList
-    in
-    if List.isEmpty newNoteList then
-        let
-            newId =
-                id + 1
-        in
-        -- if noteList is empty after the note deleted, open new note
-        { model | noteList = [ Note.new newId ], activeNoteId = newId }
+        NewFileBuilt filename ->
+            let
+                newNote =
+                    Note.new
+            in
+            ( { model | note = { newNote | name = filename } }, Cmd.none )
 
-    else if model.activeNoteId == id then
-        -- if active note is deleted, open last note
-        { model | noteList = newNoteList, activeNoteId = Note.lastId newNoteList }
+        FileLoaded value ->
+            let
+                decoded =
+                    Note.decode value
 
-    else
-        { model | noteList = newNoteList }
+                note =
+                    case decoded of
+                        Ok loadedNote ->
+                            loadedNote
+
+                        Err _ ->
+                            Note.new
+            in
+            ( { model | note = note }, Cmd.none )
+
+        FileWritten _ ->
+            ( model, Cmd.none )
+
+        SaveFile ->
+            ( model, Cmd.batch [ writeFile model.note.text ] )
 
 
 
@@ -247,10 +151,9 @@ deleteNote model id =
 view : Model -> Html Msg
 view model =
     div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
-        [ div [ class <| "app-container " ++ layoutClass model.layoutMode ]
-            [ viewSidebar model
-            , viewNoteList model
-            , viewEditor model
+        [ viewSidebar model
+        , div [ class <| "app-container " ++ layoutClass model.layoutMode ]
+            [ viewEditor model
             , viewPreview model
             , viewControl model
             ]
@@ -265,73 +168,48 @@ viewSidebar : Model -> Html Msg
 viewSidebar model =
     aside [ class "app-sidebar" ]
         [ div [ class "app-sidebar__buttons" ]
-            [ button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleList)) ]
-                [ i [ class "material-icons" ] [ text "list" ] ]
-            , button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
-                [ i [ class "material-icons" ] [ text "note_add" ] ]
+            [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
+                [ i [ class "material-icons", title "Open new note" ] [ text "note_add" ] ]
+            , button [ class "app-sidebar__buttons__btn btn", onClick SaveFile ]
+                [ i [ class "material-icons", title "Save file" ] [ text "save" ] ]
+            , button [ id "openFileButton", class "app-sidebar__buttons__btn btn", onClick OpenFile ]
+                [ i [ class "material-icons", title "Open a file" ] [ text "folder" ] ]
             , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
-                [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
+                [ i [ class "material-icons", title "Switch color theme" ] [ text "lightbulb_outline" ] ]
             , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
-                [ i [ class "material-icons" ] [ text "compare" ] ]
+                [ i [ class "material-icons", title "Switch compare mode" ] [ text "compare" ] ]
             ]
         ]
-
-
-viewNoteList : Model -> Html Msg
-viewNoteList model =
-    div [ class "app-list" ]
-        (List.reverse <| List.map viewNoteListItem (List.map (\note -> ( note, model.activeNoteId )) model.noteList))
-
-
-viewNoteListItem : ( Note, Note.Id ) -> Html Msg
-viewNoteListItem ( note, activeNoteId ) =
-    if note.body == "" then
-        div [] []
-
-    else
-        div [ class <| appListItemClass <| activeNoteId == note.id ]
-            [ a
-                [ class "app-list__item__link", onClick (OpenNote note.id) ]
-                [ text (note |> Note.toTitle) ]
-            ]
 
 
 viewEditor : Model -> Html Msg
 viewEditor model =
     div [ class "app-editor" ]
-        [ textarea [ onInput OnInput, placeholder "# Markdown text here", value (activeNote model).body ] []
+        [ textarea [ onInput OnInput, placeholder "# Markdown text here", value model.note.text ] []
         ]
 
 
 viewPreview : Model -> Html Msg
 viewPreview model =
-    div [ class "app-preview" ] [ Markdown.toHtml [] (activeNote model).body ]
+    div [ class "app-preview" ] [ Markdown.toHtml [] model.note.text ]
 
 
 viewControl : Model -> Html Msg
 viewControl model =
     let
         viewSwitchModeIcon =
-            if model.layoutMode == LayoutMode.Write || model.layoutMode == LayoutMode.OpenAll then
-                div [] []
+            if model.layoutMode == LayoutMode.Focus then
+                button [ class "btn", onClick (SwitchLayout LayoutMode.Read) ]
+                    [ i [ class "material-icons", title "Preview" ] [ text "remove_red_eye" ] ]
 
-            else if model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Modify then
-                button [ class "btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToPreviewMode)) ]
-                    [ i [ class "material-icons" ] [ text "remove_red_eye" ] ]
+            else if model.layoutMode == LayoutMode.Read then
+                button [ class "btn", onClick (SwitchLayout LayoutMode.Focus) ]
+                    [ i [ class "material-icons", title "Edit" ] [ text "edit" ] ]
 
             else
-                button [ class "btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.transitToEditableMode)) ]
-                    [ i [ class "material-icons" ] [ text "edit" ] ]
+                div [] []
     in
-    div [ class "app-control" ]
-        [ button [ class "btn", onClick (DeleteNote (activeNote model).id) ]
-            [ i [ class "material-icons" ] [ text "delete" ] ]
-        , viewSwitchModeIcon
-        ]
-
-
-
--- classeNames
+    div [ class "app-control" ] [ viewSwitchModeIcon ]
 
 
 themeClass : ColorTheme -> String
@@ -358,23 +236,58 @@ layoutClass layoutMode =
     "app-container--" ++ (layoutMode |> LayoutMode.toString |> String.toLower)
 
 
-
--- ports
-
-
-port setStorage : Decode.Value -> Cmd msg
-
-
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
 updateWithStorage msg model =
     let
         ( newModel, cmds ) =
             update msg model
+
+        newValue =
+            { colorTheme = newModel.colorTheme
+            , layoutMode = newModel.layoutMode
+            }
     in
     ( newModel
     , Cmd.batch
-        [ setStorage <| encodeModel newModel, cmds ]
+        [ setStorage <| LocalStorageValue.encode newValue, cmds ]
     )
+
+
+
+-- ports
+
+
+port changeText : String -> Cmd msg
+
+
+port setStorage : Encode.Value -> Cmd msg
+
+
+port writeFile : String -> Cmd msg
+
+
+port fileLoaded : (Decode.Value -> msg) -> Sub msg
+
+
+port fileWritten : (Bool -> msg) -> Sub msg
+
+
+port fileBuilt : (String -> msg) -> Sub msg
+
+
+port openFile : () -> Cmd msg
+
+
+port newFile : () -> Cmd msg
+
+
+
+---- Subscriptions ----
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Sub.batch [ fileLoaded FileLoaded, fileWritten FileWritten, fileBuilt NewFileBuilt ]
 
 
 
@@ -387,5 +300,5 @@ main =
         { view = view
         , init = init
         , update = updateWithStorage
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
