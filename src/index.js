@@ -45,7 +45,12 @@ app.ports.writeFile.subscribe(async (contents) => {
 });
 
 app.ports.openFile.subscribe(async () => {
-  fileHandleManager.fileHandle = await window.chooseFileSystemEntries();
+  const opts = {
+    accepts: [{
+      extensions: ['md'],
+    }],
+  };
+  fileHandleManager.fileHandle = await window.chooseFileSystemEntries(opts);
   const file = await fileHandleManager.getFile();
   const text = await file.text();
   const { name, lastModified } = file

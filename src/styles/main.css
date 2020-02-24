@@ -77,10 +77,12 @@ body {
   overflow: hidden;
   font-weight: 300;
 }
-body { font-size: 15px; }
+body { font-size: 16px; }
 * { box-sizing: border-box; }
-h1, h2, h3, h4, h5, h6, p, ul, pre, blockquote { margin-top: 1em; }
-h1, h2, h3, h4, h5, h6 { font-weight: 400; }
+h1, h2 { margin-top: 1.4em; }
+h3, h4, h5, h6 { margin-top: 1.2em; }
+p, ul, pre, blockquote { margin-top: 1em; }
+h1, h2, h3, h4, h5, h6 { font-weight: 400;  }
 textarea { resize: none; }
 .app-preview h1 { font-size: 1.7em; }
 .app-preview h2 { font-size: 1.55em; }
@@ -107,27 +109,31 @@ textarea { resize: none; }
   height: 100%;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-areas: 'sidebar editor preview';
+  grid-template-areas: 'editor preview';
   transition: all .2s;
+  padding-top: 40px;
 }
 .app-container--write {
-  grid-template-columns: 60px 1fr 1.6fr;
+  grid-template-columns: 1fr 1.6fr;
 }
 .app-container--focus {
-  grid-template-columns: 60px 1fr 0;
+  grid-template-columns: 1fr 0;
 }
 .app-container--read {
-  grid-template-columns: 60px 0 1fr;
+  grid-template-columns: 0 1fr;
 }
 .app-sidebar {
-  padding: 0 0 0 2em;
+  padding: 0.2em 1em;
   font-weight: 300;
-  height: 100%;
+  width: 100%;
+  background: #000;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
-.app-sidebar__buttons { float: right; margin: -3px 0; }
+.app-sidebar__buttons {
+}
 .app-sidebar__buttons__btn {
-  padding: 20px 0;
-  width: 60px;
 }
 .app-editor {
   grid-area: editor;

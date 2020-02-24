@@ -3,7 +3,7 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 import Browser
 import ColorTheme exposing (ColorTheme)
 import Html exposing (Html, aside, button, div, i, text, textarea)
-import Html.Attributes exposing (class, id, placeholder, value)
+import Html.Attributes exposing (class, id, placeholder, title, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -151,9 +151,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
-        [ div [ class <| "app-container " ++ layoutClass model.layoutMode ]
-            [ viewSidebar model
-            , viewEditor model
+        [ viewSidebar model
+        , div [ class <| "app-container " ++ layoutClass model.layoutMode ]
+            [ viewEditor model
             , viewPreview model
             , viewControl model
             ]
@@ -169,15 +169,15 @@ viewSidebar model =
     aside [ class "app-sidebar" ]
         [ div [ class "app-sidebar__buttons" ]
             [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
-                [ i [ class "material-icons" ] [ text "note_add" ] ]
+                [ i [ class "material-icons", title "Open new note" ] [ text "note_add" ] ]
             , button [ class "app-sidebar__buttons__btn btn", onClick SaveFile ]
-                [ i [ class "material-icons" ] [ text "save" ] ]
+                [ i [ class "material-icons", title "Save file" ] [ text "save" ] ]
             , button [ id "openFileButton", class "app-sidebar__buttons__btn btn", onClick OpenFile ]
-                [ i [ class "material-icons" ] [ text "folder" ] ]
+                [ i [ class "material-icons", title "Open a file" ] [ text "folder" ] ]
             , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
-                [ i [ class "material-icons" ] [ text "lightbulb_outline" ] ]
+                [ i [ class "material-icons", title "Switch color theme" ] [ text "lightbulb_outline" ] ]
             , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
-                [ i [ class "material-icons" ] [ text "compare" ] ]
+                [ i [ class "material-icons", title "Switch compare mode" ] [ text "compare" ] ]
             ]
         ]
 
@@ -200,11 +200,11 @@ viewControl model =
         viewSwitchModeIcon =
             if model.layoutMode == LayoutMode.Focus then
                 button [ class "btn", onClick (SwitchLayout LayoutMode.Read) ]
-                    [ i [ class "material-icons" ] [ text "remove_red_eye" ] ]
+                    [ i [ class "material-icons", title "Preview" ] [ text "remove_red_eye" ] ]
 
             else if model.layoutMode == LayoutMode.Read then
                 button [ class "btn", onClick (SwitchLayout LayoutMode.Focus) ]
-                    [ i [ class "material-icons" ] [ text "edit" ] ]
+                    [ i [ class "material-icons", title "Edit" ] [ text "edit" ] ]
 
             else
                 div [] []
