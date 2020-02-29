@@ -3,20 +3,24 @@
 
 Nekobito is a browser-based markdown editor.
 
-![screenshot of Nekobito](nekobito_screen.png)
+![screenshot of Nekobito](https://raw.githubusercontent.com/gaaamii/nekobito/master/nekobito_screen.png)
 
 ## Usage
 * Open https://nekobito.netlify.com
 * Write markdown.
 
 ## Features
+
+###  Markdown Preview
+You can see a preview of markdown text written in textarea.
+
 ### PWA Support
 If you use Google Chrome, you can install Nekobito as a progressive web app.
 
-## Development
+### [Experimental] Save text in your local file
+Nekobito is providing features to edit your local file. But it is experimental because Nekobito uses [Native File System API](https://wicg.github.io/native-file-system/) for it. You have to use the browser which supports the API, and enable the API, to edit local files on Nekobito.
 
-### elm version
-0.19
+## Development
 
 ### Install node modules
 ```
@@ -24,7 +28,6 @@ npm i
 ```
 
 ### Start dev server
-
 
 ```
 npm run start
