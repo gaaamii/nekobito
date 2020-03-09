@@ -156,6 +156,9 @@ textarea { resize: none; }
   padding: 2rem;
   margin: 0 auto;
 }
+.app-editor > textarea::-webkit-scrollbar {
+  display: none;
+}
 .app-container--focus textarea,
 .app-container--read .app-preview {
   max-width: 800px;
@@ -172,6 +175,9 @@ textarea { resize: none; }
   text-align: left;
   padding: 1em 5%;
   overflow: scroll;
+}
+.app-preview::-webkit-scrollbar {
+  display: none;
 }
 
 .app-control {

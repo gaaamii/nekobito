@@ -12,24 +12,17 @@
 }
 .app-wrapper--dark-theme textarea {
   background: transparent;
-  color: #eee;
+  color: #fff;
 }
 
 /* root elment */
-.app-wrapper--dark-theme { background: #333536; color: #eee; }
-
-/* sidebar */
-.app-wrapper--dark-theme .app-sidebar {
-  box-shadow: 1px 1px 1px #303030;
-  border-left: 1px solid #292929;
-  border-right: 1px solid #292929;
-}
+.app-wrapper--dark-theme { background: #333536; color: #fff; }
 
 /* editor */
-.app-wrapper--dark-theme .app-editor { border-right: 1px solid #292929; }
+.app-wrapper--dark-theme .app-editor { border-right: 1px solid #000; }
 
 /* button */
-.app-wrapper--dark-theme .btn { color: #eee; }
+.app-wrapper--dark-theme .btn { color: #fff; }
 .app-wrapper--dark-theme .btn:hover { color: #fff; }
 .app-wrapper--dark-theme .btn-list:hover {
   opacity: 1;
