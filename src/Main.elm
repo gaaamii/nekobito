@@ -2,6 +2,7 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 
 import Browser
 import ColorTheme exposing (ColorTheme)
+import Common.PullDown as PullDown
 import Html exposing (Html, button, div, header, i, nav, text, textarea)
 import Html.Attributes exposing (class, id, placeholder, title, value)
 import Html.Events exposing (onClick, onInput)
@@ -178,6 +179,30 @@ viewNavigation model =
                 [ i [ class "material-icons", title "Switch color theme" ] [ text "lightbulb_outline" ] ]
             , button [ class "app-navigation__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
                 [ i [ class "material-icons", title "Switch compare mode" ] [ text "compare" ] ]
+            , PullDown.view
+                [ { label = "File"
+                  , children =
+                        PullDown.Children
+                            [ { label = "New"
+                              , children = PullDown.empty
+                              }
+                            , { label = "Open"
+                              , children = PullDown.empty
+                              }
+                            ]
+                  }
+                , { label = "View"
+                  , children =
+                        PullDown.Children
+                            [ { label = "Theme"
+                              , children = PullDown.empty
+                              }
+                            , { label = "Split View"
+                              , children = PullDown.empty
+                              }
+                            ]
+                  }
+                ]
             ]
         ]
 
