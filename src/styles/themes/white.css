@@ -12,12 +12,12 @@
 .app-wrapper--white-theme { background: #fff; }
 
 /* sidebar */
-.app-wrapper--white-theme .app-sidebar {
+.app-wrapper--white-theme .app-navigation {
   background: #333536;
 }
 
 /* button */
-.app-wrapper--white-theme .app-sidebar__buttons__btn,
+.app-wrapper--white-theme .app-navigation__buttons__btn,
 .app-wrapper--white-theme .btn-list { color: #fff; }
 .app-wrapper--white-theme .btn:hover,
 .app-wrapper--white-theme .btn-list:hover {

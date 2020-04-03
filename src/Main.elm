@@ -2,7 +2,7 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 
 import Browser
 import ColorTheme exposing (ColorTheme)
-import Html exposing (Html, aside, button, div, i, text, textarea)
+import Html exposing (Html, button, div, header, i, nav, text, textarea)
 import Html.Attributes exposing (class, id, placeholder, title, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
@@ -151,7 +151,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
-        [ viewSidebar model
+        [ viewNavigation model
         , div [ class <| "app-container " ++ layoutClass model.layoutMode ]
             [ viewEditor model
             , viewPreview model
@@ -164,19 +164,19 @@ view model =
 -- sub views
 
 
-viewSidebar : Model -> Html Msg
-viewSidebar model =
-    aside [ class "app-sidebar" ]
-        [ div [ class "app-sidebar__buttons" ]
-            [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
+viewNavigation : Model -> Html Msg
+viewNavigation model =
+    header [ class "app-navigation" ]
+        [ nav [ class "app-navigation__buttons" ]
+            [ button [ class "app-navigation__buttons__btn btn btn-control-point", onClick AddNewNote ]
                 [ i [ class "material-icons", title "Open new note" ] [ text "note_add" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick SaveFile ]
+            , button [ class "app-navigation__buttons__btn btn", onClick SaveFile ]
                 [ i [ class "material-icons", title "Save file" ] [ text "save" ] ]
-            , button [ id "openFileButton", class "app-sidebar__buttons__btn btn", onClick OpenFile ]
+            , button [ id "openFileButton", class "app-navigation__buttons__btn btn", onClick OpenFile ]
                 [ i [ class "material-icons", title "Open a file" ] [ text "folder" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
+            , button [ class "app-navigation__buttons__btn btn", onClick SwitchColorTheme ]
                 [ i [ class "material-icons", title "Switch color theme" ] [ text "lightbulb_outline" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
+            , button [ class "app-navigation__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
                 [ i [ class "material-icons", title "Switch compare mode" ] [ text "compare" ] ]
             ]
         ]
