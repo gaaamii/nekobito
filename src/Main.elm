@@ -74,8 +74,7 @@ type Msg
     | SwitchLayout LayoutMode
     | FileLoaded Decode.Value
     | FileWritten Bool
-    | SaveFile
-    | NewFileBuilt String
+    | NewFileBuilt Decode.Value
     | GotPullDownMsg PullDown.Msg
 
 
@@ -94,12 +93,20 @@ update msg model =
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
 
-        NewFileBuilt filename ->
+        NewFileBuilt value ->
             let
-                newNote =
-                    Note.new
+                decoded =
+                    Note.decode value
+
+                note =
+                    case decoded of
+                        Ok loadedNote ->
+                            loadedNote
+
+                        Err _ ->
+                            Note.new
             in
-            ( { model | note = { newNote | name = filename } }, Cmd.none )
+            ( { model | note = note }, Cmd.none )
 
         FileLoaded value ->
             let
@@ -119,9 +126,6 @@ update msg model =
         FileWritten _ ->
             ( model, Cmd.none )
 
-        SaveFile ->
-            ( model, Cmd.batch [ writeFile model.note.text ] )
-
         GotPullDownMsg (PullDown.OnClick id) ->
             case id of
                 "File/New" ->
@@ -129,6 +133,14 @@ update msg model =
 
                 "File/Open" ->
                     ( model, Cmd.batch [ openFile () ] )
+
+                "File/Save" ->
+                    case model.note.lastModified of
+                        Just _ ->
+                            ( model, Cmd.batch [ writeFile model.note.text ] )
+
+                        Nothing ->
+                            ( model, Cmd.batch [ saveFile model.note.text ] )
 
                 "View/Theme/Dark" ->
                     ( { model | colorTheme = ColorTheme.Dark }, Cmd.none )
@@ -183,6 +195,11 @@ viewNavigation model =
                       }
                     , { id = "File/Open"
                       , label = "Open"
+                      , children = PullDown.empty
+                      , checked = False
+                      }
+                    , { id = "File/Save"
+                      , label = "Save"
                       , children = PullDown.empty
                       , checked = False
                       }
@@ -326,13 +343,16 @@ port setStorage : Encode.Value -> Cmd msg
 port writeFile : String -> Cmd msg
 
 
+port saveFile : String -> Cmd msg
+
+
 port fileLoaded : (Decode.Value -> msg) -> Sub msg
 
 
 port fileWritten : (Bool -> msg) -> Sub msg
 
 
-port fileBuilt : (String -> msg) -> Sub msg
+port fileBuilt : (Decode.Value -> msg) -> Sub msg
 
 
 port openFile : () -> Cmd msg

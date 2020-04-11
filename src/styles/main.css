@@ -111,7 +111,7 @@ textarea { resize: none; }
   grid-template-rows: 1fr;
   grid-template-areas: 'editor preview';
   transition: all .2s;
-  padding-top: 40px;
+  padding-top: 20px;
 }
 .app-container--write {
   grid-template-columns: 1fr 1.6fr;
@@ -168,7 +168,7 @@ textarea { resize: none; }
   width: 100%;
   grid-area: preview;
   text-align: left;
-  padding: 1em 5%;
+  padding: 0 5% 1em 5%;
   overflow: scroll;
 }
 .app-preview::-webkit-scrollbar {

@@ -34,6 +34,7 @@ app.ports.setStorage.subscribe((state) => {
   localStorage.setItem('elm-editor-save', JSON.stringify(state));
 });
 
+// update file
 app.ports.writeFile.subscribe(async (contents) => {
   if (!fileHandleManager.fileHandle) {
     fileHandleManager.fileHandle = await window.chooseFileSystemEntries();
@@ -44,6 +45,7 @@ app.ports.writeFile.subscribe(async (contents) => {
   app.ports.fileWritten.send(true);
 });
 
+// open file
 app.ports.openFile.subscribe(async () => {
   const opts = {
     accepts: [{
@@ -63,6 +65,7 @@ app.ports.openFile.subscribe(async () => {
   });
 });
 
+// new file
 app.ports.newFile.subscribe(async () => {
   const opts = {
     type: 'saveFile',
@@ -74,7 +77,39 @@ app.ports.newFile.subscribe(async () => {
   const file = await fileHandleManager.getFile();
 
   handleLoadFile(file);
-  app.ports.fileBuilt.send(file.name);
+
+  const { name, lastModified } = file
+  app.ports.fileBuilt.send({
+    name,
+    lastModified,
+    text: ''
+  });
+});
+
+app.ports.changeText.subscribe(() => {
+  appState.hasUnsavedChange = true;
+  setDocumentTitle();
+});
+
+// save as a new file
+app.ports.saveFile.subscribe(async (text) => {
+  const opts = {
+    type: 'saveFile',
+    accepts: [{
+      extensions: ['md'],
+    }],
+  };
+  fileHandleManager.fileHandle = await window.chooseFileSystemEntries(opts);
+  const file = await fileHandleManager.getFile();
+  await fileHandleManager.writeFile(text);
+
+  handleLoadFile(file);
+  const { name, lastModified } =  file
+  app.ports.fileBuilt.send({
+    name,
+    lastModified,
+    text,
+  });
 });
 
 app.ports.changeText.subscribe(() => {
