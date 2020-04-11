@@ -1,10 +1,10 @@
-port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, switchColorTheme, update, updateWithStorage, view)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, update, updateWithStorage, view)
 
 import Browser
 import ColorTheme exposing (ColorTheme)
-import Common.PullDown as PullDown
+import Common.PullDown as PullDown exposing (Msg)
 import Html exposing (Html, button, div, header, i, nav, text, textarea)
-import Html.Attributes exposing (class, id, placeholder, title, value)
+import Html.Attributes exposing (class, placeholder, title, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -71,24 +71,12 @@ init value =
 
 type Msg
     = OnInput String
-    | AddNewNote
-    | SwitchColorTheme
     | SwitchLayout LayoutMode
     | FileLoaded Decode.Value
     | FileWritten Bool
     | SaveFile
-    | OpenFile
     | NewFileBuilt String
-
-
-switchColorTheme : Model -> Model
-switchColorTheme model =
-    case model.colorTheme of
-        ColorTheme.White ->
-            { model | colorTheme = ColorTheme.Dark }
-
-        ColorTheme.Dark ->
-            { model | colorTheme = ColorTheme.White }
+    | GotPullDownMsg PullDown.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -103,17 +91,8 @@ update msg model =
             , Cmd.batch [ changeText newBody ]
             )
 
-        AddNewNote ->
-            ( model, Cmd.batch [ newFile () ] )
-
-        SwitchColorTheme ->
-            ( switchColorTheme model, Cmd.none )
-
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
-
-        OpenFile ->
-            ( model, Cmd.batch [ openFile () ] )
 
         NewFileBuilt filename ->
             let
@@ -143,6 +122,29 @@ update msg model =
         SaveFile ->
             ( model, Cmd.batch [ writeFile model.note.text ] )
 
+        GotPullDownMsg (PullDown.OnClick id) ->
+            case id of
+                "File/New" ->
+                    ( model, Cmd.batch [ newFile () ] )
+
+                "File/Open" ->
+                    ( model, Cmd.batch [ openFile () ] )
+
+                "View/Theme/Dark" ->
+                    ( { model | colorTheme = ColorTheme.Dark }, Cmd.none )
+
+                "View/Theme/White" ->
+                    ( { model | colorTheme = ColorTheme.White }, Cmd.none )
+
+                "View/Layout/Split" ->
+                    ( { model | layoutMode = LayoutMode.Write }, Cmd.none )
+
+                "View/Layout/Single" ->
+                    ( { model | layoutMode = LayoutMode.Focus }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 
 ---- VIEW ----
@@ -169,40 +171,68 @@ viewNavigation : Model -> Html Msg
 viewNavigation model =
     header [ class "app-navigation" ]
         [ nav [ class "app-navigation__buttons" ]
-            [ button [ class "app-navigation__buttons__btn btn btn-control-point", onClick AddNewNote ]
-                [ i [ class "material-icons", title "Open new note" ] [ text "note_add" ] ]
-            , button [ class "app-navigation__buttons__btn btn", onClick SaveFile ]
-                [ i [ class "material-icons", title "Save file" ] [ text "save" ] ]
-            , button [ id "openFileButton", class "app-navigation__buttons__btn btn", onClick OpenFile ]
-                [ i [ class "material-icons", title "Open a file" ] [ text "folder" ] ]
-            , button [ class "app-navigation__buttons__btn btn", onClick SwitchColorTheme ]
-                [ i [ class "material-icons", title "Switch color theme" ] [ text "lightbulb_outline" ] ]
-            , button [ class "app-navigation__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
-                [ i [ class "material-icons", title "Switch compare mode" ] [ text "compare" ] ]
-            , PullDown.view
-                [ { label = "File"
-                  , children =
-                        PullDown.Children
-                            [ { label = "New"
-                              , children = PullDown.empty
-                              }
-                            , { label = "Open"
-                              , children = PullDown.empty
-                              }
-                            ]
-                  }
-                , { label = "View"
-                  , children =
-                        PullDown.Children
-                            [ { label = "Theme"
-                              , children = PullDown.empty
-                              }
-                            , { label = "Split View"
-                              , children = PullDown.empty
-                              }
-                            ]
-                  }
-                ]
+            [ Html.map GotPullDownMsg <|
+                PullDown.view
+                    [ { id = "File"
+                      , label = "File"
+                      , checked = False
+                      , children =
+                            PullDown.Children
+                                [ { id = "File/New"
+                                  , label = "New"
+                                  , children = PullDown.empty
+                                  , checked = False
+                                  }
+                                , { id = "File/Open"
+                                  , label = "Open"
+                                  , children = PullDown.empty
+                                  , checked = False
+                                  }
+                                ]
+                      }
+                    , { id = "View"
+                      , label = "View"
+                      , checked = False
+                      , children =
+                            PullDown.Children
+                                [ { id = "View/Theme"
+                                  , label = "Theme"
+                                  , children =
+                                        PullDown.Children
+                                            [ { id = "View/Theme/Dark"
+                                              , label = "Dark"
+                                              , children = PullDown.empty
+                                              , checked = model.colorTheme == ColorTheme.Dark
+                                              }
+                                            , { id = "View/Theme/White"
+                                              , label = "White"
+                                              , children = PullDown.empty
+                                              , checked = model.colorTheme == ColorTheme.White
+                                              }
+                                            ]
+                                  , checked = False
+                                  }
+                                , { id = "View/Layout"
+                                  , label = "Layout"
+                                  , children =
+                                        PullDown.Children
+                                            [ { id = "View/Layout/Split"
+                                              , label = "Split"
+                                              , children = PullDown.empty
+                                              , checked = model.layoutMode == LayoutMode.Write
+                                              }
+                                            , { id = "View/Layout/Single"
+                                              , label = "Single"
+                                              , children = PullDown.empty
+                                              , checked = model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read
+                                              }
+                                            ]
+                                  , checked = False
+                                  }
+                                ]
+                      }
+                    ]
+                    1
             ]
         ]
 
