@@ -1,4 +1,4 @@
-module Modal exposing (view)
+module Common.Modal exposing (view)
 
 import Html exposing (Html, button, div, h2, i, span, text)
 import Html.Attributes exposing (class)

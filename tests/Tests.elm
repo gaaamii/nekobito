@@ -1,8 +1,7 @@
 module Tests exposing (all)
 
 import Expect
-import Main exposing (..)
-import Test exposing (..)
+import Test exposing (Test, describe, test)
 
 
 all : Test

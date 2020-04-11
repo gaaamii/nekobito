@@ -1,9 +1,10 @@
-port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, switchColorTheme, update, updateWithStorage, view)
+port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, update, updateWithStorage, view)
 
 import Browser
 import ColorTheme exposing (ColorTheme)
-import Html exposing (Html, aside, button, div, i, text, textarea)
-import Html.Attributes exposing (class, id, placeholder, title, value)
+import Common.PullDown as PullDown exposing (Msg)
+import Html exposing (Html, button, div, header, i, nav, text, textarea)
+import Html.Attributes exposing (class, placeholder, title, value)
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -70,24 +71,11 @@ init value =
 
 type Msg
     = OnInput String
-    | AddNewNote
-    | SwitchColorTheme
     | SwitchLayout LayoutMode
     | FileLoaded Decode.Value
     | FileWritten Bool
-    | SaveFile
-    | OpenFile
-    | NewFileBuilt String
-
-
-switchColorTheme : Model -> Model
-switchColorTheme model =
-    case model.colorTheme of
-        ColorTheme.White ->
-            { model | colorTheme = ColorTheme.Dark }
-
-        ColorTheme.Dark ->
-            { model | colorTheme = ColorTheme.White }
+    | NewFileBuilt Decode.Value
+    | GotPullDownMsg PullDown.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -102,24 +90,23 @@ update msg model =
             , Cmd.batch [ changeText newBody ]
             )
 
-        AddNewNote ->
-            ( model, Cmd.batch [ newFile () ] )
-
-        SwitchColorTheme ->
-            ( switchColorTheme model, Cmd.none )
-
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
 
-        OpenFile ->
-            ( model, Cmd.batch [ openFile () ] )
-
-        NewFileBuilt filename ->
+        NewFileBuilt value ->
             let
-                newNote =
-                    Note.new
+                decoded =
+                    Note.decode value
+
+                note =
+                    case decoded of
+                        Ok loadedNote ->
+                            loadedNote
+
+                        Err _ ->
+                            Note.new
             in
-            ( { model | note = { newNote | name = filename } }, Cmd.none )
+            ( { model | note = note }, Cmd.none )
 
         FileLoaded value ->
             let
@@ -139,8 +126,36 @@ update msg model =
         FileWritten _ ->
             ( model, Cmd.none )
 
-        SaveFile ->
-            ( model, Cmd.batch [ writeFile model.note.text ] )
+        GotPullDownMsg (PullDown.OnClick id) ->
+            case id of
+                "File/New" ->
+                    ( model, Cmd.batch [ newFile () ] )
+
+                "File/Open" ->
+                    ( model, Cmd.batch [ openFile () ] )
+
+                "File/Save" ->
+                    case model.note.lastModified of
+                        Just _ ->
+                            ( model, Cmd.batch [ writeFile model.note.text ] )
+
+                        Nothing ->
+                            ( model, Cmd.batch [ saveFile model.note.text ] )
+
+                "View/Theme/Dark" ->
+                    ( { model | colorTheme = ColorTheme.Dark }, Cmd.none )
+
+                "View/Theme/White" ->
+                    ( { model | colorTheme = ColorTheme.White }, Cmd.none )
+
+                "View/Layout/Split" ->
+                    ( { model | layoutMode = LayoutMode.Write }, Cmd.none )
+
+                "View/Layout/Single" ->
+                    ( { model | layoutMode = LayoutMode.Focus }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
 
 
@@ -151,7 +166,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
-        [ viewSidebar model
+        [ viewNavigation model
         , div [ class <| "app-container " ++ layoutClass model.layoutMode ]
             [ viewEditor model
             , viewPreview model
@@ -164,20 +179,82 @@ view model =
 -- sub views
 
 
-viewSidebar : Model -> Html Msg
-viewSidebar model =
-    aside [ class "app-sidebar" ]
-        [ div [ class "app-sidebar__buttons" ]
-            [ button [ class "app-sidebar__buttons__btn btn btn-control-point", onClick AddNewNote ]
-                [ i [ class "material-icons", title "Open new note" ] [ text "note_add" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick SaveFile ]
-                [ i [ class "material-icons", title "Save file" ] [ text "save" ] ]
-            , button [ id "openFileButton", class "app-sidebar__buttons__btn btn", onClick OpenFile ]
-                [ i [ class "material-icons", title "Open a file" ] [ text "folder" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick SwitchColorTheme ]
-                [ i [ class "material-icons", title "Switch color theme" ] [ text "lightbulb_outline" ] ]
-            , button [ class "app-sidebar__buttons__btn btn", onClick (SwitchLayout (model.layoutMode |> LayoutMode.toggleMainColumns)) ]
-                [ i [ class "material-icons", title "Switch compare mode" ] [ text "compare" ] ]
+viewNavigation : Model -> Html Msg
+viewNavigation model =
+    let
+        filePullDown =
+            { id = "File"
+            , label = "File"
+            , checked = False
+            , children =
+                PullDown.Children
+                    [ { id = "File/New"
+                      , label = "New"
+                      , children = PullDown.empty
+                      , checked = False
+                      }
+                    , { id = "File/Open"
+                      , label = "Open"
+                      , children = PullDown.empty
+                      , checked = False
+                      }
+                    , { id = "File/Save"
+                      , label = "Save"
+                      , children = PullDown.empty
+                      , checked = False
+                      }
+                    ]
+            }
+
+        viewPullDown =
+            { id = "View"
+            , label = "View"
+            , checked = False
+            , children =
+                PullDown.Children
+                    [ { id = "View/Theme"
+                      , label = "Theme"
+                      , children =
+                            PullDown.Children
+                                [ { id = "View/Theme/Dark"
+                                  , label = "Dark"
+                                  , children = PullDown.empty
+                                  , checked = model.colorTheme == ColorTheme.Dark
+                                  }
+                                , { id = "View/Theme/White"
+                                  , label = "White"
+                                  , children = PullDown.empty
+                                  , checked = model.colorTheme == ColorTheme.White
+                                  }
+                                ]
+                      , checked = False
+                      }
+                    , { id = "View/Layout"
+                      , label = "Layout"
+                      , children =
+                            PullDown.Children
+                                [ { id = "View/Layout/Split"
+                                  , label = "Split"
+                                  , children = PullDown.empty
+                                  , checked = model.layoutMode == LayoutMode.Write
+                                  }
+                                , { id = "View/Layout/Single"
+                                  , label = "Single"
+                                  , children = PullDown.empty
+                                  , checked = model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read
+                                  }
+                                ]
+                      , checked = False
+                      }
+                    ]
+            }
+    in
+    header [ class "app-navigation" ]
+        [ nav []
+            [ Html.map GotPullDownMsg <|
+                PullDown.view
+                    [ filePullDown, viewPullDown ]
+                    PullDown.rootLevel
             ]
         ]
 
@@ -266,13 +343,16 @@ port setStorage : Encode.Value -> Cmd msg
 port writeFile : String -> Cmd msg
 
 
+port saveFile : String -> Cmd msg
+
+
 port fileLoaded : (Decode.Value -> msg) -> Sub msg
 
 
 port fileWritten : (Bool -> msg) -> Sub msg
 
 
-port fileBuilt : (String -> msg) -> Sub msg
+port fileBuilt : (Decode.Value -> msg) -> Sub msg
 
 
 port openFile : () -> Cmd msg

@@ -111,7 +111,7 @@ textarea { resize: none; }
   grid-template-rows: 1fr;
   grid-template-areas: 'editor preview';
   transition: all .2s;
-  padding-top: 40px;
+  padding-top: 20px;
 }
 .app-container--write {
   grid-template-columns: 1fr 1.6fr;
@@ -122,18 +122,13 @@ textarea { resize: none; }
 .app-container--read {
   grid-template-columns: 0 1fr;
 }
-.app-sidebar {
-  padding: 0.2em 1em;
+.app-navigation {
   font-weight: 300;
   width: 100%;
   background: #000;
   position: fixed;
   top: 0;
   left: 0;
-}
-.app-sidebar__buttons {
-}
-.app-sidebar__buttons__btn {
 }
 .app-editor {
   grid-area: editor;
@@ -173,7 +168,7 @@ textarea { resize: none; }
   width: 100%;
   grid-area: preview;
   text-align: left;
-  padding: 1em 5%;
+  padding: 0 5% 1em 5%;
   overflow: scroll;
 }
 .app-preview::-webkit-scrollbar {
@@ -220,3 +215,4 @@ textarea { resize: none; }
 .hidden { display: none; }
 
 @import "./common/modal.css";
+@import "./common/pulldown.css";
