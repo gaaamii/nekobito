@@ -130,10 +130,6 @@ textarea { resize: none; }
   top: 0;
   left: 0;
 }
-.app-navigation__buttons {
-}
-.app-navigation__buttons__btn {
-}
 .app-editor {
   grid-area: editor;
   padding-bottom: 2em;

@@ -169,70 +169,75 @@ view model =
 
 viewNavigation : Model -> Html Msg
 viewNavigation model =
-    header [ class "app-navigation" ]
-        [ nav [ class "app-navigation__buttons" ]
-            [ Html.map GotPullDownMsg <|
-                PullDown.view
-                    [ { id = "File"
-                      , label = "File"
+    let
+        filePullDown =
+            { id = "File"
+            , label = "File"
+            , checked = False
+            , children =
+                PullDown.Children
+                    [ { id = "File/New"
+                      , label = "New"
+                      , children = PullDown.empty
                       , checked = False
-                      , children =
-                            PullDown.Children
-                                [ { id = "File/New"
-                                  , label = "New"
-                                  , children = PullDown.empty
-                                  , checked = False
-                                  }
-                                , { id = "File/Open"
-                                  , label = "Open"
-                                  , children = PullDown.empty
-                                  , checked = False
-                                  }
-                                ]
                       }
-                    , { id = "View"
-                      , label = "View"
+                    , { id = "File/Open"
+                      , label = "Open"
+                      , children = PullDown.empty
                       , checked = False
-                      , children =
-                            PullDown.Children
-                                [ { id = "View/Theme"
-                                  , label = "Theme"
-                                  , children =
-                                        PullDown.Children
-                                            [ { id = "View/Theme/Dark"
-                                              , label = "Dark"
-                                              , children = PullDown.empty
-                                              , checked = model.colorTheme == ColorTheme.Dark
-                                              }
-                                            , { id = "View/Theme/White"
-                                              , label = "White"
-                                              , children = PullDown.empty
-                                              , checked = model.colorTheme == ColorTheme.White
-                                              }
-                                            ]
-                                  , checked = False
-                                  }
-                                , { id = "View/Layout"
-                                  , label = "Layout"
-                                  , children =
-                                        PullDown.Children
-                                            [ { id = "View/Layout/Split"
-                                              , label = "Split"
-                                              , children = PullDown.empty
-                                              , checked = model.layoutMode == LayoutMode.Write
-                                              }
-                                            , { id = "View/Layout/Single"
-                                              , label = "Single"
-                                              , children = PullDown.empty
-                                              , checked = model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read
-                                              }
-                                            ]
-                                  , checked = False
-                                  }
-                                ]
                       }
                     ]
-                    1
+            }
+
+        viewPullDown =
+            { id = "View"
+            , label = "View"
+            , checked = False
+            , children =
+                PullDown.Children
+                    [ { id = "View/Theme"
+                      , label = "Theme"
+                      , children =
+                            PullDown.Children
+                                [ { id = "View/Theme/Dark"
+                                  , label = "Dark"
+                                  , children = PullDown.empty
+                                  , checked = model.colorTheme == ColorTheme.Dark
+                                  }
+                                , { id = "View/Theme/White"
+                                  , label = "White"
+                                  , children = PullDown.empty
+                                  , checked = model.colorTheme == ColorTheme.White
+                                  }
+                                ]
+                      , checked = False
+                      }
+                    , { id = "View/Layout"
+                      , label = "Layout"
+                      , children =
+                            PullDown.Children
+                                [ { id = "View/Layout/Split"
+                                  , label = "Split"
+                                  , children = PullDown.empty
+                                  , checked = model.layoutMode == LayoutMode.Write
+                                  }
+                                , { id = "View/Layout/Single"
+                                  , label = "Single"
+                                  , children = PullDown.empty
+                                  , checked = model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read
+                                  }
+                                ]
+                      , checked = False
+                      }
+                    ]
+            }
+    in
+    header [ class "app-navigation" ]
+        [ nav []
+            [ Html.map GotPullDownMsg <|
+                PullDown.view
+                    [ filePullDown, viewPullDown ]
+                    PullDown.rootLevel
             ]
         ]
 

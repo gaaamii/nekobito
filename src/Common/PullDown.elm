@@ -1,4 +1,4 @@
-module Common.PullDown exposing (Children(..), Id, Msg(..), empty, view)
+module Common.PullDown exposing (Children(..), Id, Msg(..), empty, rootLevel, view)
 
 import Html exposing (Html, div, li, span, text, ul)
 import Html.Attributes exposing (class, classList)
@@ -23,6 +23,11 @@ type alias PullDown =
 
 type Children
     = Children (List PullDown)
+
+
+rootLevel : Int
+rootLevel =
+    1
 
 
 view : List PullDown -> Int -> Html Msg
