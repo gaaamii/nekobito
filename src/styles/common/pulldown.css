@@ -14,7 +14,7 @@
   line-height: 1;
   box-sizing: border-box;
   position: relative;
-  padding: 2px 16px;
+  padding: 5px 16px;
 }
 .app-pulldown__label {
   display: block;
