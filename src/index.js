@@ -68,7 +68,7 @@ app.ports.openFile.subscribe(async () => {
 // new file
 app.ports.newFile.subscribe(async () => {
   const opts = {
-    type: 'saveFile',
+    type: 'save-file',
     accepts: [{
       extensions: ['md'],
     }],
@@ -94,7 +94,7 @@ app.ports.changeText.subscribe(() => {
 // save as a new file
 app.ports.saveFile.subscribe(async (text) => {
   const opts = {
-    type: 'saveFile',
+    type: 'save-file',
     accepts: [{
       extensions: ['md'],
     }],
