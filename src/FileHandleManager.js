@@ -6,7 +6,6 @@ export default class FileHandleManager {
   }
 
   set fileHandle(fileHandle) {
-    this.writer = null;
     this._fileHandle = fileHandle;
   }
 
@@ -15,8 +14,10 @@ export default class FileHandleManager {
   }
 
   async writeFile(contents) {
-    this.writer = await this.fileHandle.createWriter();
-    await this.writer.write(0, contents);
-    await this.writer.close();
+    if (this.fileHandle) {
+      const writable = await this.fileHandle.createWritable();
+      await writable.write(contents);
+      await writable.close();
+    }
   }
 }
