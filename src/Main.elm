@@ -101,7 +101,11 @@ update msg model =
                 note =
                     case decoded of
                         Ok loadedNote ->
-                            loadedNote
+                            let
+                                text =
+                                    "# " ++ (loadedNote.name |> String.replace ".md" "")
+                            in
+                            { loadedNote | text = text }
 
                         Err _ ->
                             Note.new
