@@ -6,6 +6,7 @@ import Common.PullDown as PullDown exposing (Msg)
 import Html exposing (Html, button, div, header, i, nav, text, textarea)
 import Html.Attributes exposing (class, placeholder, title, value)
 import Html.Events exposing (onClick, onInput)
+import Html.Lazy exposing (lazy)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import LayoutMode exposing (LayoutMode)
@@ -173,7 +174,7 @@ view model =
         [ viewNavigation model
         , div [ class <| "app-container " ++ layoutClass model.layoutMode ]
             [ viewEditor model
-            , viewPreview model
+            , lazy viewPreview model.note
             , viewControl model
             ]
         ]
@@ -270,9 +271,9 @@ viewEditor model =
         ]
 
 
-viewPreview : Model -> Html Msg
-viewPreview model =
-    div [ class "app-preview" ] [ Markdown.toHtml [] model.note.text ]
+viewPreview : Note -> Html Msg
+viewPreview note =
+    div [ class "app-preview" ] [ Markdown.toHtml [] note.text ]
 
 
 viewControl : Model -> Html Msg
