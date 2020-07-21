@@ -20,3 +20,9 @@
 .app-wrapper--white-theme .app-control > button {
   color: #000;
 }
+
+/* layout */
+.app-wrapper--white-theme .app-layout--focus textarea,
+.app-wrapper--white-theme .app-layout--read .app-preview {
+  box-shadow: 1px 1px 10px #dfdfdf;
+}

@@ -1,0 +1,33 @@
+.app-layout {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'editor preview';
+  transition: all .2s;
+  padding-top: 20px;
+}
+/* write */
+.app-layout--write {
+  grid-template-columns: 1fr 1.6fr;
+}
+
+/* focus */
+.app-layout--focus {
+  grid-template-columns: 1fr 0;
+}
+
+/* read */
+.app-layout--read {
+  grid-template-columns: 0 1fr;
+}
+.app-layout--read > .app-editor > textarea {
+  width: 0;
+  padding: 0;
+}
+.app-layout--focus textarea,
+.app-layout--read .app-preview {
+  max-width: 800px;
+  margin: 40px auto;
+  box-shadow: 1px 1px 10px #000;
+}

@@ -172,7 +172,7 @@ view : Model -> Html Msg
 view model =
     div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
         [ viewNavigation model
-        , div [ class <| "app-container " ++ layoutClass model.layoutMode ]
+        , div [ class <| "app-layout " ++ layoutClass model.layoutMode ]
             [ viewEditor model
             , lazy viewPreview model.note
             , viewControl model
@@ -315,7 +315,7 @@ appListItemClass isActive =
 
 layoutClass : LayoutMode -> String
 layoutClass layoutMode =
-    "app-container--" ++ (layoutMode |> LayoutMode.toString |> String.toLower)
+    "app-layout--" ++ (layoutMode |> LayoutMode.toString |> String.toLower)
 
 
 updateWithStorage : Msg -> Model -> ( Model, Cmd Msg )
