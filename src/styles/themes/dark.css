@@ -25,3 +25,9 @@
 .app-wrapper--dark-theme .app-control > button {
   color: #fff;
 }
+
+/* layout */
+.app-wrapper--dark-theme .app-layout--focus textarea,
+.app-wrapper--dark-theme .app-layout--read .app-preview {
+  box-shadow: 1px 1px 10px #000;
+}
