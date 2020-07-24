@@ -104,7 +104,11 @@ update msg model =
                         Ok loadedNote ->
                             let
                                 text =
-                                    "# " ++ (loadedNote.name |> String.replace ".md" "")
+                                    if String.isEmpty model.note.text then
+                                        "# " ++ (loadedNote.name |> String.replace ".md" "")
+
+                                    else
+                                        model.note.text
                             in
                             { loadedNote | text = text }
 
