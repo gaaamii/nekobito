@@ -2,7 +2,7 @@
 .app-pulldown--level-1 {
   display: flex;
   list-style: none;
-  margin: 0;
+  margin: 0 0 0 1px;
   padding: 0;
   font-size: 14px;
   height: 24px;
@@ -14,7 +14,7 @@
   line-height: 1;
   box-sizing: border-box;
   position: relative;
-  padding: 5px 16px;
+  padding: 4px 16px;
 }
 .app-pulldown__label {
   display: block;
@@ -24,9 +24,13 @@
 .app-pulldown__children {
   display: none;
   border-radius: 0 0 4px 4px;
-  margin-top: 1px;
+  margin-top: 2px;
   border: 1px solid #000;
+  border-width: 0 1px 1px 1px;
   box-sizing: initial;
+}
+.app-pulldown__children > li > .app-pulldown__children {
+  border-width: 1px 1px 1px 1px;
 }
 .app-pulldown__children > li {
   margin: 0;
@@ -73,18 +77,14 @@
 /* colors */
 /* TODO: optimize color for each Theme */
 .app-pulldown--level-1 {
-  box-shadow: 1px 1px 2px #222;
+  border-bottom: 1px solid #222;
 }
 
 .app-pulldown--level-1, .app-pulldown--level-2, .app-pulldown--level-3 {
   color: #fff;
   background: #333;
 }
-.app-pulldown--level-1 > li:hover {
+.app-pulldown--level-1 > li:hover,
+.app-pulldown__children > li:hover {
   background: #222;
-}
-
-.app-pulldown--level-2 > li:hover,
-.app-pulldown--level-3 > li:hover {
-  background: #555;
 }
