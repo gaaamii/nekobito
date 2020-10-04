@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "create-elm-app": "^5.1.0",
-    "elm-format": "^0.8.3"
+    "elm-format": "^0.8.4"
   }
 }
