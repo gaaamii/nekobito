@@ -36,27 +36,16 @@ app.ports.setStorage.subscribe((state) => {
 
 // update file
 app.ports.writeFile.subscribe(async (contents) => {
-  if (!fileHandleManager.fileHandle) {
-    const [fileHandle] = await window.showOpenFilePicker();
-    fileHandleManager.fileHandle = fileHandle
-  }
-  await fileHandleManager.writeFile(contents);
-  const file = await fileHandleManager.getFile();
+  const file = await fileHandleManager.updateFile(contents)
   handleLoadFile(file);
   app.ports.fileWritten.send(true);
 });
 
 // open file
 app.ports.openFile.subscribe(async () => {
-  const opts = {
-    accepts: [{
-      extensions: ['md'],
-    }],
-  };
-  fileHandleManager.fileHandle = await window.showOpenFilePicker(opts);
-  const file = await fileHandleManager.getFile();
-  const text = await file.text();
+  const file = await fileHandleManager.openFile()
   const { name, lastModified } = file
+  const text = await file.text();
 
   handleLoadFile(file);
   app.ports.fileLoaded.send({
@@ -68,18 +57,7 @@ app.ports.openFile.subscribe(async () => {
 
 // new file
 app.ports.newFile.subscribe(async () => {
-  const opts = {
-    types: [
-      {
-        accept: {
-          'text/markdown': ['.md'],
-        },
-      }
-    ]
-  };
-  fileHandleManager.fileHandle = await window.showSaveFilePicker(opts);
-  const file = await fileHandleManager.getFile();
-
+  const file = await fileHandleManager.newFile()
   handleLoadFile(file);
 
   const { name, lastModified } = file
@@ -95,22 +73,9 @@ app.ports.changeText.subscribe(() => {
   setDocumentTitle();
 });
 
-// save as a new file
+// create a new file
 app.ports.saveFile.subscribe(async (text) => {
-  const opts = {
-    types: [
-      {
-        accept: {
-          'text/markdown': ['.md'],
-          'text/plain': ['.txt'],
-        }
-      }
-    ]
-  };
-  fileHandleManager.fileHandle = await window.showSaveFilePicker(opts);
-  const file = await fileHandleManager.getFile();
-  await fileHandleManager.writeFile(text);
-
+  const file = fileHandleManager.createFile(text)
   handleLoadFile(file);
   const { name, lastModified } =  file
   app.ports.fileBuilt.send({
@@ -132,7 +97,7 @@ const onAfterInitialRender = () => {
   document.getElementsByTagName("textarea")[0].focus();
   // hide sync button if Native Filesystem API is unavailable.
   const syncBtn = document.getElementById("openFileButton");
-  if (syncBtn && !window.showOpenFilePicker) {
+  if (syncBtn && !window.showSaveFilePicker) {
     syncBtn.style.display = 'none';
   }
 }
