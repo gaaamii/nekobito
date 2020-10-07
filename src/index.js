@@ -37,7 +37,8 @@ app.ports.setStorage.subscribe((state) => {
 // update file
 app.ports.writeFile.subscribe(async (contents) => {
   if (!fileHandleManager.fileHandle) {
-    fileHandleManager.fileHandle = await window.chooseFileSystemEntries();
+    const [fileHandle] = await window.showOpenFilePicker();
+    fileHandleManager.fileHandle = fileHandle
   }
   await fileHandleManager.writeFile(contents);
   const file = await fileHandleManager.getFile();
@@ -52,7 +53,7 @@ app.ports.openFile.subscribe(async () => {
       extensions: ['md'],
     }],
   };
-  fileHandleManager.fileHandle = await window.chooseFileSystemEntries(opts);
+  fileHandleManager.fileHandle = await window.showOpenFilePicker(opts);
   const file = await fileHandleManager.getFile();
   const text = await file.text();
   const { name, lastModified } = file
@@ -68,12 +69,15 @@ app.ports.openFile.subscribe(async () => {
 // new file
 app.ports.newFile.subscribe(async () => {
   const opts = {
-    type: 'save-file',
-    accepts: [{
-      extensions: ['md'],
-    }],
+    types: [
+      {
+        accept: {
+          'text/markdown': ['.md'],
+        },
+      }
+    ]
   };
-  fileHandleManager.fileHandle = await window.chooseFileSystemEntries(opts);
+  fileHandleManager.fileHandle = await window.showSaveFilePicker(opts);
   const file = await fileHandleManager.getFile();
 
   handleLoadFile(file);
@@ -94,12 +98,16 @@ app.ports.changeText.subscribe(() => {
 // save as a new file
 app.ports.saveFile.subscribe(async (text) => {
   const opts = {
-    type: 'save-file',
-    accepts: [{
-      extensions: ['md'],
-    }],
+    types: [
+      {
+        accept: {
+          'text/markdown': ['.md'],
+          'text/plain': ['.txt'],
+        }
+      }
+    ]
   };
-  fileHandleManager.fileHandle = await window.chooseFileSystemEntries(opts);
+  fileHandleManager.fileHandle = await window.showSaveFilePicker(opts);
   const file = await fileHandleManager.getFile();
   await fileHandleManager.writeFile(text);
 
@@ -124,7 +132,7 @@ const onAfterInitialRender = () => {
   document.getElementsByTagName("textarea")[0].focus();
   // hide sync button if Native Filesystem API is unavailable.
   const syncBtn = document.getElementById("openFileButton");
-  if (syncBtn && !window.chooseFileSystemEntries) {
+  if (syncBtn && !window.showOpenFilePicker) {
     syncBtn.style.display = 'none';
   }
 }
