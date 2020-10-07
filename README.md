@@ -18,7 +18,7 @@ You can see a preview of markdown text written in textarea.
 If you use Google Chrome, you can install Nekobito as a progressive web app.
 
 ### [Experimental] Save text in your local file
-Nekobito is providing features to edit your local file. But it is experimental because Nekobito uses [Native File System API](https://wicg.github.io/native-file-system/) for it. You have to use the browser which supports the API, and enable the API, to edit local files on Nekobito.
+Nekobito is providing features to edit your local files. But it is experimental because Nekobito uses [File System Access API](https://wicg.github.io/file-system-access/) for it. You have to use the browser which supports the API to edit local files on Nekobito.
 
 ## Development
 
