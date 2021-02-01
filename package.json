@@ -11,7 +11,7 @@
   "author": "gaaamii <i1shi4ga4mi1@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "elm": "^0.19.1-4"
+    "elm": "^0.19.1-5"
   },
   "devDependencies": {
     "create-elm-app": "^5.22.0",
