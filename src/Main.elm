@@ -221,24 +221,7 @@ viewNavigation model =
             , checked = False
             , children =
                 PullDown.Children
-                    [ { id = "View/Theme"
-                      , label = "Theme"
-                      , children =
-                            PullDown.Children
-                                [ { id = "View/Theme/Dark"
-                                  , label = "Dark"
-                                  , children = PullDown.empty
-                                  , checked = model.colorTheme == ColorTheme.Dark
-                                  }
-                                , { id = "View/Theme/White"
-                                  , label = "White"
-                                  , children = PullDown.empty
-                                  , checked = model.colorTheme == ColorTheme.White
-                                  }
-                                ]
-                      , checked = False
-                      }
-                    , { id = "View/Layout"
+                    [ { id = "View/Layout"
                       , label = "Layout"
                       , children =
                             PullDown.Children
@@ -251,6 +234,23 @@ viewNavigation model =
                                   , label = "Single"
                                   , children = PullDown.empty
                                   , checked = model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read
+                                  }
+                                ]
+                      , checked = False
+                      }
+                    , { id = "View/Theme"
+                      , label = "Theme"
+                      , children =
+                            PullDown.Children
+                                [ { id = "View/Theme/Dark"
+                                  , label = "Dark"
+                                  , children = PullDown.empty
+                                  , checked = model.colorTheme == ColorTheme.Dark
+                                  }
+                                , { id = "View/Theme/White"
+                                  , label = "White"
+                                  , children = PullDown.empty
+                                  , checked = model.colorTheme == ColorTheme.White
                                   }
                                 ]
                       , checked = False
