@@ -1,3 +1,4 @@
+import 'regenerator-runtime';
 import './styles/main.css';
 import './styles/themes/dark.css';
 import './styles/themes/white.css';

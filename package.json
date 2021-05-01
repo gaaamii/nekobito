@@ -1,20 +1,19 @@
 {
+  "private": true,
   "scripts": {
-    "start": "elm-app start",
-    "build": "elm-app build",
-    "test": "elm-app test"
-  },
-  "name": "nekobito",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:gaaamii/nekobito.git",
-  "author": "gaaamii <i1shi4ga4mi1@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "elm": "^0.19.1-5"
+    "start": "parcel ./public/index.html --out-dir build",
+    "build": "parcel build ./public/index.html --out-dir build",
+    "test": "elm-test"
   },
   "devDependencies": {
-    "create-elm-app": "^5.22.0",
-    "elm-format": "^0.8.5"
+    "elm": "^0.19.1-5",
+    "elm-format": "^0.8.5",
+    "elm-hot": "^1.1.6",
+    "elm-test": "^0.19.1-revision6",
+    "node-elm-compiler": "^5.0.6",
+    "parcel-bundler": "^1.12.5"
+  },
+  "dependencies": {
+    "regenerator-runtime": "^0.13.7"
   }
 }
