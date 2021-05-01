@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "start": "parcel ./public/index.html --out-dir build",
-    "build": "parcel build ./public/index.html --out-dir build",
+    "build": "parcel build ./public/index.html ./public/service-worker.js --out-dir build",
     "test": "elm-test"
   },
   "devDependencies": {
