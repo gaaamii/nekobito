@@ -76,7 +76,7 @@ app.ports.changeText.subscribe(() => {
 
 // create a new file
 app.ports.saveFile.subscribe(async (text) => {
-  const file = fileHandleManager.createFile(text)
+  const file = await fileHandleManager.createFile(text)
   handleLoadFile(file);
   const { name, lastModified } =  file
   app.ports.fileBuilt.send({
