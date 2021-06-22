@@ -5,6 +5,9 @@ Nekobito is a browser-based markdown editor.
 
 ![screenshot of Nekobito](nekobito_screen.png)
 
+## DEPRECATION WARNING
+https://nekobito.github.io is no longer maintained, use https://nekobito.netlify.com
+
 ## Usage
 * Open https://nekobito.netlify.com
 * Write markdown.
