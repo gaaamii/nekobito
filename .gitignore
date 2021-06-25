@@ -12,4 +12,4 @@ node_modules
 .DS_Store
 
 /build
-/.cache
+/.parcel-cache
