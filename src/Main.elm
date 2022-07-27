@@ -277,8 +277,15 @@ viewEditor model =
 
 viewPreview : Note -> Html Msg
 viewPreview note =
-    div [ class "app-preview" ] [ Markdown.toHtml [] note.text ]
+    div [ class "app-preview" ] [ Markdown.toHtmlWith markdownOptions [] note.text ]
 
+markdownOptions : Markdown.Options
+markdownOptions =
+    { githubFlavored = Just { tables = True, breaks = False }
+    , defaultHighlighting = Nothing
+    , sanitize = True
+    , smartypants = False
+    }
 
 viewControl : Model -> Html Msg
 viewControl model =

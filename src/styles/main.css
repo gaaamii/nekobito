@@ -1,19 +1,87 @@
 @import "./common/modal.css";
 @import "./common/pulldown.css";
 @import "./layout.css";
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
   margin: 0;
   padding: 0;
   border: 0;
@@ -25,8 +93,11 @@ time, mark, audio, video {
 /**
  * Styles for particular elements
  */
-p { line-height: 1.75em; }
-a, a:visited {
+p {
+  line-height: 1.75em;
+}
+a,
+a:visited {
   color: #42aef0;
 }
 hr {
@@ -37,9 +108,11 @@ hr {
 blockquote {
   background-color: #eee;
   padding: 1em;
-  border-radius: .2em;
+  border-radius: 0.2em;
 }
-blockquote p:first-child { margin: 0; }
+blockquote p:first-child {
+  margin: 0;
+}
 
 pre {
   padding: 1em 2em;
@@ -53,43 +126,112 @@ p > code {
   padding: 3px 5px;
   border-radius: 3px;
 }
-ul { padding: 0 1.5em; list-style: disc; }
-ul ul { margin: .35em 0 0 0; }
-li { margin-top: .35em; }
-:focus { outline: 0; }
-img { max-width: 100%; }
-html, body, body > div {
+ul {
+  padding: 0 1.5em;
+  list-style: disc;
+}
+ul ul {
+  margin: 0.35em 0 0 0;
+}
+li {
+  margin-top: 0.35em;
+}
+:focus {
+  outline: 0;
+}
+img {
+  max-width: 100%;
+}
+html,
+body,
+body > div {
   height: 100%;
-} 
+}
 body {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: "Noto Sans JP", sans-serif;
   color: #404040;
   overflow: hidden;
   font-weight: 400;
 }
-body { font-size: 16px; }
-* { box-sizing: border-box; }
-h1, h2 { margin-top: 1.4em; }
-h3, h4, h5, h6 { margin-top: 1.2em; }
-p, ul, pre, blockquote { margin-top: 1em; }
-h1, h2, h3, h4, h5, h6 { font-weight: 400;  }
-textarea { resize: none; }
-.app-preview h1 { font-size: 1.7em; }
-.app-preview h2 { font-size: 1.55em; }
-.app-preview h3 { font-size: 1.5em; }
-.app-preview h4 { font-size: 1.4em; }
-.app-preview h5 { font-size: 1.3em; }
-.app-preview h6 { font-size: 1.2em; }
-.app-preview p { font-size: 1.1em; }
+body {
+  font-size: 16px;
+}
+* {
+  box-sizing: border-box;
+}
+h1,
+h2 {
+  margin-top: 1.4em;
+}
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 1.2em;
+}
+p,
+ul,
+pre,
+blockquote {
+  margin-top: 1em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}
+textarea {
+  resize: none;
+}
+.app-preview h1 {
+  font-size: 1.7em;
+}
+.app-preview h2 {
+  font-size: 1.55em;
+}
+.app-preview h3 {
+  font-size: 1.5em;
+}
+.app-preview h4 {
+  font-size: 1.4em;
+}
+.app-preview h5 {
+  font-size: 1.3em;
+}
+.app-preview h6 {
+  font-size: 1.2em;
+}
+.app-preview p {
+  font-size: 1.1em;
+}
+.app-preview table {
+  margin-top: 1em;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+}
+.app-preview tr {
+  border: 1px solid #ccc;
+}
+.app-preview th,
+.app-preview td {
+  border: 1px solid #ccc;
+  padding: 0.5em;
+}
 
 /**
  * Styles for classes
  */
 
 /* Material Icons */
-.material-icons { vertical-align: bottom; }
+.material-icons {
+  vertical-align: bottom;
+}
 
-#root, .app-wrapper {
+#root,
+.app-wrapper {
   height: 100%;
   width: 100%;
   overflow-x: hidden;
@@ -110,7 +252,7 @@ textarea { resize: none; }
 .app-editor > textarea {
   display: block;
   border: 0;
-  font-size: .95em;
+  font-size: 0.95em;
   width: 100%;
   height: 100%;
   overflow: scroll;
@@ -121,7 +263,9 @@ textarea { resize: none; }
 .app-editor > textarea::-webkit-scrollbar {
   display: none;
 }
-.app-editor textarea:focus { outline: 0; }
+.app-editor textarea:focus {
+  outline: 0;
+}
 .app-editor__btn {
   float: right;
   margin: 15px;
@@ -156,7 +300,7 @@ textarea { resize: none; }
 
 .page-header {
   display: inline-block;
-  font-size: .9em;;
+  font-size: 0.9em;
   color: #333;
   padding: 10px 0;
 }
@@ -166,12 +310,16 @@ textarea { resize: none; }
   cursor: pointer;
   box-sizing: border-box;
   border: 0;
-  opacity: .7;
-  font-size: .7em;
+  opacity: 0.7;
+  font-size: 0.7em;
   background: transparent;
   vertical-align: middle;
 }
-.btn:hover { outline: 0; }
+.btn:hover {
+  outline: 0;
+}
 
 /* Visibility */
-.hidden { display: none; }
+.hidden {
+  display: none;
+}
