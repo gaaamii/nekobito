@@ -3,8 +3,8 @@
   height: 100%;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-areas: 'editor preview';
-  transition: all .2s;
+  grid-template-areas: "editor preview";
+  transition: all 0.2s;
   padding-top: 20px;
 }
 /* write */
@@ -29,5 +29,4 @@
 .app-layout--read .app-preview {
   max-width: 800px;
   margin: 40px auto;
-  box-shadow: 1px 1px 10px #000;
 }

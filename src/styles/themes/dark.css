@@ -16,18 +16,17 @@
 }
 
 /* root elment */
-.app-wrapper--dark-theme { background: #333536; color: #fff; }
+.app-wrapper--dark-theme {
+  background: #333536;
+  color: #fff;
+}
 
 /* editor */
-.app-wrapper--dark-theme .app-editor { border-right: 1px solid #000; }
+.app-wrapper--dark-theme .app-editor {
+  border-right: 1px solid #000;
+}
 
 /* button */
 .app-wrapper--dark-theme .app-control > button {
   color: #fff;
-}
-
-/* layout */
-.app-wrapper--dark-theme .app-layout--focus textarea,
-.app-wrapper--dark-theme .app-layout--read .app-preview {
-  box-shadow: 1px 1px 10px #000;
 }
