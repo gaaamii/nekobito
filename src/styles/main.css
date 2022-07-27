@@ -1,3 +1,6 @@
+@import "./common/modal.css";
+@import "./common/pulldown.css";
+@import "./layout.css";
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -172,7 +175,3 @@ textarea { resize: none; }
 
 /* Visibility */
 .hidden { display: none; }
-
-@import "./common/modal.css";
-@import "./common/pulldown.css";
-@import "./layout.css";
