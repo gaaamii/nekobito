@@ -1,7 +1,0 @@
-#!/bin/sh
-# Usage:
-# ./bump_up 1.1
-# will tag 1.1 and push to origin
-ver=$1
-git tag -a $ver -m "$ver"
-git push origin $ver
