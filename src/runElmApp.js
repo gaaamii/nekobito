@@ -83,11 +83,6 @@ const runElmApp = () => {
       text,
     });
   });
-
-  app.ports.changeText.subscribe(() => {
-    appState.hasUnsavedChange = true;
-    setDocumentTitle();
-  });
 };
 
 export default runElmApp;
