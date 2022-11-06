@@ -362,6 +362,12 @@ port writeFile : String -> Cmd msg
 port saveFile : String -> Cmd msg
 
 
+port openFile : () -> Cmd msg
+
+
+port newFile : () -> Cmd msg
+
+
 port fileLoaded : (Decode.Value -> msg) -> Sub msg
 
 
@@ -369,14 +375,6 @@ port fileWritten : (Bool -> msg) -> Sub msg
 
 
 port fileBuilt : (Decode.Value -> msg) -> Sub msg
-
-
-port openFile : () -> Cmd msg
-
-
-port newFile : () -> Cmd msg
-
-
 
 ---- Subscriptions ----
 
