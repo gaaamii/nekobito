@@ -1,6 +1,7 @@
 port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, update, updateWithStorage, view)
 
 import Browser
+import Browser.Events exposing (onKeyDown)
 import ColorTheme exposing (ColorTheme)
 import Common.PullDown as PullDown exposing (Msg)
 import Html exposing (Html, button, div, header, i, nav, text, textarea)
@@ -72,6 +73,7 @@ init value =
 
 type Msg
     = OnInput String
+    | OnKeyDown String
     | SwitchLayout LayoutMode
     | FileLoaded Decode.Value
     | FileWritten Bool
@@ -90,6 +92,17 @@ update msg model =
             ( { model | note = { note | text = newBody } }
             , Cmd.batch [ changeText newBody ]
             )
+
+        OnKeyDown key ->
+            case key of
+                "p" ->
+                    update (SwitchLayout LayoutMode.Read) model
+
+                "e" ->
+                    update (SwitchLayout LayoutMode.Focus) model
+
+                _ ->
+                    ( model, Cmd.none )
 
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
@@ -279,6 +292,7 @@ viewPreview : Note -> Html Msg
 viewPreview note =
     div [ class "app-preview" ] [ Markdown.toHtmlWith markdownOptions [] note.text ]
 
+
 markdownOptions : Markdown.Options
 markdownOptions =
     { githubFlavored = Just { tables = True, breaks = False }
@@ -286,6 +300,7 @@ markdownOptions =
     , sanitize = True
     , smartypants = False
     }
+
 
 viewControl : Model -> Html Msg
 viewControl model =
@@ -376,12 +391,19 @@ port fileWritten : (Bool -> msg) -> Sub msg
 
 port fileBuilt : (Decode.Value -> msg) -> Sub msg
 
+
+keyDecoder : Decode.Decoder Msg
+keyDecoder =
+    Decode.map OnKeyDown (Decode.field "key" Decode.string)
+
+
+
 ---- Subscriptions ----
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.batch [ fileLoaded FileLoaded, fileWritten FileWritten, fileBuilt NewFileBuilt ]
+    Sub.batch [ fileLoaded FileLoaded, fileWritten FileWritten, fileBuilt NewFileBuilt, onKeyDown keyDecoder ]
 
 
 
