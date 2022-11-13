@@ -1,4 +1,4 @@
-module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggleMainColumns, transitToComparableMode, transitToEditableMode, transitToPreviewMode)
+module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggle)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -48,31 +48,8 @@ toString layoutMode =
             "Read"
 
 
-toggleMainColumns : LayoutMode -> LayoutMode
-toggleMainColumns currentMode =
-    case currentMode of
-        Focus ->
-            Write
-
-        Read ->
-            Write
-
-        Write ->
-            Focus
-
-
-transitToEditableMode : LayoutMode -> LayoutMode
-transitToEditableMode currentMode =
-    case currentMode of
-        Read ->
-            Focus
-
-        _ ->
-            Write
-
-
-transitToPreviewMode : LayoutMode -> LayoutMode
-transitToPreviewMode currentMode =
+toggle : LayoutMode -> LayoutMode
+toggle currentMode =
     case currentMode of
         Focus ->
             Read
@@ -81,17 +58,5 @@ transitToPreviewMode currentMode =
             Focus
 
         _ ->
-            Write
+            currentMode
 
-
-transitToComparableMode : LayoutMode -> LayoutMode
-transitToComparableMode currentMode =
-    case currentMode of
-        Focus ->
-            Write
-
-        Read ->
-            Write
-
-        _ ->
-            Write

@@ -14,6 +14,7 @@ import LayoutMode exposing (LayoutMode)
 import LocalStorageValue
 import Markdown
 import Note exposing (Note)
+import LayoutMode
 
 
 
@@ -97,26 +98,23 @@ update msg model =
             )
 
         OnKeyDown key ->
-            case key of
-                "Control" ->
-                   ({ model | isWaitingShortcutKey = True }, Cmd.none)
+            if model.isWaitingShortcutKey then
+                case key of
+                    "Control" ->
+                        update (SwitchLayout (LayoutMode.toggle model.layoutMode)) { model | isWaitingShortcutKey = False }
 
-                _ ->
-                   if model.isWaitingShortcutKey then
-                       case key of
-                           "p" ->
-                               update (SwitchLayout LayoutMode.Read) model
+                    "s" ->
+                        update TriggerSaveFile model
 
-                           "e" ->
-                               update (SwitchLayout LayoutMode.Focus) model
+                    _ ->
+                        ({ model | isWaitingShortcutKey = False }, Cmd.none)
+            else
+                case key of
+                    "Control" ->
+                       ({ model | isWaitingShortcutKey = True }, Cmd.none)
 
-                           "s" ->
-                               update TriggerSaveFile model
-
-                           _ ->
-                               ({ model | isWaitingShortcutKey = False }, Cmd.none)
-                   else
-                       ({ model | isWaitingShortcutKey = False }, Cmd.none )
+                    _ ->
+                      ({ model | isWaitingShortcutKey = False }, Cmd.none )
 
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
