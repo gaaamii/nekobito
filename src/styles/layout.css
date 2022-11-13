@@ -4,7 +4,6 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-areas: "editor preview";
-  transition: all 0.2s;
   padding-top: 20px;
 }
 /* write */
