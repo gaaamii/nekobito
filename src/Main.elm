@@ -81,7 +81,7 @@ type Msg
     | FileWritten Bool
     | NewFileBuilt Decode.Value
     | GotPullDownMsg PullDown.Msg
-    | TriggerUpdateFile
+    | TriggerSaveFile
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -111,7 +111,7 @@ update msg model =
                                update (SwitchLayout LayoutMode.Focus) model
 
                            "s" ->
-                               update TriggerUpdateFile model
+                               update TriggerSaveFile model
 
                            _ ->
                                ({ model | isWaitingShortcutKey = False }, Cmd.none)
@@ -163,7 +163,7 @@ update msg model =
             ( model, Cmd.none )
 
 
-        TriggerUpdateFile ->
+        TriggerSaveFile ->
             case model.note.lastModified of
                 Just _ ->
                     ( model, Cmd.batch [ writeFile model.note.text ] )
@@ -180,12 +180,7 @@ update msg model =
                     ( model, Cmd.batch [ openFile () ] )
 
                 "File/Save" ->
-                    case model.note.lastModified of
-                        Just _ ->
-                            ( model, Cmd.batch [ writeFile model.note.text ] )
-
-                        Nothing ->
-                            ( model, Cmd.batch [ saveFile model.note.text ] )
+                    update TriggerSaveFile model
 
                 "View/Theme/Dark" ->
                     ( { model | colorTheme = ColorTheme.Dark }, Cmd.none )
