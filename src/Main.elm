@@ -24,6 +24,7 @@ type alias Model =
     { colorTheme : ColorTheme
     , note : Note
     , layoutMode : LayoutMode
+    , isWaitingShortcutKey : Bool
     }
 
 
@@ -38,6 +39,7 @@ emptyModel =
     { colorTheme = ColorTheme.White
     , note = Note.new
     , layoutMode = LayoutMode.Write
+    , isWaitingShortcutKey = False
     }
 
 
@@ -79,6 +81,7 @@ type Msg
     | FileWritten Bool
     | NewFileBuilt Decode.Value
     | GotPullDownMsg PullDown.Msg
+    | TriggerUpdateFile
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -95,14 +98,25 @@ update msg model =
 
         OnKeyDown key ->
             case key of
-                "p" ->
-                    update (SwitchLayout LayoutMode.Read) model
-
-                "e" ->
-                    update (SwitchLayout LayoutMode.Focus) model
+                "Control" ->
+                   ({ model | isWaitingShortcutKey = True }, Cmd.none)
 
                 _ ->
-                    ( model, Cmd.none )
+                   if model.isWaitingShortcutKey then
+                       case key of
+                           "p" ->
+                               update (SwitchLayout LayoutMode.Read) model
+
+                           "e" ->
+                               update (SwitchLayout LayoutMode.Focus) model
+
+                           "s" ->
+                               update TriggerUpdateFile model
+
+                           _ ->
+                               ({ model | isWaitingShortcutKey = False }, Cmd.none)
+                   else
+                       ({ model | isWaitingShortcutKey = False }, Cmd.none )
 
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
@@ -147,6 +161,15 @@ update msg model =
 
         FileWritten _ ->
             ( model, Cmd.none )
+
+
+        TriggerUpdateFile ->
+            case model.note.lastModified of
+                Just _ ->
+                    ( model, Cmd.batch [ writeFile model.note.text ] )
+
+                Nothing ->
+                    ( model, Cmd.batch [ saveFile model.note.text ] )
 
         GotPullDownMsg (PullDown.OnClick id) ->
             case id of
