@@ -3,9 +3,9 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 import Browser
 import Browser.Events exposing (onKeyDown)
 import ColorTheme exposing (ColorTheme)
-import Html exposing (Html, button, div, text, textarea, label, h2)
-import Html.Attributes exposing (class, placeholder, value, type_, for, id, checked)
-import Html.Events exposing (onClick, onInput, onCheck)
+import Html exposing (Html, button, div, h2, input, label, text, textarea)
+import Html.Attributes exposing (checked, class, for, id, placeholder, type_, value)
+import Html.Events exposing (onCheck, onClick, onInput)
 import Html.Lazy exposing (lazy)
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -13,8 +13,6 @@ import LayoutMode exposing (LayoutMode)
 import LocalStorageValue
 import Markdown
 import Note exposing (Note)
-import LayoutMode
-import Html exposing (input)
 
 
 
@@ -113,14 +111,15 @@ update msg model =
                         update TriggerSaveFile model
 
                     _ ->
-                        ({ model | isWaitingShortcutKey = False }, Cmd.none)
+                        ( { model | isWaitingShortcutKey = False }, Cmd.none )
+
             else
                 case key of
                     "Control" ->
-                       ({ model | isWaitingShortcutKey = True }, Cmd.none)
+                        ( { model | isWaitingShortcutKey = True }, Cmd.none )
 
                     _ ->
-                      ({ model | isWaitingShortcutKey = False }, Cmd.none )
+                        ( { model | isWaitingShortcutKey = False }, Cmd.none )
 
         SwitchLayout mode ->
             ( { model | layoutMode = mode }, Cmd.none )
@@ -166,7 +165,6 @@ update msg model =
         FileWritten _ ->
             ( model, Cmd.none )
 
-
         TriggerSaveFile ->
             case model.note.lastModified of
                 Just _ ->
@@ -176,15 +174,21 @@ update msg model =
                     ( model, Cmd.batch [ saveFile model.note.text ] )
 
         ToggleLayout _ ->
-                    ( { model | layoutMode = LayoutMode.toggle model.layoutMode }, Cmd.none )
+            ( { model | layoutMode = LayoutMode.toggle model.layoutMode }, Cmd.none )
+
         ToggleTheme _ ->
-                    ( { model | colorTheme = ColorTheme.toggle model.colorTheme }, Cmd.none )
+            ( { model | colorTheme = ColorTheme.toggle model.colorTheme }, Cmd.none )
+
         ToggleSidebar ->
-                    ( { model | isSidebarOpen = not model.isSidebarOpen }, Cmd.none )
+            ( { model | isSidebarOpen = not model.isSidebarOpen }, Cmd.none )
+
         OpenFile ->
             ( model, Cmd.batch [ openFile () ] )
+
         NewFile ->
             ( model, Cmd.batch [ newFile () ] )
+
+
 
 ---- VIEW ----
 -- main view
@@ -200,73 +204,91 @@ view model =
             ]
         ]
 
+
 viewSidebar : Model -> Html Msg
 viewSidebar model =
     let
         sidebarClassNames =
             if model.isSidebarOpen then
                 "app-sidebar app-sidebar--open"
+
             else
                 "app-sidebar app-sidebar--closed"
     in
-        div [ class sidebarClassNames]
-            [
-              div [ class "app-sidebar__buttons"] [
-                  button [ class "app-sidebar__button", onClick TriggerSaveFile ] [
-                      div [] [ text "Save Text" ]
-                  ]
-                  , button [ class "app-sidebar__button", onClick ToggleSidebar] [
-                      div [] [ text (if model.isSidebarOpen then "Close sidebar" else "Open sidebar") ]
-                  ]
-              ]
-            , div [ class "app-sidebar__body" ] [
-                div [ class "app-sidebar__body__section" ]
-                    [ h2 [] [ text "File" ]
-                      , div [ class "app-sidebar__body__section__buttons" ]
-                          [ button [onClick NewFile] [text "Create New"]
-                          , button [onClick OpenFile] [text "Open"]
-                          ]
-                      ]
-                , div [ class "app-sidebar__body__section" ] [
-                    h2 [] [ text "Layout" ]
-                    , input [ type_ "radio"
-                            , id "layout-radio-split"
-                            , value "split"
-                            , checked (model.layoutMode == LayoutMode.Write)
-                            , onCheck ToggleLayout
-                            , class "app-sidebar__body__radio"
-                            ] []
-                    , label [ for "layout-radio-split" ] [ text "split" ]
-                    , input [ type_ "radio"
-                            , id "layout-radio-single"
-                            , value "single"
-                            , checked (model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read)
-                            , onCheck ToggleLayout
-                            , class "app-sidebar__body__radio"
-                            ] []
-                    , label [ for "layout-radio-single" ] [ text "single" ]
-                    ]
-                , div [ class "app-sidebar__body__section" ] [
-                    h2 [] [ text "Theme" ]
-                    , input [ type_ "radio"
-                            , id "layout-radio-white"
-                            , value "white"
-                            , checked (model.colorTheme == ColorTheme.White)
-                            , onCheck ToggleTheme
-                            , class "app-sidebar__body__radio"
-                            ] []
-                    , label [ for "layout-radio-white" ] [ text "white" ]
-                    , input [ type_ "radio"
-                            , id "layout-radio-dark"
-                            , value "dark"
-                            , checked (model.colorTheme == ColorTheme.Dark)
-                            , onCheck ToggleTheme
-                            , class "app-sidebar__body__radio"
-                            ] []
-                    , label [ for "layout-radio-dark" ] [ text "dark" ]
+    div [ class sidebarClassNames ]
+        [ div [ class "app-sidebar__buttons" ]
+            [ button [ class "app-sidebar__button", onClick TriggerSaveFile ]
+                [ div [] [ text "Save Text" ]
+                ]
+            , button [ class "app-sidebar__button", onClick ToggleSidebar ]
+                [ div []
+                    [ text
+                        (if model.isSidebarOpen then
+                            "Close sidebar"
+
+                         else
+                            "Open sidebar"
+                        )
                     ]
                 ]
             ]
+        , div [ class "app-sidebar__body" ]
+            [ div [ class "app-sidebar__body__section" ]
+                [ h2 [] [ text "File" ]
+                , div [ class "app-sidebar__body__section__buttons" ]
+                    [ button [ onClick NewFile ] [ text "Create New" ]
+                    , button [ onClick OpenFile ] [ text "Open" ]
+                    ]
+                ]
+            , div [ class "app-sidebar__body__section" ]
+                [ h2 [] [ text "Layout" ]
+                , input
+                    [ type_ "radio"
+                    , id "layout-radio-split"
+                    , value "split"
+                    , checked (model.layoutMode == LayoutMode.Write)
+                    , onCheck ToggleLayout
+                    , class "app-sidebar__body__radio"
+                    ]
+                    []
+                , label [ for "layout-radio-split" ] [ text "split" ]
+                , input
+                    [ type_ "radio"
+                    , id "layout-radio-single"
+                    , value "single"
+                    , checked (model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read)
+                    , onCheck ToggleLayout
+                    , class "app-sidebar__body__radio"
+                    ]
+                    []
+                , label [ for "layout-radio-single" ] [ text "single" ]
+                ]
+            , div [ class "app-sidebar__body__section" ]
+                [ h2 [] [ text "Theme" ]
+                , input
+                    [ type_ "radio"
+                    , id "layout-radio-white"
+                    , value "white"
+                    , checked (model.colorTheme == ColorTheme.White)
+                    , onCheck ToggleTheme
+                    , class "app-sidebar__body__radio"
+                    ]
+                    []
+                , label [ for "layout-radio-white" ] [ text "white" ]
+                , input
+                    [ type_ "radio"
+                    , id "layout-radio-dark"
+                    , value "dark"
+                    , checked (model.colorTheme == ColorTheme.Dark)
+                    , onCheck ToggleTheme
+                    , class "app-sidebar__body__radio"
+                    ]
+                    []
+                , label [ for "layout-radio-dark" ] [ text "dark" ]
+                ]
+            ]
+        ]
+
 
 viewEditor : Model -> Html Msg
 viewEditor model =
@@ -287,8 +309,6 @@ markdownOptions =
     , sanitize = True
     , smartypants = False
     }
-
-
 
 
 themeClass : ColorTheme -> String
