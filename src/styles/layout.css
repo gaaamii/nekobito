@@ -4,7 +4,6 @@
   display: grid;
   grid-template-rows: 1fr;
   grid-template-areas: "editor preview";
-  padding-top: 20px;
 }
 /* write */
 .app-layout--write {
@@ -27,5 +26,5 @@
 .app-layout--focus textarea,
 .app-layout--read .app-preview {
   max-width: 800px;
-  margin: 40px auto;
+  margin: 20px auto;
 }

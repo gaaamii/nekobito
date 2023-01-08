@@ -23,10 +23,26 @@
 
 /* editor */
 .app-wrapper--dark-theme .app-editor {
-  border-right: 1px solid #000;
+  border-right: 1px solid #292929;
 }
 
 /* button */
 .app-wrapper--dark-theme .app-control > button {
+  color: #fff;
+}
+
+/* sidebar */
+.app-wrapper--dark-theme .app-sidebar__button {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #292929;
+}
+.app-wrapper--dark-theme .app-sidebar__button:hover {
+  background: #222;
+  border: 2px solid #111;
+}
+.app-wrapper--dark-theme .app-sidebar__body {
+  background: #333;
+  border-color: #292929;
   color: #fff;
 }

@@ -297,9 +297,6 @@ textarea {
 }
 
 /* sidebar */
-.app-sidebar {
-  opacity: 0.9;
-}
 .app-sidebar__buttons {
   position: fixed;
   top: 24px;
@@ -310,7 +307,6 @@ textarea {
 }
 .app-sidebar__button {
   height: 40px;
-  background: transparent;
   cursor: pointer;
   border: 0;
   display: flex;
@@ -318,8 +314,6 @@ textarea {
   gap: 8px;
   border-radius: 5px;
   padding: 0 16px;
-  border: 1px solid #888;
-  color: #888;
 }
 .app-sidebar__body {
   position: fixed;
@@ -327,13 +321,11 @@ textarea {
   right: 0;
   height: 100vh;
   z-index: 1;
-  border-radius: 5px 0 0 5px;
   padding-top: 60px;
-  color: #000;
-  border-left: 2px solid #eee;
-  background: #fff;
   transition: width 0.2s ease-out;
   white-space: nowrap;
+  border-left-width: 6px;
+  border-style: solid;
 }
 .app-sidebar__body__section {
   padding: 0 24px;

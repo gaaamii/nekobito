@@ -24,3 +24,19 @@
 .app-wrapper--white-theme .app-control > button {
   color: #000;
 }
+
+/* sidebar */
+.app-wrapper--white-theme .app-sidebar__button {
+  background: transparent;
+  color: #000;
+  border: 2px solid #ccc;
+}
+.app-wrapper--white-theme .app-sidebar__button:hover {
+  background: #eee;
+  border: 2px solid #ccc;
+}
+.app-wrapper--white-theme .app-sidebar__body {
+  background: #fff;
+  border-color: #eee;
+  color: #000;
+}
