@@ -3,8 +3,8 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 import Browser
 import Browser.Events exposing (onKeyDown)
 import ColorTheme exposing (ColorTheme)
-import Html exposing (Html, button, div, h2, input, label, text, textarea, fieldset, legend, nav)
-import Html.Attributes exposing (checked, class, for, id, placeholder, type_, value, name)
+import Html exposing (Html, button, div, fieldset, h2, input, label, legend, nav, text, textarea)
+import Html.Attributes exposing (checked, class, for, id, name, placeholder, type_, value)
 import Html.Events exposing (onCheck, onClick, onInput)
 import Html.Lazy exposing (lazy)
 import Json.Decode as Decode
@@ -13,6 +13,7 @@ import LayoutMode exposing (LayoutMode)
 import LocalStorageValue
 import Markdown
 import Note exposing (Note)
+
 
 
 ---- MODEL ----
@@ -227,11 +228,14 @@ viewSidebar model =
                     ]
                 ]
             ]
-            , viewSidebarBody model
+        , viewSidebarBody model
         ]
+
+
 viewSidebarBody : Model -> Html Msg
 viewSidebarBody model =
-    let body =
+    let
+        body =
             if True then
                 [ div [ class "app-sidebar__body__section" ]
                     [ h2 [] [ text "File" ]
@@ -300,12 +304,14 @@ viewSidebarBody model =
                         ]
                         []
                     , label [ for "layout-radio-dark" ] [ text "dark" ]
+                    ]
                 ]
-            ]
+
             else
                 []
     in
-        div [ class "app-sidebar__body" ] body
+    div [ class "app-sidebar__body" ] body
+
 
 viewEditor : Model -> Html Msg
 viewEditor model =
@@ -313,6 +319,7 @@ viewEditor model =
         classNames =
             if model.layoutMode /= LayoutMode.Read then
                 "app-editor"
+
             else
                 "app-editor app-editor--hidden"
     in

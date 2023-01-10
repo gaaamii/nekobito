@@ -3,18 +3,20 @@ module ColorTheme exposing (ColorTheme(..), decode, encode, toggle)
 import Json.Decode as Decode
 import Json.Encode as Encode
 
+
 type ColorTheme
     = White
     | Dark
 
+
 toggle : ColorTheme -> ColorTheme
 toggle colorTheme =
-   case colorTheme of
-       Dark ->
-           White
+    case colorTheme of
+        Dark ->
+            White
 
-       White ->
-           Dark
+        White ->
+            Dark
 
 
 encode : ColorTheme -> Encode.Value
@@ -38,4 +40,3 @@ decode =
                     _ ->
                         Decode.succeed White
             )
- 

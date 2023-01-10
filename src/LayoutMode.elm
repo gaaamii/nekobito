@@ -72,4 +72,3 @@ toggle currentMode =
 
         Write ->
             Focus
-
