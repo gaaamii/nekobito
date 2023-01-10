@@ -20,15 +20,12 @@
   background: #333536;
   color: #fff;
 }
-
 /* editor */
 .app-wrapper--dark-theme .app-editor {
-  border-right: 1px solid #292929;
+  border-right: 1px solid #000;
 }
-
-/* button */
-.app-wrapper--dark-theme .app-control > button {
-  color: #fff;
+.app-wrapper--dark-theme *:focus {
+  outline: 2px solid #999;
 }
 
 /* sidebar */
@@ -42,7 +39,7 @@
   border: 2px solid #111;
 }
 .app-wrapper--dark-theme .app-sidebar__body {
-  background: #333;
+  background: #333536;
   border-color: #292929;
   color: #fff;
 }

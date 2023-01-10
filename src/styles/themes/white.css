@@ -14,15 +14,13 @@
 .app-wrapper--white-theme {
   background: #fff;
 }
-
-/* sidebar */
-.app-wrapper--white-theme .app-navigation {
-  background: #333536;
+.app-wrapper--white-theme * {
+  outline-color: #000;
 }
 
-/* button */
-.app-wrapper--white-theme .app-control > button {
-  color: #000;
+/* editor*/
+.app-wrapper--white-theme .app-editor {
+  border-right: 2px solid #ccc;
 }
 
 /* sidebar */
