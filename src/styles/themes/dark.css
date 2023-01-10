@@ -20,13 +20,26 @@
   background: #333536;
   color: #fff;
 }
-
 /* editor */
 .app-wrapper--dark-theme .app-editor {
   border-right: 1px solid #000;
 }
+.app-wrapper--dark-theme *:focus {
+  outline: 2px solid #999;
+}
 
-/* button */
-.app-wrapper--dark-theme .app-control > button {
+/* sidebar */
+.app-wrapper--dark-theme .app-sidebar__button {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #292929;
+}
+.app-wrapper--dark-theme .app-sidebar__button:hover {
+  background: #222;
+  border: 2px solid #111;
+}
+.app-wrapper--dark-theme .app-sidebar__body {
+  background: #333536;
+  border-color: #292929;
   color: #fff;
 }

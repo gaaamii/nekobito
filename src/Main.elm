@@ -3,10 +3,9 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 import Browser
 import Browser.Events exposing (onKeyDown)
 import ColorTheme exposing (ColorTheme)
-import Common.PullDown as PullDown exposing (Msg)
-import Html exposing (Html, button, div, header, i, nav, text, textarea)
-import Html.Attributes exposing (class, placeholder, title, value)
-import Html.Events exposing (onClick, onInput)
+import Html exposing (Html, button, div, h2, input, label, text, textarea, fieldset, legend, nav)
+import Html.Attributes exposing (checked, class, for, id, placeholder, type_, value, name)
+import Html.Events exposing (onCheck, onClick, onInput)
 import Html.Lazy exposing (lazy)
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -14,8 +13,6 @@ import LayoutMode exposing (LayoutMode)
 import LocalStorageValue
 import Markdown
 import Note exposing (Note)
-import LayoutMode
-
 
 
 ---- MODEL ----
@@ -26,6 +23,7 @@ type alias Model =
     , note : Note
     , layoutMode : LayoutMode
     , isWaitingShortcutKey : Bool
+    , isSidebarOpen : Bool
     }
 
 
@@ -41,6 +39,7 @@ emptyModel =
     , note = Note.new
     , layoutMode = LayoutMode.Write
     , isWaitingShortcutKey = False
+    , isSidebarOpen = False
     }
 
 
@@ -77,12 +76,15 @@ init value =
 type Msg
     = OnInput String
     | OnKeyDown String
-    | SwitchLayout LayoutMode
+    | SwitchLayout LayoutMode Bool
     | FileLoaded Decode.Value
     | FileWritten Bool
     | NewFileBuilt Decode.Value
-    | GotPullDownMsg PullDown.Msg
     | TriggerSaveFile
+    | ToggleTheme Bool
+    | ToggleSidebar
+    | OpenFile
+    | NewFile
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -101,22 +103,23 @@ update msg model =
             if model.isWaitingShortcutKey then
                 case key of
                     "Control" ->
-                        update (SwitchLayout (LayoutMode.toggle model.layoutMode)) { model | isWaitingShortcutKey = False }
+                        update (SwitchLayout (LayoutMode.togglePreview model.layoutMode) True) { model | isWaitingShortcutKey = False }
 
                     "s" ->
                         update TriggerSaveFile model
 
                     _ ->
-                        ({ model | isWaitingShortcutKey = False }, Cmd.none)
+                        ( { model | isWaitingShortcutKey = False }, Cmd.none )
+
             else
                 case key of
                     "Control" ->
-                       ({ model | isWaitingShortcutKey = True }, Cmd.none)
+                        ( { model | isWaitingShortcutKey = True }, Cmd.none )
 
                     _ ->
-                      ({ model | isWaitingShortcutKey = False }, Cmd.none )
+                        ( { model | isWaitingShortcutKey = False }, Cmd.none )
 
-        SwitchLayout mode ->
+        SwitchLayout mode _ ->
             ( { model | layoutMode = mode }, Cmd.none )
 
         NewFileBuilt value ->
@@ -160,7 +163,6 @@ update msg model =
         FileWritten _ ->
             ( model, Cmd.none )
 
-
         TriggerSaveFile ->
             case model.note.lastModified of
                 Just _ ->
@@ -169,31 +171,17 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.batch [ saveFile model.note.text ] )
 
-        GotPullDownMsg (PullDown.OnClick id) ->
-            case id of
-                "File/New" ->
-                    ( model, Cmd.batch [ newFile () ] )
+        ToggleTheme _ ->
+            ( { model | colorTheme = ColorTheme.toggle model.colorTheme }, Cmd.none )
 
-                "File/Open" ->
-                    ( model, Cmd.batch [ openFile () ] )
+        ToggleSidebar ->
+            ( { model | isSidebarOpen = not model.isSidebarOpen }, Cmd.none )
 
-                "File/Save" ->
-                    update TriggerSaveFile model
+        OpenFile ->
+            ( model, Cmd.batch [ openFile () ] )
 
-                "View/Theme/Dark" ->
-                    ( { model | colorTheme = ColorTheme.Dark }, Cmd.none )
-
-                "View/Theme/White" ->
-                    ( { model | colorTheme = ColorTheme.White }, Cmd.none )
-
-                "View/Layout/Split" ->
-                    ( { model | layoutMode = LayoutMode.Write }, Cmd.none )
-
-                "View/Layout/Single" ->
-                    ( { model | layoutMode = LayoutMode.Focus }, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
+        NewFile ->
+            ( model, Cmd.batch [ newFile () ] )
 
 
 
@@ -204,102 +192,131 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
-        [ viewNavigation model
-        , div [ class <| "app-layout " ++ layoutClass model.layoutMode ]
+        [ div [ class <| "app-layout " ++ layoutClass model.layoutMode ]
             [ viewEditor model
             , lazy viewPreview model.note
-            , viewControl model
+            , viewSidebar model
             ]
         ]
 
 
-
--- sub views
-
-
-viewNavigation : Model -> Html Msg
-viewNavigation model =
+viewSidebar : Model -> Html Msg
+viewSidebar model =
     let
-        filePullDown =
-            { id = "File"
-            , label = "File"
-            , checked = False
-            , children =
-                PullDown.Children
-                    [ { id = "File/New"
-                      , label = "New"
-                      , children = PullDown.empty
-                      , checked = False
-                      }
-                    , { id = "File/Open"
-                      , label = "Open"
-                      , children = PullDown.empty
-                      , checked = False
-                      }
-                    , { id = "File/Save"
-                      , label = "Save"
-                      , children = PullDown.empty
-                      , checked = False
-                      }
-                    ]
-            }
+        sidebarClassNames =
+            if model.isSidebarOpen then
+                "app-sidebar app-sidebar--open"
 
-        viewPullDown =
-            { id = "View"
-            , label = "View"
-            , checked = False
-            , children =
-                PullDown.Children
-                    [ { id = "View/Layout"
-                      , label = "Layout"
-                      , children =
-                            PullDown.Children
-                                [ { id = "View/Layout/Split"
-                                  , label = "Split"
-                                  , children = PullDown.empty
-                                  , checked = model.layoutMode == LayoutMode.Write
-                                  }
-                                , { id = "View/Layout/Single"
-                                  , label = "Single"
-                                  , children = PullDown.empty
-                                  , checked = model.layoutMode == LayoutMode.Focus || model.layoutMode == LayoutMode.Read
-                                  }
-                                ]
-                      , checked = False
-                      }
-                    , { id = "View/Theme"
-                      , label = "Theme"
-                      , children =
-                            PullDown.Children
-                                [ { id = "View/Theme/Dark"
-                                  , label = "Dark"
-                                  , children = PullDown.empty
-                                  , checked = model.colorTheme == ColorTheme.Dark
-                                  }
-                                , { id = "View/Theme/White"
-                                  , label = "White"
-                                  , children = PullDown.empty
-                                  , checked = model.colorTheme == ColorTheme.White
-                                  }
-                                ]
-                      , checked = False
-                      }
-                    ]
-            }
+            else
+                "app-sidebar app-sidebar--closed"
     in
-    header [ class "app-navigation" ]
-        [ nav []
-            [ Html.map GotPullDownMsg <|
-                PullDown.view
-                    [ filePullDown, viewPullDown ]
-                    PullDown.rootLevel
-            ]
-        ]
+    nav [ class sidebarClassNames ]
+        [ div [ class "app-sidebar__buttons" ]
+            [ button [ class "app-sidebar__button", onClick TriggerSaveFile ]
+                [ div [] [ text "Save text" ]
+                ]
+            , button [ class "app-sidebar__button", onClick ToggleSidebar ]
+                [ div []
+                    [ text
+                        (if model.isSidebarOpen then
+                            "Close sidebar"
 
+                         else
+                            "Open sidebar"
+                        )
+                    ]
+                ]
+            ]
+            , viewSidebarBody model
+        ]
+viewSidebarBody : Model -> Html Msg
+viewSidebarBody model =
+    let body =
+            if True then
+                [ div [ class "app-sidebar__body__section" ]
+                    [ h2 [] [ text "File" ]
+                    , div [ class "app-sidebar__body__section__buttons" ]
+                        [ button [ onClick NewFile ] [ text "New" ]
+                        , button [ onClick OpenFile ] [ text "Open" ]
+                        ]
+                    ]
+                , fieldset [ class "app-sidebar__body__section" ]
+                    [ legend [] [ text "Layout" ]
+                    , input
+                        [ type_ "radio"
+                        , id "layout-radio-split"
+                        , value "split"
+                        , checked (model.layoutMode == LayoutMode.Write)
+                        , onCheck (SwitchLayout LayoutMode.Write)
+                        , class "app-sidebar__body__radio"
+                        , name "layout"
+                        ]
+                        []
+                    , label [ for "layout-radio-split" ] [ text "split" ]
+                    , input
+                        [ type_ "radio"
+                        , id "layout-radio-edit"
+                        , value "edit"
+                        , checked (model.layoutMode == LayoutMode.Focus)
+                        , onCheck (SwitchLayout LayoutMode.Focus)
+                        , class "app-sidebar__body__radio"
+                        , name "layout"
+                        ]
+                        []
+                    , label [ for "layout-radio-edit" ] [ text "edit" ]
+                    , input
+                        [ type_ "radio"
+                        , id "layout-radio-view"
+                        , value "view"
+                        , checked (model.layoutMode == LayoutMode.Read)
+                        , onCheck (SwitchLayout LayoutMode.Read)
+                        , class "app-sidebar__body__radio"
+                        , name "layout"
+                        ]
+                        []
+                    , label [ for "layout-radio-view" ] [ text "view" ]
+                    ]
+                , fieldset [ class "app-sidebar__body__section" ]
+                    [ legend [] [ text "Theme" ]
+                    , input
+                        [ type_ "radio"
+                        , id "layout-radio-white"
+                        , value "white"
+                        , checked (model.colorTheme == ColorTheme.White)
+                        , onCheck ToggleTheme
+                        , class "app-sidebar__body__radio"
+                        , name "theme"
+                        ]
+                        []
+                    , label [ for "layout-radio-white" ] [ text "white" ]
+                    , input
+                        [ type_ "radio"
+                        , id "layout-radio-dark"
+                        , value "dark"
+                        , checked (model.colorTheme == ColorTheme.Dark)
+                        , onCheck ToggleTheme
+                        , class "app-sidebar__body__radio"
+                        , name "theme"
+                        ]
+                        []
+                    , label [ for "layout-radio-dark" ] [ text "dark" ]
+                ]
+            ]
+            else
+                []
+    in
+        div [ class "app-sidebar__body" ] body
 
 viewEditor : Model -> Html Msg
 viewEditor model =
-    div [ class "app-editor" ]
+    let
+        classNames =
+            if model.layoutMode /= LayoutMode.Read then
+                "app-editor"
+            else
+                "app-editor app-editor--hidden"
+    in
+    div [ class classNames ]
         [ textarea [ onInput OnInput, placeholder "# Markdown text here", value model.note.text ] []
         ]
 
@@ -316,24 +333,6 @@ markdownOptions =
     , sanitize = True
     , smartypants = False
     }
-
-
-viewControl : Model -> Html Msg
-viewControl model =
-    let
-        viewSwitchModeIcon =
-            if model.layoutMode == LayoutMode.Focus then
-                button [ class "btn", onClick (SwitchLayout LayoutMode.Read) ]
-                    [ i [ class "material-icons", title "Preview" ] [ text "remove_red_eye" ] ]
-
-            else if model.layoutMode == LayoutMode.Read then
-                button [ class "btn", onClick (SwitchLayout LayoutMode.Focus) ]
-                    [ i [ class "material-icons", title "Edit" ] [ text "edit" ] ]
-
-            else
-                div [] []
-    in
-    div [ class "app-control" ] [ viewSwitchModeIcon ]
 
 
 themeClass : ColorTheme -> String

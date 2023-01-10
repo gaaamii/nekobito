@@ -1,4 +1,4 @@
-module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggle)
+module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggle, togglePreview)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -48,8 +48,8 @@ toString layoutMode =
             "Read"
 
 
-toggle : LayoutMode -> LayoutMode
-toggle currentMode =
+togglePreview : LayoutMode -> LayoutMode
+togglePreview currentMode =
     case currentMode of
         Focus ->
             Read
@@ -59,4 +59,17 @@ toggle currentMode =
 
         _ ->
             currentMode
+
+
+toggle : LayoutMode -> LayoutMode
+toggle currentMode =
+    case currentMode of
+        Focus ->
+            Write
+
+        Read ->
+            Write
+
+        Write ->
+            Focus
 
