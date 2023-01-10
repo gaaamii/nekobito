@@ -146,7 +146,7 @@ body > div {
   height: 100%;
 }
 body {
-  font-family: "Noto Sans JP", sans-serif;
+  font-family: sans-serif;
   color: #404040;
   overflow: hidden;
   font-weight: 400;
