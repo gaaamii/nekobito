@@ -37,6 +37,3 @@ npm run start
 ```
 npm run build
 ```
-
-## DEPRECATION WARNING
-https://nekobito.github.io is no longer maintained, use https://nekobito.netlify.app
