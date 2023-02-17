@@ -12,7 +12,7 @@
     "elm": "^0.19.1-5",
     "elm-format": "^0.8.5",
     "elm-hot": "^1.1.6",
-    "elm-test": "^0.19.1-revision11",
+    "elm-test": "^0.19.1-revision12",
     "node-elm-compiler": "^5.0.6",
     "parcel": "^2.3.1"
   },
