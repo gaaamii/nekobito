@@ -165,7 +165,7 @@ update msg model =
                         Err _ ->
                             Note.new
             in
-            ( { model | note = note }, Cmd.none )
+            ( { model | note = note }, focusOnEditor )
 
         FileWritten _ ->
             ( model, Cmd.none )
