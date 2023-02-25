@@ -2,6 +2,7 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 
 import Browser
 import Browser.Events exposing (onKeyDown)
+import Browser.Dom
 import ColorTheme exposing (ColorTheme)
 import Html exposing (Html, button, div, fieldset, h2, input, label, legend, nav, text, textarea)
 import Html.Attributes exposing (checked, class, for, id, name, placeholder, type_, value)
@@ -13,7 +14,7 @@ import LayoutMode exposing (LayoutMode)
 import LocalStorageValue
 import Markdown
 import Note exposing (Note)
-
+import Task
 
 
 ---- MODEL ----
@@ -67,7 +68,7 @@ buildModelFrom value =
 
 init : Decode.Value -> ( Model, Cmd Msg )
 init value =
-    ( buildModelFrom value, Cmd.none )
+    ( buildModelFrom value, focusOnEditor )
 
 
 
@@ -86,6 +87,7 @@ type Msg
     | ToggleSidebar
     | OpenFile
     | NewFile
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -104,7 +106,11 @@ update msg model =
             if model.isWaitingShortcutKey then
                 case key of
                     "Control" ->
-                        update (SwitchLayout (LayoutMode.togglePreview model.layoutMode) True) { model | isWaitingShortcutKey = False }
+                        let
+                            isWaitingShortcutKey  = False
+                            layoutMode = LayoutMode.togglePreview model.layoutMode
+                        in
+                        ({ model | isWaitingShortcutKey = isWaitingShortcutKey, layoutMode = layoutMode}, focusOnEditor)
 
                     "s" ->
                         update TriggerSaveFile model
@@ -176,13 +182,20 @@ update msg model =
             ( { model | colorTheme = ColorTheme.toggle model.colorTheme }, Cmd.none )
 
         ToggleSidebar ->
-            ( { model | isSidebarOpen = not model.isSidebarOpen }, Cmd.none )
+            let
+                isSidebarOpen = not model.isSidebarOpen
+                cmd = if isSidebarOpen then Cmd.none else focusOnEditor
+            in
+            ( { model | isSidebarOpen = isSidebarOpen }, cmd )
 
         OpenFile ->
             ( model, Cmd.batch [ openFile () ] )
 
         NewFile ->
             ( model, Cmd.batch [ newFile () ] )
+
+        NoOp ->
+            ( model, Cmd.none)
 
 
 
@@ -324,9 +337,16 @@ viewEditor model =
                 "app-editor app-editor--hidden"
     in
     div [ class classNames ]
-        [ textarea [ onInput OnInput, placeholder "# Markdown text here", value model.note.text ] []
+        [ textarea
+            [ onInput OnInput
+            , placeholder "# Markdown text here"
+            , value model.note.text
+            , id "app-editor"
+            ] []
         ]
-
+focusOnEditor : Cmd Msg
+focusOnEditor =
+    Task.attempt (\_ -> NoOp) (Browser.Dom.focus "app-editor")
 
 viewPreview : Note -> Html Msg
 viewPreview note =
