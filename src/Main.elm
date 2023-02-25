@@ -1,8 +1,8 @@
 port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemClass, emptyModel, init, main, setStorage, update, updateWithStorage, view)
 
 import Browser
-import Browser.Events exposing (onKeyDown)
 import Browser.Dom
+import Browser.Events exposing (onKeyDown)
 import ColorTheme exposing (ColorTheme)
 import Html exposing (Html, button, div, fieldset, h2, input, label, legend, nav, text, textarea)
 import Html.Attributes exposing (checked, class, for, id, name, placeholder, type_, value)
@@ -15,6 +15,7 @@ import LocalStorageValue
 import Markdown
 import Note exposing (Note)
 import Task
+
 
 
 ---- MODEL ----
@@ -107,10 +108,13 @@ update msg model =
                 case key of
                     "Control" ->
                         let
-                            isWaitingShortcutKey  = False
-                            layoutMode = LayoutMode.togglePreview model.layoutMode
+                            isWaitingShortcutKey =
+                                False
+
+                            layoutMode =
+                                LayoutMode.togglePreview model.layoutMode
                         in
-                        ({ model | isWaitingShortcutKey = isWaitingShortcutKey, layoutMode = layoutMode}, focusOnEditor)
+                        ( { model | isWaitingShortcutKey = isWaitingShortcutKey, layoutMode = layoutMode }, focusOnEditor )
 
                     "s" ->
                         update TriggerSaveFile model
@@ -183,8 +187,15 @@ update msg model =
 
         ToggleSidebar ->
             let
-                isSidebarOpen = not model.isSidebarOpen
-                cmd = if isSidebarOpen then Cmd.none else focusOnEditor
+                isSidebarOpen =
+                    not model.isSidebarOpen
+
+                cmd =
+                    if isSidebarOpen then
+                        Cmd.none
+
+                    else
+                        focusOnEditor
             in
             ( { model | isSidebarOpen = isSidebarOpen }, cmd )
 
@@ -195,7 +206,7 @@ update msg model =
             ( model, Cmd.batch [ newFile () ] )
 
         NoOp ->
-            ( model, Cmd.none)
+            ( model, Cmd.none )
 
 
 
@@ -342,11 +353,15 @@ viewEditor model =
             , placeholder "# Markdown text here"
             , value model.note.text
             , id "app-editor"
-            ] []
+            ]
+            []
         ]
+
+
 focusOnEditor : Cmd Msg
 focusOnEditor =
     Task.attempt (\_ -> NoOp) (Browser.Dom.focus "app-editor")
+
 
 viewPreview : Note -> Html Msg
 viewPreview note =
