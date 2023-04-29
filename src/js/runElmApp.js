@@ -1,5 +1,5 @@
 import FileHandleManager from "./FileHandleManager";
-import { Elm } from "./Main.elm";
+import { Elm } from "../elm/Main.elm";
 
 const runElmApp = () => {
   const storedState = localStorage.getItem("elm-editor-save");
