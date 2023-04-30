@@ -1,7 +1,7 @@
 -- Types
 
 
-module Note exposing (Id, Note, decode, new, toTitle)
+module Models.Note exposing (Id, Note, decode, new)
 
 import Json.Decode as Decode
 
@@ -28,15 +28,6 @@ new =
 
 
 -- Note
-
-
-toTitle : Note -> String
-toTitle note =
-    note.text
-        |> String.lines
-        |> List.head
-        |> Maybe.withDefault ""
-        |> String.replace "#" ""
 
 
 decode : Decode.Value -> Result Decode.Error Note

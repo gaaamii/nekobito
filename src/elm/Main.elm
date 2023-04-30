@@ -3,17 +3,17 @@ port module Main exposing (Model, ModelExposedToStorage, Msg(..), appListItemCla
 import Browser
 import Browser.Dom
 import Browser.Events exposing (onKeyDown)
-import ColorTheme exposing (ColorTheme)
 import Html exposing (Html, button, div, fieldset, h2, input, label, legend, nav, text, textarea)
 import Html.Attributes exposing (checked, class, for, id, name, placeholder, type_, value)
 import Html.Events exposing (onCheck, onClick, onInput)
 import Html.Lazy exposing (lazy)
 import Json.Decode as Decode
 import Json.Encode as Encode
-import LayoutMode exposing (LayoutMode)
-import LocalStorageValue
 import Markdown
-import Note exposing (Note)
+import Models.ColorTheme as ColorTheme
+import Models.LayoutMode as LayoutMode
+import Models.LocalStorageValue as LocalStorageValue
+import Models.Note as Note
 import Task
 
 
@@ -22,17 +22,17 @@ import Task
 
 
 type alias Model =
-    { colorTheme : ColorTheme
-    , note : Note
-    , layoutMode : LayoutMode
+    { colorTheme : ColorTheme.ColorTheme
+    , note : Note.Note
+    , layoutMode : LayoutMode.LayoutMode
     , isWaitingShortcutKey : Bool
     , isSidebarOpen : Bool
     }
 
 
 type alias ModelExposedToStorage =
-    { colorTheme : ColorTheme
-    , layoutMode : LayoutMode
+    { colorTheme : ColorTheme.ColorTheme
+    , layoutMode : LayoutMode.LayoutMode
     }
 
 
@@ -79,7 +79,7 @@ init value =
 type Msg
     = OnInput String
     | OnKeyDown String
-    | SwitchLayout LayoutMode Bool
+    | SwitchLayout LayoutMode.LayoutMode Bool
     | FileLoaded Decode.Value
     | FileWritten Bool
     | NewFileBuilt Decode.Value
@@ -363,7 +363,7 @@ focusOnEditor =
     Task.attempt (\_ -> NoOp) (Browser.Dom.focus "app-editor")
 
 
-viewPreview : Note -> Html Msg
+viewPreview : Note.Note -> Html Msg
 viewPreview note =
     div [ class "app-preview" ] [ Markdown.toHtmlWith markdownOptions [] note.text ]
 
@@ -377,7 +377,7 @@ markdownOptions =
     }
 
 
-themeClass : ColorTheme -> String
+themeClass : ColorTheme.ColorTheme -> String
 themeClass colorTheme =
     case colorTheme of
         ColorTheme.White ->
@@ -396,7 +396,7 @@ appListItemClass isActive =
         "app-list__item"
 
 
-layoutClass : LayoutMode -> String
+layoutClass : LayoutMode.LayoutMode -> String
 layoutClass layoutMode =
     "app-layout--" ++ (layoutMode |> LayoutMode.toString |> String.toLower)
 

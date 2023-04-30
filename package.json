@@ -3,7 +3,7 @@
   "scripts": {
     "start": "parcel ./public/index.html --dist-dir build",
     "build": "parcel build ./public/index.html ./public/service-worker.js --dist-dir build",
-    "test": "elm-test"
+    "test": "elm-test 'src/**/*Tests.elm'"
   },
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.3.1",

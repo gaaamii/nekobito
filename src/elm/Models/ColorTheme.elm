@@ -1,4 +1,4 @@
-module ColorTheme exposing (ColorTheme(..), decode, encode, toggle)
+module Models.ColorTheme exposing (ColorTheme(..), decode, encode, toggle)
 
 import Json.Decode as Decode
 import Json.Encode as Encode

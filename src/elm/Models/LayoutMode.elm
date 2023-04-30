@@ -1,4 +1,4 @@
-module LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggle, togglePreview)
+module Models.LayoutMode exposing (LayoutMode(..), decode, encode, toString, toggle, togglePreview)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
