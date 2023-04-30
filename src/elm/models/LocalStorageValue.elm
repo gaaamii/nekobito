@@ -1,14 +1,14 @@
-module LocalStorageValue exposing (LocalStorageValue, decode, encode)
+module Models.LocalStorageValue exposing (LocalStorageValue, decode, encode)
 
-import ColorTheme exposing (ColorTheme)
 import Json.Decode as Decode
 import Json.Encode as Encode
-import LayoutMode exposing (LayoutMode)
+import Models.ColorTheme as ColorTheme
+import Models.LayoutMode as LayoutMode
 
 
 type alias LocalStorageValue =
-    { colorTheme : ColorTheme
-    , layoutMode : LayoutMode
+    { colorTheme : ColorTheme.ColorTheme
+    , layoutMode : LayoutMode.LayoutMode
     }
 
 
