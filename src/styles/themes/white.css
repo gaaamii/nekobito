@@ -38,3 +38,6 @@
   border-color: #eee;
   color: #000;
 }
+.app-wrapper--white-theme *:focus {
+  border: 1px solid #333;
+}
