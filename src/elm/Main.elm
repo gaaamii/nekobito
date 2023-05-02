@@ -144,7 +144,7 @@ update msg model =
                             let
                                 text =
                                     if String.isEmpty model.note.text then
-                                        "# " ++ (loadedNote.name |> String.replace ".md" "")
+                                        Note.getHeadingFromFilename loadedNote
 
                                     else
                                         model.note.text
