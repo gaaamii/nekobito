@@ -1,4 +1,4 @@
-module Models.ColorTheme exposing (ColorTheme(..), decode, encode, toggle)
+module Models.ColorTheme exposing (ColorTheme(..), decode, encode, toClassName, toggle)
 
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -40,3 +40,13 @@ decode =
                     _ ->
                         Decode.succeed White
             )
+
+
+toClassName : ColorTheme -> String
+toClassName colorTheme =
+    case colorTheme of
+        White ->
+            "app-wrapper--white-theme"
+
+        Dark ->
+            "app-wrapper--dark-theme"

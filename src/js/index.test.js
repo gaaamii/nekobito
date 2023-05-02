@@ -1,31 +1,53 @@
-import { findByRole } from '@testing-library/dom'
+import { screen, waitFor } from '@testing-library/dom'
 import '@testing-library/jest-dom'
-const { execSync } = require('child_process')
-const fs = require('fs').promises;
-
-const HTML_FILENAME = execSync("find build/index.html | head -1").toString().trim()
-if (!HTML_FILENAME) {
-  throw "HTML file is empty. Please build by npm run build before running test."
-}
-
-const JS_FILENAME = execSync("find build/*.js | head -1").toString().trim() // "build/index.xxx.js"
-if (!JS_FILENAME) {
-  throw "JS file is empty. Please build by npm run build before running test."
-}
-
-async function runElmApp() {
-  const htmlString = await fs.readFile(HTML_FILENAME, 'utf-8')
-  const jsString = await fs.readFile(JS_FILENAME, 'utf-8')
-  const dom = new DOMParser().parseFromString(htmlString, 'text/html')
-  const root = dom.querySelector('#root')
-  document.body.appendChild(root)
-  eval(jsString)
-  return root
-}
+import userEvent from '@testing-library/user-event';
 
 test('Show textarea', async () => {
-  const container = await runElmApp()
-
-  const textarea = await findByRole(container, 'textbox')
+  const textarea = await screen.findByRole('textbox')
   expect(textarea).toHaveAttribute("placeholder", "# Markdown text here")
+})
+
+test('Switch layout', async () => {
+  const openSidebarButton = await screen.findByRole("button", { name: "Open sidebar" })
+  userEvent.click(openSidebarButton)
+
+  // change to split mode
+  const splitRadioInput = await screen.findByLabelText("split")
+  userEvent.click(splitRadioInput)
+  await waitFor(() => {
+    expect(splitRadioInput).toBeChecked()
+  })
+
+  // change to edit mode
+  const editRadioInput = screen.getByLabelText("edit")
+  userEvent.click(editRadioInput)
+  await waitFor(() => {
+    expect(editRadioInput).toBeChecked()
+  })
+
+  // change to view mode
+  const viewRadioInput = screen.getByLabelText("view")
+  userEvent.click(viewRadioInput)
+  await waitFor(() => {
+    expect(viewRadioInput).toBeChecked()
+  })
+})
+
+test('Change theme', async () => {
+  const openSidebarButton = await screen.findByRole("button", { name: "Open sidebar" })
+  userEvent.click(openSidebarButton)
+
+  // change to dark theme
+  const darkRadioInput = await screen.findByLabelText("dark")
+  userEvent.click(darkRadioInput)
+  await waitFor(() => {
+    expect(darkRadioInput).toBeChecked()
+  })
+
+  // change to white theme
+  const whiteRadioInput = screen.getByLabelText("white")
+  userEvent.click(whiteRadioInput)
+  await waitFor(() => {
+    expect(whiteRadioInput).toBeChecked()
+  })
 })
