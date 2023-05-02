@@ -238,18 +238,16 @@ viewSidebar model =
     nav [ class sidebarClassNames ]
         [ div [ class "app-sidebar__buttons" ]
             [ button [ class "app-sidebar__button", onClick TriggerSaveFile ]
-                [ div [] [ text "Save text" ]
+                [ text "Save text"
                 ]
             , button [ class "app-sidebar__button", onClick ToggleSidebar ]
-                [ div []
-                    [ text
-                        (if model.isSidebarOpen then
-                            "Close sidebar"
+                [ text
+                    (if model.isSidebarOpen then
+                        "Close sidebar"
 
-                         else
-                            "Open sidebar"
-                        )
-                    ]
+                     else
+                        "Open sidebar"
+                    )
                 ]
             ]
         , viewSidebarBody model
