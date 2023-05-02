@@ -3,16 +3,25 @@
   "scripts": {
     "start": "parcel ./public/index.html --dist-dir build",
     "build": "parcel build ./public/index.html ./public/service-worker.js --dist-dir build",
-    "test": "elm-test 'src/**/*Tests.elm'"
+    "elm-test": "elm-test 'src/**/*Tests.elm'",
+    "jest": "jest"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.5",
+    "@babel/preset-env": "^7.21.5",
     "@parcel/packager-raw-url": "^2.3.1",
     "@parcel/transformer-elm": "^2.3.1",
     "@parcel/transformer-webmanifest": "^2.3.1",
+    "@testing-library/dom": "^9.2.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/user-event": "^14.4.3",
+    "babel-jest": "^29.5.0",
     "elm": "^0.19.1-5",
     "elm-format": "^0.8.7",
     "elm-hot": "^1.1.6",
     "elm-test": "^0.19.1-revision12",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "node-elm-compiler": "^5.0.6",
     "parcel": "^2.3.1"
   },
