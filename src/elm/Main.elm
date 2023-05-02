@@ -216,7 +216,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class <| "app-wrapper " ++ themeClass model.colorTheme ]
+    div [ class <| "app-wrapper " ++ (model.colorTheme |> ColorTheme.toClassName) ]
         [ div [ class <| "app-layout " ++ layoutClass model.layoutMode ]
             [ viewEditor model
             , lazy viewPreview model.note
@@ -375,16 +375,6 @@ markdownOptions =
     , sanitize = True
     , smartypants = False
     }
-
-
-themeClass : ColorTheme.ColorTheme -> String
-themeClass colorTheme =
-    case colorTheme of
-        ColorTheme.White ->
-            "app-wrapper--white-theme"
-
-        ColorTheme.Dark ->
-            "app-wrapper--dark-theme"
 
 
 appListItemClass : Bool -> String
