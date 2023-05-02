@@ -1,7 +1,7 @@
 -- Types
 
 
-module Models.Note exposing (Id, Note, decode, new)
+module Models.Note exposing (Id, Note, decode, getHeadingFromFilename, new)
 
 import Json.Decode as Decode
 
@@ -40,3 +40,8 @@ decode value =
                 (Decode.field "text" Decode.string)
     in
     Decode.decodeValue decoder value
+
+
+getHeadingFromFilename : Note -> String
+getHeadingFromFilename note =
+    "# " ++ (note.name |> String.replace ".md" "")
