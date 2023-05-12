@@ -52,8 +52,10 @@ p > code {
   padding: 3px 5px;
   border-radius: 3px;
 }
-ul {
+ul, ol {
   padding: 0 1.5em;
+}
+ul {
   list-style: disc;
 }
 ul ul {
@@ -72,7 +74,7 @@ body > div {
 }
 body {
   font-family: sans-serif;
-  color: #404040;
+  color: #222;
   overflow: hidden;
   font-weight: 400;
 }
@@ -90,6 +92,7 @@ h5:first-child,
 h6:first-child {
   margin-top: 0;
 }
+h1 { margin-bottom: 1em; }
 h1,
 h2 {
   margin-top: 1.4em;
@@ -112,7 +115,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 400;
+  font-weight: bold;
 }
 textarea {
   resize: none;
@@ -255,13 +258,6 @@ textarea {
 .app-sidebar--closed > .app-sidebar__body {
   width: 0;
   border-left-width: 0;
-}
-
-.page-header {
-  display: inline-block;
-  font-size: 0.9em;
-  color: #333;
-  padding: 10px 0;
 }
 
 /* Visibility */
