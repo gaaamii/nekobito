@@ -10,7 +10,7 @@
     "@babel/core": "^7.21.8",
     "@babel/preset-env": "^7.21.5",
     "@parcel/packager-raw-url": "^2.3.1",
-    "@parcel/transformer-elm": "^2.3.1",
+    "@parcel/transformer-elm": "^2.9.1",
     "@parcel/transformer-webmanifest": "^2.3.1",
     "@testing-library/dom": "^9.3.0",
     "@testing-library/jest-dom": "^5.16.5",
