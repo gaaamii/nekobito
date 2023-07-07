@@ -7,7 +7,7 @@
     "jest": "jest"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
+    "@babel/core": "^7.22.8",
     "@babel/preset-env": "^7.21.5",
     "@parcel/packager-raw-url": "^2.3.1",
     "@parcel/transformer-elm": "^2.3.1",
