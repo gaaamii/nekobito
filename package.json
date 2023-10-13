@@ -13,7 +13,7 @@
     "@parcel/transformer-elm": "^2.3.1",
     "@parcel/transformer-webmanifest": "^2.3.1",
     "@testing-library/dom": "^9.3.0",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/user-event": "^14.4.3",
     "babel-jest": "^29.5.0",
     "elm": "^0.19.1-5",
